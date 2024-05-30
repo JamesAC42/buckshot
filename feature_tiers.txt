@@ -1,0 +1,22 @@
+token system - 1 token = 5 resumes + redo
+
+free account comes with 1 token
+premium - 5 tokens / month - $10/month + extra features
+each token costs $3
+
+free
+
+    - 5 free resume generations, 5 tabs
+    - tone
+    - template - toggle output sections
+    - export and share
+    - setting to copy personal section to new jobs
+
+premium
+
+    - up to 10 tabs at once
+    - change model
+    - 5 tokens a month
+    - AI feedback and suggestions
+    - more template customization
+    - cover letter generator - uses a token

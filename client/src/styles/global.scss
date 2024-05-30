@@ -1,0 +1,49 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+@font-face {
+    font-family: 'Questrial';
+    src: url('/fonts/Questrial/Questrial-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'PT Mono';
+    src: url('/fonts/PT_Mono/PTMono-Regular.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Questrial', sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+.container {
+    padding:0 5rem;
+    display:flex;
+    flex-direction:row;
+    position:relative;
+    overflow-y:scroll;
+    height:calc(100vh - 8rem);
+    padding-top:3rem;
+    gap:3rem;
+}
+
+.section-outer {
+    position:relative;
+    width:fit-content;
+    width:$input-section-width;
+    margin-bottom:1rem;
+}
+
+.section-background {
+    @include drop-shadow;
+}
+
+.section-inner {
+    position:relative;
+    background:$secondary-color;
+    border:1px solid $primary-color;
+    border-radius:4px;
+    color:$primary-color;
+    padding:0.2rem 0.5rem;
+}

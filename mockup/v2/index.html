@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css"/>
+</head>
+<body>
+    
+    <div class="banner">
+        <h1>buckshot</h1>
+        <div class="links-outer">
+            <a>home</a>
+            <a>login</a>
+            <a>contact</a>
+            <a>github</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active">
+                <div class="section-inner"></div>
+                <div class="tab-inner">tab</div>
+            </div>
+            <div class="tab">
+                <div class="section-inner"></div>
+                <div class="tab-inner">tab</div>
+            </div>
+            <div class="tab">
+                <div class="section-inner"></div>
+                <div class="tab-inner">tab</div>
+            </div>
+
+            <div class="tab-add">
+                <div class="tab-add-button">
+                    <div class="section-inner"></div>
+                    <div class="tab-add-button-inner">
+                        New Tab
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="input-container">
+            <div class="section-background"></div>
+            <div class="input-container-inner">
+                <input type="text" class="job-name-field" placeholder="job name...">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, voluptatibus.</p>
+                <div class="info-input">
+                    <div class="section-inner"></div>
+                    <textarea class="info-input-inner" placeholder="Info about you..."></textarea>
+                </div>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, voluptatibus.</p>
+                <div class="info-input">
+                    <div class="section-inner"></div>
+                    <textarea class="info-input-inner" placeholder="Info about the job..."></textarea>
+                </div>
+                <div class="generate-button">
+                    <div class="section-inner"></div>
+                    <div class="generate-button-inner">
+                        Generate
+                    </div>
+                </div>
+                <div class="output">
+                    <div class="section-inner"></div>
+                    <div class="output-inner">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const outputInner = document.querySelector('.output-inner');
+        const loremText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..`;
+        let index = 0;
+
+        function streamText() {
+            if (index < loremText.length) {
+                outputInner.textContent += loremText.substring(index,index + 3);
+                index+=3;
+                setTimeout(streamText, 1); // Adjust the timeout to control the speed of the streaming effect
+            }
+        }
+
+        streamText(); // Start streaming the text
+    });
+    </script>
+
+</body>
+</html>

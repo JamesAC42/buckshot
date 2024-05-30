@@ -1,0 +1,45 @@
+@import "./variables.scss";
+
+
+
+@mixin flex-center-row {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+@mixin flex-center-col {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@mixin pop-in-transition {
+    animation:pop-in .2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1;
+}
+
+@mixin drop-shadow {
+    position:absolute;
+    height:100%;width:100%;
+    background:$primary-color;
+    border-radius:4px;
+    transform:translate(-4px,4px);
+    z-index:-1;
+}
+
+@mixin section-interact {
+    cursor:pointer; 
+    transition:all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    user-select: none;
+}
+
+@mixin section-hover {
+    background:$primary-color;
+    outline:1px solid $primary-color;
+    color:$secondary-color;
+    border:1px solid $secondary-color;
+}
+
+@mixin section-click {
+    transform:translate(-3px,3px);
+}
