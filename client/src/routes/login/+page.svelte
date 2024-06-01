@@ -1,6 +1,16 @@
 <script>
+    import { writable } from "svelte/store";
     import Navbar from "../../components/Navbar.svelte";
+
+    let mode = writable(0);
+
 </script>
 
 <Navbar/>
-<h1>BUCKSHOT LOGIN</h1>
+
+
+
+
+<style lang="scss">
+
+</style>

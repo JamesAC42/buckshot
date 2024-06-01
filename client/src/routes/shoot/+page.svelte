@@ -1,23 +1,98 @@
 <script>
     import { onMount } from 'svelte';
 
-    onMount(() => {
-        const outputInner = document.querySelector('.output-inner');
-        const loremText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..`;
+    const loremText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..`;
+
+    const resultText = 
+`John Doe
+Software Engineer
+john.doe@example.com | (123) 456-7890 | LinkedIn: linkedin.com/in/johndoe
+
+Summary
+--------
+Highly skilled software engineer with 5+ years of experience in developing scalable web applications and working 
+across the full stack. Proficient in modern frameworks and technologies, with a strong background in computer 
+science and a passion for continuous learning and improvement.
+
+Experience
+-----------
+Software Engineer
+Tech Solutions Inc., San Francisco, CA
+June 2018 - Present
+- Developed and maintained web applications using React, Node.js, and MongoDB.
+- Led a team of 5 developers in the design and implementation of a new microservices 
+    architecture, resulting in a 30% increase in system performance.
+- Collaborated with cross-functional teams to define, design, and ship new features.
+- Implemented automated testing and continuous integration pipelines, reducing deployment times by 50%.
+
+Junior Software Engineer
+Innovative Apps, New York, NY
+July 2015 - May 2018
+- Assisted in the development of mobile applications using Swift and Kotlin.
+- Participated in code reviews and contributed to the improvement of coding standards and best practices.
+- Worked closely with the UX/UI team to ensure a seamless user experience.
+- Debugged and resolved software defects, improving application stability and performance.
+
+Education
+-----------
+Master of Science in Computer Science
+University of California, Berkeley, CA
+Graduated: May 2015
+
+Bachelor of Science in Computer Science
+University of California, Berkeley, CA
+Graduated: May 2013
+
+Skills
+-------
+- Programming Languages: JavaScript, Python, Java, Swift, Kotlin
+- Frameworks: React, Node.js, Express, Django, Spring Boot
+- Databases: MongoDB, MySQL, PostgreSQL
+- Tools: Git, Docker, Jenkins, AWS, Kubernetes
+- Agile methodologies, Test-Driven Development (TDD), Continuous Integration/Continuous Deployment (CI/CD)
+
+Certifications
+---------------
+- AWS Certified Solutions Architect
+- Certified Kubernetes Administrator (CKA)
+
+Projects
+---------
+- E-commerce Platform: Developed a full-stack e-commerce platform using React, Node.js, and MongoDB,
+    handling over 10,000 transactions per day.
+- Chat Application: Built a real-time chat application using WebSocket and Node.js, supporting 
+    thousands of concurrent users.
+
+References
+-----------
+Available upon request.`;
+
+    let loading = writable(false);
+    let remainingGenerations = writable(10);
+    
+    let cancel = false;
+    
+    function streamText() {
         let index = 0;
+        cancel = false;
+        output.update(value => "");
+        loading.set(true);
+        remainingGenerations.update(value => {
+            if(value === 0) return value;
+            return value - 1;
+        });
+        setTimeout(() => { 
+            streamTextR(index);
+            loading.set(false);
+        }, 2000);    
+    }
 
-        function streamText() {
-            if (index < loremText.length) {
-                if(outputInner) {
-                    outputInner.textContent += loremText.substring(index,index + 3);
-                    index+=3;
-                    setTimeout(streamText, 1); // Adjust the timeout to control the speed of the streaming effect
-                }
-            }
-        }
-
-        streamText(); // Start streaming the text
-    });
+    function streamTextR(index) {
+        if(cancel) return;
+        output.update(value => value + resultText.substring(index, index + 3));
+        index+=3;
+        setTimeout(() => streamTextR(index), 1);
+    }
 
     import Navbar from "../../components/Navbar.svelte";
     import Button from '../../components/Button.svelte';
@@ -25,29 +100,23 @@
     import Tabs from '../../components/shoot/Tabs.svelte';
     import TextArea from '../../components/TextArea.svelte';
 
-    import SettingsIcon from '~icons/pajamas/preferences';
-    import Flask from '~icons/mdi/flask';
-    import PayBubble from '~icons/solar/chat-round-money-broken';
     import CheckBoxOutline from '~icons/material-symbols/check-box-outline-blank';
     import CheckBoxFilled from '~icons/material-symbols/check-box-rounded';
-
-    import Face from '~icons/solar/face-scan-circle-linear';
-    import Copy from '~icons/material-symbols/content-copy-outline';
     import Trash from '~icons/ph/trash';
-    import Download from '~icons/material-symbols/download';
-    import Share from '~icons/material-symbols/ios-share';
-    import Mail from '~icons/ic/round-mail';
-    import HandCoin from '~icons/mdi/hand-coin';
-    import Subscription from '~icons/streamline/subscription-cashflow';
-    import Robot from '~icons/material-symbols/robot-2-rounded';
+
+    import Loading from '~icons/svg-spinners/pulse-2';
 
     import { writable } from 'svelte/store';
+    import Settings from '../../components/shoot/Settings.svelte';
 
     let activePage = writable(1);
+    let output = writable('');
     let pages = [1,2,3,4,5,6,7,8,9,10]
 
     function handlePageClick(page) {
         activePage.set(page);
+        output.set("");
+        cancel = true;
     }
 
     let templateItems = 
@@ -149,9 +218,12 @@
         <div class="spacer"></div>
 
         <div class="generate-section">
-            <Button buttonText="Generate" enableLoading={true}></Button>
+            <Button 
+                onClick={() => streamText()}
+                buttonText="Generate" 
+                enableLoading={true}></Button>
             <div class="generate-remaining">
-                <strong>4</strong> remaining
+                <strong>{$remainingGenerations}</strong> remaining
             </div>
         </div>
 
@@ -176,134 +248,24 @@
         <div class="spacer"></div>
 
         <Section>
-            <pre>
-            John Doe
-            Software Engineer
-            john.doe@example.com | (123) 456-7890 | LinkedIn: linkedin.com/in/johndoe
-
-            Summary
-            --------
-            Highly skilled software engineer with 5+ years of experience in developing scalable web applications and working 
-            across the full stack. Proficient in modern frameworks and technologies, with a strong background in computer 
-            science and a passion for continuous learning and improvement.
-
-            Experience
-            -----------
-            Software Engineer
-            Tech Solutions Inc., San Francisco, CA
-            June 2018 - Present
-            - Developed and maintained web applications using React, Node.js, and MongoDB.
-            - Led a team of 5 developers in the design and implementation of a new microservices 
-              architecture, resulting in a 30% increase in system performance.
-            - Collaborated with cross-functional teams to define, design, and ship new features.
-            - Implemented automated testing and continuous integration pipelines, reducing deployment times by 50%.
-
-            Junior Software Engineer
-            Innovative Apps, New York, NY
-            July 2015 - May 2018
-            - Assisted in the development of mobile applications using Swift and Kotlin.
-            - Participated in code reviews and contributed to the improvement of coding standards and best practices.
-            - Worked closely with the UX/UI team to ensure a seamless user experience.
-            - Debugged and resolved software defects, improving application stability and performance.
-
-            Education
-            -----------
-            Master of Science in Computer Science
-            University of California, Berkeley, CA
-            Graduated: May 2015
-
-            Bachelor of Science in Computer Science
-            University of California, Berkeley, CA
-            Graduated: May 2013
-
-            Skills
-            -------
-            - Programming Languages: JavaScript, Python, Java, Swift, Kotlin
-            - Frameworks: React, Node.js, Express, Django, Spring Boot
-            - Databases: MongoDB, MySQL, PostgreSQL
-            - Tools: Git, Docker, Jenkins, AWS, Kubernetes
-            - Agile methodologies, Test-Driven Development (TDD), Continuous Integration/Continuous Deployment (CI/CD)
-
-            Certifications
-            ---------------
-            - AWS Certified Solutions Architect
-            - Certified Kubernetes Administrator (CKA)
-
-            Projects
-            ---------
-            - E-commerce Platform: Developed a full-stack e-commerce platform using React, Node.js, and MongoDB,
-              handling over 10,000 transactions per day.
-            - Chat Application: Built a real-time chat application using WebSocket and Node.js, supporting 
-              thousands of concurrent users.
-
-            References
-            -----------
-            Available upon request.
-            </pre>
+            {#if $loading}
+                <div class="loading-output">
+                    <Loading />
+                    Generating
+                    <Loading />
+                </div>
+            {:else}
+                <pre class="output-inner">
+                    {$output}
+                </pre>
+            {/if}
         </Section>
 
         <div class="input-container-footer"></div>
 
     </div>
 
-    <div class="settings-container">
-
-        <div class="settings-category">
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-header">
-                    <SettingsIcon /> settings 
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-content">
-
-                    <div class="settings-row">
-                        <div class="settings-icon"><Face/></div>
-                        <div class="settings-description">Tone</div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-content">
-                </div>
-            </div>
-        </div>
-
-
-        <div class="settings-category">
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-header">
-                    <Flask /> more 
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-content">
-                </div>
-            </div>
-        </div>
-
-
-        <div class="settings-category">
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-header">
-                    <PayBubble /> buy 
-                </div>
-            </div>
-            <div class="settings-section">
-                <div class="section-background"></div>
-                <div class="settings-section-inner section-inner settings-content">
-                </div>
-            </div>
-        </div>
-
-    </div>
+    <Settings/>
 
 </div>
 
@@ -409,6 +371,11 @@
             color:$primary-color;
         }
 
+        .loading-output {
+            @include flex-center-row;
+            margin:1rem 0;
+        }
+
         pre {
             padding:0 1rem;
             width:calc(#{$input-section-width} - 3rem);
@@ -469,39 +436,6 @@
                             color:$primary-color;
                         }
                     }
-                }
-            }
-        }
-
-    }
-
-    .settings-container {
-
-        flex:1;
-        position:sticky;
-        top:0;
-
-        .settings-category {
-            margin-bottom:2.5rem;
-        }
-
-        .settings-section {
-            position:relative;
-            @include pop-in-transition;
-
-            .settings-section-inner {
-                @include flex-center-row;
-                justify-content: space-between;
-                align-items: center;
-                gap:0.5rem;
-                margin-bottom:0.7rem;
-                &.settings-header {
-                    font-weight:500;       
-                }
-                &.settings-content {
-
-
-
                 }
             }
         }

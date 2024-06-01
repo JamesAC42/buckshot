@@ -1,22 +1,20 @@
 <script>
     import Button from "../Button.svelte";
     import Tab from "./Tab.svelte";
-    export let active=0;
     import { tabsStore } from '../../stores/stores.js';
-    import { get } from "svelte/store";
+    import { get, writable } from "svelte/store";
 
-    let maxTabs = 100;
+    import Plus from '~icons/material-symbols/add-circle-outline-rounded';
+
+    export let active= writable(0);
+
+    let maxTabs = 10;
     
-    /**
-     * @param {CustomEvent} event
-     */
-    const handleTabClick = (event) => {
-        active = event.detail.index;
+    const handleTabClick = (index) => {
+        active.set(index);
     }
-    /**
-     * @param {CustomEvent} event
-     */
-    const handleNewTab = (event) => {
+
+    const handleNewTab = () => {
         if(get(tabsStore).length >= maxTabs) return;
         tabsStore.update(tabs => {
             return [...tabs, "job name"];
@@ -28,16 +26,20 @@
 <div class="tabs">
     {#each $tabsStore as tab, index}
         <Tab 
-            active={active === index}
+            active={$active === index}
             tab={tab}
             index={index}
-            on:click={handleTabClick} />
+            onClick={(index) => handleTabClick(index)} />
     {/each}
     <div class="tab-add">
         <Button
-            on:click={handleNewTab}
+            onClick={handleNewTab}
             disabled={$tabsStore.length >= maxTabs}
-            buttonText="New Tab"></Button>
+            buttonText="New Tab">
+            <div class="add-icon">
+                <Plus/>    
+            </div>    
+        </Button>
     </div>
 </div>
 <style lang="scss">
@@ -53,5 +55,9 @@
         margin-top:1rem;
         @include flex-center-row;
         @include pop-in-transition;
+    }
+    .add-icon {
+        transform:translateY(2px);
+        margin-right:2px;
     }
 </style>

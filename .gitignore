@@ -4,6 +4,9 @@ psql_login.json
 redis_login.json
 openai.txt
 config.json
+anthropic_key.json
+openai_key.json
+paypal_info.json
 
 .DS_Store
 build

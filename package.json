@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "axios": "^1.7.2",
+    "connect-redis": "^5.0.0",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "openai": "^4.47.2",
+    "pg": "^8.11.5",
+    "redis": "^3.1.2",
+    "sequelize": "^6.37.3",
+    "socket.io": "^4.7.5"
+  }
+}

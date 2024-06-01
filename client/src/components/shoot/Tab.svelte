@@ -1,14 +1,9 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
     export let active = false;
     export let tab;
     export let index = 0;
     export let clicked = false;
-    const dispatch = createEventDispatcher();
-
-    function handleClick() {
-        dispatch('click', { index: index });
-    }
+    export let onClick = (index) => {};
 </script>
 
 <div class="section-outer tab-outer {active ? 'active' : ''}">
@@ -17,7 +12,7 @@
         class="section-inner tab-inner {clicked ? 'clicked' : ''}"
         tabindex="0"
         role="button"
-        on:click={handleClick}
+        on:click={() => onClick(index)}
         on:mousedown={() => { clicked = true; }}
         on:mouseup={() => { clicked = false; }}
         on:mouseleave={() => { clicked = false; }}

@@ -1,10 +1,9 @@
 <script>
 
-    import { createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
     export let buttonText = "Click Me";
     export let disabled = false;
     export let enableLoading = false;
+    export let onClick = () => {};
     let showLoading = false;
     let isPressed = false;
 
@@ -19,12 +18,15 @@
     function handleClick() {
         if(showLoading) return;
         
-        dispatch('click');
         if(enableLoading) {
             showLoading = true;
             setTimeout(() => {
                 showLoading = false;
-            }, 3000);
+            }, 2000);
+        }
+
+        if(onClick) {
+            onClick();
         }
     }
 
@@ -44,6 +46,7 @@
 
     <div class="section-background"></div>
     <div class="section-inner button-container-inner">
+        <slot/>
         {buttonText}
         {#if showLoading}
             <div class="loading">
@@ -76,6 +79,7 @@
             @include section-interact;
             display:flex;
             flex-direction: row;
+            align-items: center;
             &:hover {
                 @include section-hover;
             }

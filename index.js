@@ -35,6 +35,9 @@ if(config.local) {
 redisClient.auth(redisLogin.password);
 
 const models = require('./models/models');
+const handleConnection = require('./socket');
+const prompt = require('./controllers/llm/prompt');
+
 
 sequelize.sync()
   .then(() => {
@@ -74,8 +77,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-app.get('/getStats', (req, res) => {
-  getStats(req, res, models);
+app.post('/prompt', async (req, res) => {
+  prompt(req, res, models, redisClient);
 });
 
 io.on('connection', handleConnection);
