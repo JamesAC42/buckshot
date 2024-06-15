@@ -1,71 +1,13 @@
 <script>
     import { onMount } from 'svelte';
+    import { authGuard } from '$lib/authGuard';
 
-    const loremText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum..`;
+    let user = null;
+    onMount(async () => {
+        user = await authGuard();
+    });
 
-    const resultText = 
-`John Doe
-Software Engineer
-john.doe@example.com | (123) 456-7890 | LinkedIn: linkedin.com/in/johndoe
-
-Summary
---------
-Highly skilled software engineer with 5+ years of experience in developing scalable web applications and working 
-across the full stack. Proficient in modern frameworks and technologies, with a strong background in computer 
-science and a passion for continuous learning and improvement.
-
-Experience
------------
-Software Engineer
-Tech Solutions Inc., San Francisco, CA
-June 2018 - Present
-- Developed and maintained web applications using React, Node.js, and MongoDB.
-- Led a team of 5 developers in the design and implementation of a new microservices 
-    architecture, resulting in a 30% increase in system performance.
-- Collaborated with cross-functional teams to define, design, and ship new features.
-- Implemented automated testing and continuous integration pipelines, reducing deployment times by 50%.
-
-Junior Software Engineer
-Innovative Apps, New York, NY
-July 2015 - May 2018
-- Assisted in the development of mobile applications using Swift and Kotlin.
-- Participated in code reviews and contributed to the improvement of coding standards and best practices.
-- Worked closely with the UX/UI team to ensure a seamless user experience.
-- Debugged and resolved software defects, improving application stability and performance.
-
-Education
------------
-Master of Science in Computer Science
-University of California, Berkeley, CA
-Graduated: May 2015
-
-Bachelor of Science in Computer Science
-University of California, Berkeley, CA
-Graduated: May 2013
-
-Skills
--------
-- Programming Languages: JavaScript, Python, Java, Swift, Kotlin
-- Frameworks: React, Node.js, Express, Django, Spring Boot
-- Databases: MongoDB, MySQL, PostgreSQL
-- Tools: Git, Docker, Jenkins, AWS, Kubernetes
-- Agile methodologies, Test-Driven Development (TDD), Continuous Integration/Continuous Deployment (CI/CD)
-
-Certifications
----------------
-- AWS Certified Solutions Architect
-- Certified Kubernetes Administrator (CKA)
-
-Projects
----------
-- E-commerce Platform: Developed a full-stack e-commerce platform using React, Node.js, and MongoDB,
-    handling over 10,000 transactions per day.
-- Chat Application: Built a real-time chat application using WebSocket and Node.js, supporting 
-    thousands of concurrent users.
-
-References
------------
-Available upon request.`;
+    const resultText = "asdf";
 
     let loading = writable(false);
     let remainingGenerations = writable(10);
@@ -169,105 +111,109 @@ Available upon request.`;
 
 <Navbar/>
 
-<div class="container">
-    
-    <Tabs />
+{#if user}
+    <div class="container">
+        
+        <Tabs />
 
-    <div class="input-container">
+        <div class="input-container">
 
-        <input type="text" class="job-name-field" placeholder="Job Title...">
+            <input type="text" class="job-name-field" placeholder="Job Title...">
 
-        <div class="delete-space" title="Delete Workspace">
-            <Trash/>
-        </div>
-
-        <div class="spacer"></div>
-
-        <p>Enter information about yourself here. Just list out the important points — no need for polished sentences or perfect grammar. Buckshot will handle the rewording for you. Simply provide a straightforward list of your qualifications, such as education, work history, skills, notable accomplishments, and anything else you would like to include.</p>
-        <TextArea placeholder="E.g., 'Software engineer, Master's in Computer Science, cloud computing certification, led 10-person developer team.'"/>
-        <div class="spacer"></div>
-        <p>Provide specific details about the job role you are applying for, including required qualifications, skills, and work experience as outlined in the job description. Additionally, you may include insights into the company's culture, values, and mission to tailor your application more closely to the organization. Feel free to just copy paste from LinkedIn or wherever the details are from.</p>
-        <TextArea placeholder="E.g., 'Seeking a seasoned graphic designer with a minimum of 5 years experience in brand development, proficient in Adobe Creative Suite, and familiar with web design principles. The ideal candidate aligns with our company's commitment to sustainability and innovation.'"/>
-
-        <div class="spacer"></div>
-
-        <div class="template-section">
-            <div class="template-section-description">
-                Toggle which sections of the resume you would like to include and which sections to leave out.
+            <div class="delete-space" title="Delete Workspace">
+                <Trash/>
             </div>
-            <div class="template-section-items">
-                {#each templateItems as item (item)}
-                    <div 
-                        class="template-section-item {$activeTemplateItems[item] ? 'active' : ''}" 
-                        on:click={() => toggleTemplateItem(item)}
-                        on:keydown={(event) => {if (event.key === 'Enter') toggleTemplateItem(item)}}
+
+            <div class="spacer"></div>
+
+            <p>Enter information about yourself here. Just list out the important points — no need for polished sentences or perfect grammar. Buckshot will handle the rewording for you. Simply provide a straightforward list of your qualifications, such as education, work history, skills, notable accomplishments, and anything else you would like to include.</p>
+            <TextArea placeholder="E.g., 'Software engineer, Master's in Computer Science, cloud computing certification, led 10-person developer team.'"/>
+            <div class="spacer"></div>
+            <p>Provide specific details about the job role you are applying for, including required qualifications, skills, and work experience as outlined in the job description. Additionally, you may include insights into the company's culture, values, and mission to tailor your application more closely to the organization. Feel free to just copy paste from LinkedIn or wherever the details are from.</p>
+            <TextArea placeholder="E.g., 'Seeking a seasoned graphic designer with a minimum of 5 years experience in brand development, proficient in Adobe Creative Suite, and familiar with web design principles. The ideal candidate aligns with our company's commitment to sustainability and innovation.'"/>
+
+            <div class="spacer"></div>
+
+            <div class="template-section">
+                <div class="template-section-description">
+                    Toggle which sections of the resume you would like to include and which sections to leave out.
+                </div>
+                <div class="template-section-items">
+                    {#each templateItems as item (item)}
+                        <div 
+                            class="template-section-item {$activeTemplateItems[item] ? 'active' : ''}" 
+                            on:click={() => toggleTemplateItem(item)}
+                            on:keydown={(event) => {if (event.key === 'Enter') toggleTemplateItem(item)}}
+                            tabindex="0"
+                            role="button"
+                            aria-pressed={$activeTemplateItems[item] ? 'true' : 'false'}>
+                            {#if $activeTemplateItems[item]}
+                                <CheckBoxFilled/>
+                            {:else}
+                                <CheckBoxOutline/>
+                            {/if}
+                            {item}
+                        </div>
+                    {/each}
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <div class="generate-section">
+                <Button 
+                    onClick={() => streamText()}
+                    buttonText="Generate" 
+                    loading={$loading}></Button>
+                <div class="generate-remaining">
+                    <strong>{$remainingGenerations}</strong> remaining
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <div class="result-pages">
+                {#each pages as page (page)}
+                    <div
+                        on:click={() => handlePageClick(page)}
+                        on:keydown={() => handlePageClick(page)}
                         tabindex="0"
                         role="button"
-                        aria-pressed={$activeTemplateItems[item] ? 'true' : 'false'}>
-                        {#if $activeTemplateItems[item]}
-                            <CheckBoxFilled/>
-                        {:else}
-                            <CheckBoxOutline/>
-                        {/if}
-                        {item}
+                        class="result-page {$activePage === page ? 'active' : ''}">
+                        <div class="section-background"></div>
+                        <div class="result-page-inner">
+                            {page}
+                        </div>
                     </div>
                 {/each}
             </div>
-        </div>
 
-        <div class="spacer"></div>
+            <div class="spacer"></div>
 
-        <div class="generate-section">
-            <Button 
-                onClick={() => streamText()}
-                buttonText="Generate" 
-                enableLoading={true}></Button>
-            <div class="generate-remaining">
-                <strong>{$remainingGenerations}</strong> remaining
-            </div>
-        </div>
-
-        <div class="spacer"></div>
-
-        <div class="result-pages">
-            {#each pages as page (page)}
-                <div
-                    on:click={() => handlePageClick(page)}
-                    on:keydown={() => handlePageClick(page)}
-                    tabindex="0"
-                    role="button"
-                    class="result-page {$activePage === page ? 'active' : ''}">
-                    <div class="section-background"></div>
-                    <div class="result-page-inner">
-                        {page}
+            <Section>
+                {#if $loading}
+                    <div class="loading-output">
+                        <Loading />
+                        Generating
+                        <Loading />
                     </div>
-                </div>
-            {/each}
+                {:else}
+                    <pre class="output-inner">
+                        {$output}
+                    </pre>
+                {/if}
+            </Section>
+
+            <div class="input-container-footer"></div>
+
         </div>
 
-        <div class="spacer"></div>
-
-        <Section>
-            {#if $loading}
-                <div class="loading-output">
-                    <Loading />
-                    Generating
-                    <Loading />
-                </div>
-            {:else}
-                <pre class="output-inner">
-                    {$output}
-                </pre>
-            {/if}
-        </Section>
-
-        <div class="input-container-footer"></div>
+        <Settings/>
 
     </div>
-
-    <Settings/>
-
-</div>
+{:else}
+    <p class="redirecting">Redirecting...</p>
+{/if}
 
 <style lang="scss">
 
@@ -440,6 +386,12 @@ Available upon request.`;
             }
         }
 
+    }
+
+    p.redirecting {
+        margin-top:10rem;
+        font-size:1.5rem;
+        text-align:center;
     }
 
 </style>

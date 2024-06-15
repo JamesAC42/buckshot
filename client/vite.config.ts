@@ -9,5 +9,10 @@ export default defineConfig({
 		Icons({
 		  compiler: 'svelte',
 		})
-	]
+	],
+	server: {
+        proxy: {
+            '/api': 'http://localhost:5000',
+        },
+    },
 });

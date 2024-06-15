@@ -7,6 +7,8 @@ config.json
 anthropic_key.json
 openai_key.json
 paypal_info.json
+captcha.json
+email.json
 
 .DS_Store
 build

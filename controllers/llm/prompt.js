@@ -1,61 +1,28 @@
-const anthropicKey = require("../../loadApiKeys").anthropicKey;
-const axios = require('axios');
-const openai = require("../../load_oai_sdk");
+const models = require("../../llm/models");
+const checkInput = require("../../llm/checkInput");
 
-async function prompt(req, res, model, redisClient) {
+async function prompt(req, res) {
 
     try {
+
         const userInput = req.body.userInput;
-        console.log(userInput);
+
+        if(
+            typeof(userInput) !== "string" ||
+            userInput.length > 1000
+        ) {
+            res.status(500).json({ error: "Invalid input."});
+            return;
+        }
 
         const model = req.body.model;
-        if(model !== "GPT" && model !== "CLAUDE") {
+        if(!models[model]) {
             res.status(400).json({ error: 'Invalid model parameter value' });
             return;
         }
 
-        console.log(model);
+        let inputValid = checkInput(userInput, requiredSections)
 
-        let completion, response;
-        switch(model) {
-
-            case "CLAUDE":
-                response = await axios.post(
-                  'https://api.anthropic.com/v1/messages',
-                    {
-                        model: 'claude-3-opus-20240229',
-                        max_tokens: 1024,
-                        messages: [{ role: 'user', content: userInput }],
-                    },
-                    {
-                        headers: {
-                        'x-api-key': anthropicKey,
-                        'anthropic-version': '2023-06-01',
-                        'content-type': 'application/json',
-                        },
-                    }
-                );
-                
-                if (response.status === 200) {
-                    completion = response.data.content[0].text;
-                    break;
-                } else {
-                    res.status(response.status).json({ error: 'Error from Anthropic API' });
-                    return;
-                }
-                
-            case "GPT":        
-            default:
-
-                response = await openai.chat.completions.create({
-                    messages: [{ role: "system", content: userInput }],
-                    model: "gpt-4o",
-                });
-                console.log(response);
-                completion = response.choices[0];
-        }
-        
-        res.json({ completion });
 
       } catch (error) {
         console.error('Error:', error);

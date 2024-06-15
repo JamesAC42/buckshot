@@ -2,9 +2,8 @@
 
     export let buttonText = "Click Me";
     export let disabled = false;
-    export let enableLoading = false;
+    export let loading = false; 
     export let onClick = () => {};
-    let showLoading = false;
     let isPressed = false;
 
     function handleMouseDown() {
@@ -16,15 +15,6 @@
     }
 
     function handleClick() {
-        if(showLoading) return;
-        
-        if(enableLoading) {
-            showLoading = true;
-            setTimeout(() => {
-                showLoading = false;
-            }, 2000);
-        }
-
         if(onClick) {
             onClick();
         }
@@ -48,7 +38,7 @@
     <div class="section-inner button-container-inner">
         <slot/>
         {buttonText}
-        {#if showLoading}
+        {#if loading}
             <div class="loading">
                 <LoadingIcon />
             </div>
