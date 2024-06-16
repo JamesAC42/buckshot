@@ -7,6 +7,7 @@ CREATE TABLE users
     premium boolean NOT NULL,
     remaining_generations smallint NOT NULL,
     email character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    verified boolean NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 
