@@ -29,7 +29,7 @@
         
         width:100%;
         text-align:center;
-        margin:0.3rem 0;
+        margin:0.2rem 0;
         margin-bottom:1rem;
         opacity:0.3;
 
@@ -45,6 +45,9 @@
 
     }
     .tab-inner {
+
+        word-wrap:break-word;
+
         &:hover {
             @include section-hover;
         }

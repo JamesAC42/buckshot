@@ -1,9 +1,11 @@
 <script>
     export let value = "";
-    export let rows = 5;
+    export let rows = 8;
     export let cols = 50;
     export let disabled = false;
     export let readonly = false;
+    export let onBlur = () => {};
+    export let maxLength = 5000;
     export let placeholder = "Input text...";
 </script>
 
@@ -11,11 +13,13 @@
     <div class="section-background"></div>
     <textarea 
         class="info-input-inner" 
-        bind:value 
+        bind:value={value} 
+        on:blur={onBlur}
         rows={rows} 
         cols={cols} 
         {disabled} 
         {readonly} 
+        maxLength={maxLength}
         placeholder={placeholder}/>
 </div>
 
@@ -29,7 +33,7 @@
     }
 
     textarea.info-input-inner {
-        height:12rem;
+        height:18rem;
         width:calc($input-section-width - 2rem);
         border:1px solid $primary-color;
         border-radius:4px;

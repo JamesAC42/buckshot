@@ -118,6 +118,14 @@ const JobOutput = sequelize.define('JobOutput', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    model: {
+        type: DataTypes.SMALLINT,
+        allowNull: false,
+    },
+    tone: {
+        type: DataTypes.SMALLINT,
+        allowNull: false,
+    }
 }, {
     tableName: 'job_output',
     timestamps: false,
@@ -146,7 +154,7 @@ const Settings = sequelize.define('Settings', {
     generateMode: {
         type: DataTypes.SMALLINT,
         allowNull: false,
-        field: '"generate_mode"',
+        field: 'generate_mode',
     },
 }, {
     tableName: 'settings',

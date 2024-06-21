@@ -4,6 +4,7 @@
 
     import {userStore,jobsStore,settingsStore} from "../../stores/stores.js";
     import { goto } from "$app/navigation";
+    import serializeJobInputs from "$lib/serializeJobInput";
 
     let username = '';
     let email = '';
@@ -60,7 +61,8 @@
             loading = false;
             if (data.success) {
                 userStore.set(data.user);
-                jobsStore.set(data.jobs);
+                const newJobs = serializeJobInput(data.jobs);
+                jobsStore.set(newJobs);
                 settingsStore.set(data.settings);
                 goto("/account");
             } else {
@@ -74,12 +76,10 @@
     }
 
     onMount(() => {
-        // @ts-ignore
         window.handleSubmit = handleSubmit;
     });
     
     onDestroy(() => {
-        // @ts-ignore
         window.handleSubmit = null;
     });
 

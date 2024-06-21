@@ -47,7 +47,7 @@
 
 <div class="payment-options-container">
     <h1>Upgrade to Premium</h1>
-    <p>Exclusive features including more language models, cover letters, and free credits. Or just buy credits to make as many resumes as you need.</p>
+    <p>Exclusive features including cover letter generation, additional language models, community access, and free monthly credits. Or buy credits to make as many resumes as you need.</p>
     <br>
     <PaymentOptions />
 </div>

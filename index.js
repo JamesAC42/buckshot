@@ -36,7 +36,7 @@ redisClient.auth(redisLogin.password);
 
 const datamodels = require('./datamodels/datamodels');
 const handleConnection = require('./socket');
-const prompt = require('./controllers/llm/prompt');
+const generate = require('./controllers/llm/generate');
 const createAccount = require('./controllers/user/createAccount');
 const login = require("./controllers/user/login");
 const getSession = require('./controllers/user/getSession');
@@ -47,6 +47,19 @@ const resetPassword = require('./controllers/user/resetPassword');
 const updateEmail = require('./controllers/user/updateEmail');
 const updateUsername = require('./controllers/user/updateUsername');
 const updatePassword = require('./controllers/user/updatePassword');
+const updateCopyInfo = require('./controllers/settings/updateCopyInfo');
+const updateMode = require('./controllers/settings/updateMode');
+const updateTone = require('./controllers/settings/updateTone');
+const updateModel = require('./controllers/settings/updateModel');
+const createJob = require('./controllers/jobs/createJob');
+const requestDeleteJob = require('./controllers/jobs/deleteJob');
+const {
+  requestSaveJobInput,
+  requestSaveJobTitle,
+  requestSaveJobPersonalInfo,
+  requestSaveJobJobInfo,
+  requestSaveJobRequiredSections
+} = require('./controllers/jobs/saveJobInput');
 
 sequelize.sync()
   .then(() => {
@@ -86,8 +99,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-app.post('/prompt', async (req, res) => {
-  prompt(req, res, models, redisClient);
+app.post('/api/generate', async (req, res) => {
+  generate(req, res, models, redisClient);
 });
 
 app.post('/api/login', async(req, res) => {
@@ -124,6 +137,50 @@ app.post('/api/updatePassword', async (req, res) => {
 
 app.post('/api/updateUsername', async (req, res) => {
   updateUsername(req, res, datamodels);
+});
+
+app.post('/api/updateCopyInfo', async (req, res) => {
+  updateCopyInfo(req, res, datamodels);
+});
+
+app.post('/api/updateMode', async (req, res) => {
+  updateMode(req, res, datamodels);
+});
+
+app.post('/api/updateTone', async (req, res) => {
+  updateTone(req, res, datamodels);
+});
+
+app.post('/api/updateModel', async (req, res) => {
+  updateModel(req, res, datamodels);
+});
+
+app.post('/api/createJob', async (req, res) => {
+  createJob(req, res);
+});
+
+app.post('/api/deleteJob', async (req, res) => {
+  requestDeleteJob(req, res);
+});
+
+app.post('/api/saveJobInput', async (req, res) => {
+  requestSaveJobInput(req, res);
+});
+
+app.post('/api/saveJobTitle', async (req, res) => {
+  requestSaveJobTitle(req, res);
+});
+
+app.post('/api/saveJobPersonalInfo', async (req, res) => {
+  requestSaveJobPersonalInfo(req, res);
+});
+
+app.post('/api/saveJobJobInfo', async (req, res) => {
+  requestSaveJobJobInfo(req, res);
+});
+
+app.post('/api/saveJobRequiredSections', async (req, res) => {
+  requestSaveJobRequiredSections(req, res);
 });
 
 app.get('/api/getSession', async (req, res) => {

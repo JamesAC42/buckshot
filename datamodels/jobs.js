@@ -1,4 +1,7 @@
 const datamodels = require('../datamodels/datamodels');
+const { sections } = require('../datamodels/settings');
+const sequelize = require("../database.js");
+const { v4: uuidv4 } = require('uuid');
 
 const getUserJobs = async (userid) => {
     try {
@@ -8,6 +11,7 @@ const getUserJobs = async (userid) => {
 
         for (const jobInput of jobInputs) {
             jobs[jobInput.id] = jobInput;
+            jobs[jobInput.id].outputs = null;
         }
         return jobs;
     
@@ -20,18 +24,19 @@ const getUserJobs = async (userid) => {
 const createJob = async (userid, title) => {
 
     const newJob = {
+        id: uuidv4(),
         userId: userid,
         title: title,
-        personal_info: '',
-        job_info: '',
-        required_sections: JSON.stringify([
-            datamodels.sections.EDUCATION,
-            datamodels.sections.WORK_HISTORY,
-            datamodels.sections.SUMMARY,
-            datamodels.sections.SKILLS,
-            datamodels.sections.PROJECTS,
-            datamodels.sections.ACADEMIC_ACHIEVEMENTS,
-            datamodels.sections.VOLUNTEERING
+        personalInfo: '',
+        jobInfo: '',
+        requiredSections: JSON.stringify([
+            sections.EDUCATION,
+            sections.WORK_HISTORY,
+            sections.SUMMARY,
+            sections.SKILLS,
+            sections.PROJECTS,
+            sections.ACADEMIC_ACHIEVEMENTS,
+            sections.VOLUNTEERING
         ])
     };
 
@@ -46,17 +51,30 @@ const createJob = async (userid, title) => {
 
 // returns bool based on whether userid is owner of job
 const validateJob = async (userid, job) => {
+
+    console.log(userid, job);
     const userJob = await datamodels.JobInput.findOne({ where: { id: job, userId: userid } });
+    console.log(userJob);
     return !!userJob;
 }
 
 const deleteJob = async (userid, job) => {
-    const userJob = await datamodels.JobInput.findOne({ where: { id: job, userId: userid } });
-    if (userJob) {
-        await datamodels.JobInput.destroy({ where: { id: job } });
-        return true;
+    try {
+        const userJob = await datamodels.JobInput.findOne({ where: { id: job, userId: userid } });
+        if (userJob) {
+            
+            await sequelize.transaction(async (t) => {
+                await datamodels.JobOutput.destroy({ where: { job: job } }, { transaction: t });
+                await datamodels.JobInput.destroy({ where: { id: job } }, { transaction: t });
+            });
+    
+            return true;
+        }
+        return false;
+    } catch(err) {
+        console.error(err);
+        return false;
     }
-    return false;
 }
 
 const setJobTitle = async (job, title) => {

@@ -18,14 +18,14 @@ body {
 }
 
 .container {
-    padding:0 5rem;
+    padding:0 2rem;
     display:flex;
     flex-direction:row;
     position:relative;
     overflow-y:scroll;
-    height:calc(100vh - 8rem);
-    padding-top:3rem;
-    gap:3rem;
+    height:calc(100vh - 7rem);
+    padding-top:2rem;
+    gap:2rem;
 }
 
 .section-outer {
@@ -33,6 +33,10 @@ body {
     width:fit-content;
     width:$input-section-width;
     margin-bottom:1rem;
+}
+
+.spacer {
+    height:0.7rem;
 }
 
 .section-background {

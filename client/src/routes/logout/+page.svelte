@@ -5,6 +5,8 @@
 
   import { userStore, jobsStore, settingsStore } from "../../stores/stores";
 
+  console.log("asdfasdf");
+
   onMount(async () => {
     try {
       // Make a POST request to the logout API endpoint
@@ -34,3 +36,10 @@
 <div>
   <p>Logging out...</p>
 </div>
+
+<style>
+  p {
+    margin-top:10rem;
+    text-align:center;
+  }
+</style>

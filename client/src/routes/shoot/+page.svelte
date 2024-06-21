@@ -1,106 +1,189 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
+    import { get, writable } from 'svelte/store';
+
     import { authGuard } from '$lib/authGuard';
-
-    let user = null;
-    onMount(async () => {
-        user = await authGuard();
-    });
-
-    const resultText = "asdf";
-
-    let loading = writable(false);
-    let remainingGenerations = writable(10);
-    
-    let cancel = false;
-    
-    function streamText() {
-        let index = 0;
-        cancel = false;
-        output.update(value => "");
-        loading.set(true);
-        remainingGenerations.update(value => {
-            if(value === 0) return value;
-            return value - 1;
-        });
-        setTimeout(() => { 
-            streamTextR(index);
-            loading.set(false);
-        }, 2000);    
-    }
-
-    function streamTextR(index) {
-        if(cancel) return;
-        output.update(value => value + resultText.substring(index, index + 3));
-        index+=3;
-        setTimeout(() => streamTextR(index), 1);
-    }
+    import postFetch from '$lib/postFetch';
 
     import Navbar from "../../components/Navbar.svelte";
     import Button from '../../components/Button.svelte';
-    import Section from '../../components/Section.svelte';
     import Tabs from '../../components/shoot/Tabs.svelte';
-    import TextArea from '../../components/TextArea.svelte';
-
-    import CheckBoxOutline from '~icons/material-symbols/check-box-outline-blank';
-    import CheckBoxFilled from '~icons/material-symbols/check-box-rounded';
-    import Trash from '~icons/ph/trash';
-
-    import Loading from '~icons/svg-spinners/pulse-2';
-
-    import { writable } from 'svelte/store';
     import Settings from '../../components/shoot/Settings.svelte';
+    import Output from '../../components/shoot/Output.svelte';
+    import OutputPages from '../../components/shoot/OutputPages.svelte';
+    import UserInput from '../../components/shoot/UserInput.svelte';
+    import SectionInput from '../../components/shoot/SectionInput.svelte';
 
-    let activePage = writable(1);
-    let output = writable('');
-    let pages = [1,2,3,4,5,6,7,8,9,10]
+    import Trash from '~icons/ph/trash';
+    import LoadingIcon from '~icons/svg-spinners/pulse-2';
+
+    import { jobsStore } from '../../stores/stores';
+    import { saveJobTitle } from '$lib/saveJobInput';
+
+    let user = null;
+    let jobs = null;
+    let unsubscribe = null;
+
+    let activeJob = writable("");
+
+    let loading = writable(false);
+    let loadingDelete = writable(false);
+    let outputText = writable("");
+    let stopStreaming = writable(false);
+    let activePage = writable(0);
+
+    let title = "";
+
+    onMount(async () => {
+        user = await authGuard();
+        unsubscribe = jobsStore.subscribe(async (value) => {
+            jobs = value;
+
+            if(jobs && Object.keys(jobs).length === 0) {
+                const response = await postFetch("/api/createJob", null);
+                if(response.success) {
+                    jobsStore.update(oldJobs => {
+                        if(oldJobs) {
+                            oldJobs[response.job.id] = response.job;
+                            oldJobs[response.job.id].requiredSections = JSON.parse(oldJobs[response.job.id].requiredSections);
+                            return oldJobs;
+                        } else {
+                            return null;
+                        }
+                    })
+
+                } else {
+                    console.error(response.message);
+                }
+            }
+
+        });
+    });
+
+    onDestroy(() => {
+        if(unsubscribe) {
+            unsubscribe();
+        }
+    });
+
+    function updateActiveJob(job) {
+        activeJob.set(job);
+        if(jobs && jobs[job]) {
+            title = jobs[job].title;
+        }
+    }
 
     function handlePageClick(page) {
         activePage.set(page);
-        output.set("");
-        cancel = true;
+        stopStreaming.set(true);
     }
 
-    let templateItems = 
-    [
-        "Education",
-        "Work History",
-        "Objective",
-        "Skills",
-        "Volunteering",
-        "Certifications",
-        "Awards",
-        "Academic Achievements",
-        "References",
-        "Hobbies",
-        "Projects",
-        "Websites",
-        "Contact Info",
-        "Other Stuff (Smart)"
-    ]
-
-    let activeTemplateItems = writable({
-        "Education":1,
-        "Work History":1,
-        "Projects":1,
-        "Contact Info":1,
-        "Skills":1,
-        "Certifications":1
-    });
-    
-    function toggleTemplateItem(item) {
-        if(!item) return;
-        if(typeof(item) !== "string") return;
-        // @ts-ignore
-        activeTemplateItems.update(items => {
-            if(items[item]) {
-                // @ts-ignore
-                const { [item]: _, ...rest } = items;
-                return rest;
-            } else {
-                return { ...items, [item]: 1 };
+    function saveTitle() {
+        jobsStore.update(oldJobs => {
+            if(oldJobs === null) return null;
+            let jobData = oldJobs[$activeJob];
+            if(jobData) {
+                jobData.title = title;
+                saveJobTitle(jobData.id, title);
             }
-        });
+
+            return oldJobs;
+        })
+    }
+
+    async function deleteJob() {
+        if($loadingDelete) return;
+        let job = get(activeJob);
+        if(!job) return;
+        let jobAmount = Object.keys(jobs).length;
+        if(jobAmount <= 1) return;
+
+        if(!window.confirm("Are you sure you want to delete this job?")) return;
+        
+        loadingDelete.set(true);
+        const response = await postFetch("/api/deleteJob", {job});
+        loadingDelete.set(false);
+        if(response.success) {
+            
+            let index = 0;
+            let ids = Object.keys(jobs);
+            for(let i = 0; i < ids.length; i++) {
+                if(ids[i] === job) {
+                    index = i;
+                    break;
+                }
+            }
+            
+            let newActive;
+            if(index < ids.length - 1) {
+                newActive = ids[index + 1];
+            } else {
+                newActive = ids[index - 1];
+            }
+
+            jobsStore.update((oldJobs) => {
+                if(oldJobs === null) return null;
+                let oj = JSON.parse(JSON.stringify(oldJobs));
+                delete oj[job];
+                return oj;
+            });
+            activeJob.set(newActive);
+            localStorage.setItem('activetab', newActive);
+
+        } else {
+            console.error(response.message);
+        }
+
+    }
+
+    async function generate() {
+
+        if (!jobs || !jobs[$activeJob]) return;
+        
+        loading.set(true);
+        try {
+            const response = await postFetch("/api/generate", { jobId: $activeJob });
+            if (response.success) {
+                outputText.set(response.generatedText);
+                jobsStore.update(jobs => {
+                    if (jobs && jobs[$activeJob]) {
+                        if (!jobs[$activeJob].outputs) {
+                            jobs[$activeJob].outputs = [];
+                        }
+                        jobs[$activeJob].outputs.push({
+                            id: jobs[$activeJob].outputs.length + 1,
+                            output: response.generatedText,
+                            tone: response.tone || 0,  // Assuming tone is provided in the response, default to 0 if not
+                            model: response.model || 0,  // Assuming model is provided in the response, default to 0 if not
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                    return jobs;
+                });
+            } else {
+                console.error("Generation failed:", response.message);
+                outputText.set("Generation failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error during generation:", error);
+            outputText.set("An error occurred. Please try again.");
+        } finally {
+            loading.set(false);
+        }
+
+    }
+
+    let disableGenerateButton = false;
+    $: {
+
+        disableGenerateButton = !jobs || 
+                           !jobs[$activeJob] || 
+                           !user || 
+                           !jobs[$activeJob].personalInfo || 
+                           !jobs[$activeJob].jobInfo || 
+                           jobs[$activeJob].requiredSections.length === 0 || 
+                           !user.verified || 
+                           user.remainingGenerations <= 0;
     }
 
 </script>
@@ -114,98 +197,59 @@
 {#if user}
     <div class="container">
         
-        <Tabs />
+        <Tabs 
+            active={$activeJob}
+            updateActive={(job) => updateActiveJob(job)}/>
 
         <div class="input-container">
 
-            <input type="text" class="job-name-field" placeholder="Job Title...">
+            <input type="text" bind:value={title} maxLength={100} class="job-name-field" on:blur={saveTitle} placeholder="Job Title...">
+            <div class="spacer"></div>
 
+            {#if Object.keys(jobs).length > 1 && jobs[$activeJob]}
             <div class="delete-space" title="Delete Workspace">
-                <Trash/>
-            </div>
-
-            <div class="spacer"></div>
-
-            <p>Enter information about yourself here. Just list out the important points — no need for polished sentences or perfect grammar. Buckshot will handle the rewording for you. Simply provide a straightforward list of your qualifications, such as education, work history, skills, notable accomplishments, and anything else you would like to include.</p>
-            <TextArea placeholder="E.g., 'Software engineer, Master's in Computer Science, cloud computing certification, led 10-person developer team.'"/>
-            <div class="spacer"></div>
-            <p>Provide specific details about the job role you are applying for, including required qualifications, skills, and work experience as outlined in the job description. Additionally, you may include insights into the company's culture, values, and mission to tailor your application more closely to the organization. Feel free to just copy paste from LinkedIn or wherever the details are from.</p>
-            <TextArea placeholder="E.g., 'Seeking a seasoned graphic designer with a minimum of 5 years experience in brand development, proficient in Adobe Creative Suite, and familiar with web design principles. The ideal candidate aligns with our company's commitment to sustainability and innovation.'"/>
-
-            <div class="spacer"></div>
-
-            <div class="template-section">
-                <div class="template-section-description">
-                    Toggle which sections of the resume you would like to include and which sections to leave out.
-                </div>
-                <div class="template-section-items">
-                    {#each templateItems as item (item)}
-                        <div 
-                            class="template-section-item {$activeTemplateItems[item] ? 'active' : ''}" 
-                            on:click={() => toggleTemplateItem(item)}
-                            on:keydown={(event) => {if (event.key === 'Enter') toggleTemplateItem(item)}}
-                            tabindex="0"
-                            role="button"
-                            aria-pressed={$activeTemplateItems[item] ? 'true' : 'false'}>
-                            {#if $activeTemplateItems[item]}
-                                <CheckBoxFilled/>
-                            {:else}
-                                <CheckBoxOutline/>
-                            {/if}
-                            {item}
-                        </div>
-                    {/each}
+                <div
+                    on:click={deleteJob}
+                    on:keydown={deleteJob}
+                    role="button"
+                    tabindex="0" 
+                    class="delete-icon">
+                    {#if $loadingDelete}
+                    <LoadingIcon />
+                    {:else}
+                    <Trash/>
+                    {/if}
                 </div>
             </div>
+            {/if}
 
+            <UserInput 
+                activeJob={$activeJob}/>
+            <div class="spacer"></div>
+
+            <SectionInput 
+                activeJob={$activeJob}/>
             <div class="spacer"></div>
 
             <div class="generate-section">
                 <Button 
-                    onClick={() => streamText()}
-                    buttonText="Generate" 
+                    onClick={() => generate()}
+                    buttonText="Generate"
+                    disabled={disableGenerateButton}
                     loading={$loading}></Button>
                 <div class="generate-remaining">
-                    <strong>{$remainingGenerations}</strong> remaining
+                    <strong>{user.remainingGenerations}</strong> remaining
                 </div>
             </div>
-
             <div class="spacer"></div>
 
-            <div class="result-pages">
-                {#each pages as page (page)}
-                    <div
-                        on:click={() => handlePageClick(page)}
-                        on:keydown={() => handlePageClick(page)}
-                        tabindex="0"
-                        role="button"
-                        class="result-page {$activePage === page ? 'active' : ''}">
-                        <div class="section-background"></div>
-                        <div class="result-page-inner">
-                            {page}
-                        </div>
-                    </div>
-                {/each}
-            </div>
-
+            <OutputPages />
             <div class="spacer"></div>
-
-            <Section>
-                {#if $loading}
-                    <div class="loading-output">
-                        <Loading />
-                        Generating
-                        <Loading />
-                    </div>
-                {:else}
-                    <pre class="output-inner">
-                        {$output}
-                    </pre>
-                {/if}
-            </Section>
-
-            <div class="input-container-footer"></div>
-
+            
+            <Output
+                loading={$loading}
+                output={$outputText} />
+                <div class="input-container-footer"></div>
         </div>
 
         <Settings/>
@@ -217,20 +261,26 @@
 
 <style lang="scss">
 
-    @import "../../styles/variables.scss";
     @import "../../styles/mixins.scss";
-
-    @mixin wrap-flex-row {
-        display:flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        width:100%;
-    }
 
     .input-container {
         
         flex:1;
         position: relative;
+        
+        input.job-name-field {
+            padding:1rem 0;
+            font-size:1.4rem;
+            border:none;
+            width:calc(#{$input-section-width} - 10vw  + 2rem);
+            border-bottom:1px solid $primary-color;
+            font-family: 'Questrial',sans-serif;
+            color:$primary-color;
+        
+            &:focus {
+                outline:none;
+            }
+        }
 
         .delete-space {
             position:absolute;
@@ -241,8 +291,8 @@
             transition:all .2s ease-in-out;
             cursor:pointer;
             transform:translate(0,50%);
-            svg {
-                transform:translate(0,10px);
+            .delete-icon {
+                transform:translate(0,2px);
             }
             &:hover {
                 background:$primary-color;
@@ -258,134 +308,10 @@
             gap:1rem;
             margin-top:-0.9rem;
         }
-
-        .template-section {
-            margin-bottom:1rem;
-            position: relative;
-            .template-section-description {
-                margin-bottom:0.5rem;
-                text-align:center;
-            }
-            .template-section-items {
-                @include wrap-flex-row;
-                justify-content: center;
-                gap:0.5rem;
-                width:100%;
-                .template-section-item {
-                    cursor:pointer;
-                    display:flex;
-                    flex-direction: row;
-                    align-items:center;
-                    padding:0.3rem 0.8rem;
-                    gap:0.5rem;
-                    border-radius:0.3rem;
-                    transition:all .1s ease-in-out;
-                    
-                    &:hover, &.active {
-                        background:$primary-color;
-                        color:$secondary-color;
-                    }
-
-                    &:hover {
-                        opacity:0.6;
-                    }
-                }
-            }
-        }
-
-        input.job-name-field {
-            padding:1rem 0;
-            font-size:1.4rem;
-            border:none;
-            width:calc(#{$input-section-width} - 10vw  + 2rem);
-            border-bottom:1px solid $primary-color;
-            font-family: 'Questrial',sans-serif;
-            color:$primary-color;
-        }
         
-        input.job-name-field:focus {
-            outline:none;
-        }
-
-        .spacer {
-            height:0.7rem;
-        }
-        
-        p {
-            margin:1rem 0;
-            width:$input-section-width;
-            color:$primary-color;
-        }
-
-        .loading-output {
-            @include flex-center-row;
-            margin:1rem 0;
-        }
-
-        pre {
-            padding:0 1rem;
-            width:calc(#{$input-section-width} - 3rem);
-            white-space:pre-line;
-            word-wrap:break-word;
-            font-family:"PT Mono",monospace;
-        }
-
         .input-container-footer {
             height:3rem;
         }
-
-        @keyframes shadow-drop {
-            0% {
-                transform:none;
-            }
-            100% {
-                transform:translate(-2px, 2px);
-            }
-        }
-
-        .result-pages {
-            @include wrap-flex-row;
-            align-items: center;
-            gap:0.5rem;
-            .result-page {
-                position:relative;
-                cursor:pointer;
-                @include pop-in-transition;
-                .section-background {
-                    opacity:0;
-                }
-                .result-page-inner {
-                    padding:0.4rem 0.7rem;
-                    background:$secondary-color;
-                    border-radius:0.5rem;
-                    transition:all .1s linear;
-                    border:1px solid $secondary-color;
-                }
-                &:hover {
-                    .result-page-inner {
-                        background:$primary-color;
-                        color:$secondary-color;
-                    }
-                }
-                &.active {
-                    .section-background {
-                        opacity:1;
-                        animation:shadow-drop .1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1;
-                    }
-                    .result-page-inner {
-                        border:1px solid $primary-color;
-                        border-radius:5px;
-                    }
-                    &:hover {
-                        .result-page-inner {
-                            background:$secondary-color;
-                            color:$primary-color;
-                        }
-                    }
-                }
-            }
-        }
-
     }
 
     p.redirecting {

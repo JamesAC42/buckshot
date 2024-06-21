@@ -30,9 +30,12 @@
     {#if user}
         <a href="/shoot">shoot</a>
         <a href="/connect">connect</a>
-        {#if !user.premium}
-        <a href="/premium"><span class="notif"></span>premium</a>
-        {/if}
+        <a href="/premium">
+          {#if !user.premium}
+          <span class="notif"></span>
+          {/if}
+          premium
+        </a>
         <a href="/account">account</a>
         <a href="/logout">logout</a>
     {:else}

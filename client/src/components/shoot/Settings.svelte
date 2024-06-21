@@ -1,50 +1,137 @@
 <script>
-
     
     import Face from '~icons/solar/face-scan-circle-linear';
     import Copy from '~icons/material-symbols/content-copy-outline';
     import Download from '~icons/material-symbols/download';
     import Share from '~icons/material-symbols/ios-share';
-    import Mail from '~icons/material-symbols-light/mail-outline-rounded';
+    import Mail from '~icons/material-symbols/mail-outline';
     import HandCoin from '~icons/mdi/hand-coin';
     import Subscription from '~icons/fluent/premium-28-filled';
     import Robot from '~icons/material-symbols/robot-2-outline';
     import SettingsIcon from '~icons/pajamas/preferences';
     import Flask from '~icons/mdi/flask';
     import Feedback from '~icons/material-symbols/feedback-outline-rounded';
-
     import Info from '~icons/solar/info-circle-broken';
-
     import PayBubble from '~icons/solar/chat-round-money-broken';
+
     import Slider from '../../components/Slider.svelte';
-    import { writable } from 'svelte/store';
+    import { get, writable } from 'svelte/store';
 
-    const toneSettings = ["curt", "hammy", "casual"];
-    const selectedTone = writable(0);
-    const updateTone = (index) => {
-        selectedTone.update(value => index);
+    import { settingsStore, userStore } from "../../stores/stores";
+
+    import { tone, mode, models, copyPersonalInfo } from "../../lib/userSettings";
+
+    let settings = null;
+    let user = null;
+    let unsubscribeSettings = null;
+    let unsubscribeUser = null;
+
+    import { onDestroy, onMount } from 'svelte';
+
+    async function saveSetting(url, settingObject) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settingObject)
+            });
+            const data = await response.json();
+            return data.success;
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            return false;
+        }
     }
 
-    const modelSettings = ["gpt-4", "gpt-4o", "claude-3"];
+    const toneSettings = tone;
+    const selectedTone = writable(1);
+    const updateTone = async (t) => {
+        let saveVal = get(selectedTone);
+        selectedTone.update(value => tone[t]);
+        let success = await saveSetting("/api/updateTone", {
+            tone: t
+        });
+        if(!success) {
+            selectedTone.update(value => saveVal);
+        }
+    }
+
+    const modelSettings = models;
     const selectedModel = writable(1);
-    const updateModel = (index) => {
-        selectedModel.update(value => index);
+    const updateModel = async (m) => {
+        let saveVal = get(selectedModel);
+        selectedModel.update(value => models[m]);
+        let success = await saveSetting("/api/updateModel", {
+            model: m
+        });
+        if(!success) {
+            selectedModel.update(value => saveVal);
+        }
     }
 
-    const outputMode = ["resume", "cover"];
-    const selectedOutputMode = writable(0);
-    const updateOutputMode = (index) => {
-        selectedOutputMode.update(value => index);
+    const outputMode = mode;
+    const selectedOutputMode = writable(1);
+    const updateOutputMode = async (m) => {
+        let saveVal = get(selectedOutputMode);
+        selectedOutputMode.update(value => mode[m]);
+        let success = await saveSetting("/api/updateMode", {
+            mode: m
+        });
+        if(!success) {
+            selectedOutputMode.update(value => saveVal);
+        }
     }
 
-    const copyPersonal = ["copy", "reset"];
-    const copyMode = writable(0);
-    const updateCopyMode = (index) => {
-        copyMode.update(value => index);
+    const copyPersonal = copyPersonalInfo;
+    const copyMode = writable(1);
+    const updateCopyMode = async (c) => {
+        let saveVal = get(copyMode);
+        copyMode.update(value => copyPersonalInfo[c]);
+        let success = await saveSetting("/api/updateCopyInfo", {
+            copyPersonalInfo: (get(copyMode) === 1) ? true : false
+        });
+        if(!success) {
+            copyMode.update(value => saveVal);
+        }
+    }
+    
+    onMount(() => {
+        unsubscribeSettings = settingsStore.subscribe(value => {
+            settings = value;
+            selectedTone.update(val => settings.tone);
+            selectedModel.update(val => settings.model);
+            selectedOutputMode.update(val => settings.mode);
+            copyMode.update(val => settings.copyPersonalInfo);
+        });
+        unsubscribeUser = userStore.subscribe(value => {
+            user = value;
+        })
+    });
+
+    onDestroy(() => {
+        if(unsubscribeSettings) {
+            unsubscribeSettings();
+        }
+        if(unsubscribeUser) {
+            unsubscribeUser();
+        }
+    });
+    
+    $: settingsSectionClass = (user) => {
+        let className = "settings-section-inner section-inner settings-content " ;
+        if(!user.premium || !user.verified) {
+            className += "disabled";
+        }
+        return className;
     }
 
 </script>
 
+{#if !user || !settings}
+<div class="empty"></div>
+{:else}
 <div class="settings-container">
 
     <div class="settings-category">
@@ -56,12 +143,11 @@
         </div>
         <div class="settings-section">
             <div class="section-background"></div>
-            <div class="settings-section-inner section-inner settings-content">
+            <div class={settingsSectionClass(user)}>
 
                 <div class="settings-row">
                     <div class="settings-icon"><Face/></div>
                     <div class="settings-description">Tone</div>
-                    <div class="settings-info"><Info/></div>
                     <div class="settings-control">
                         <Slider
                             items={toneSettings}
@@ -72,7 +158,6 @@
                 <div class="settings-row">
                     <div class="settings-icon"><Copy/></div>
                     <div class="settings-description">Copy Personal Info</div>
-                    <div class="settings-info"><Info/></div>
                     <div class="settings-control">
                         <Slider
                             items={copyPersonal}
@@ -86,13 +171,11 @@
         </div>
         <div class="settings-section">
             <div class="section-background"></div>
-            <div class="settings-section-inner section-inner settings-content disabled">
-
+            <div class={settingsSectionClass(user)}>
 
                 <div class="settings-row">
                     <div class="settings-icon"><Robot/></div>
                     <div class="settings-description">Model</div>
-                    <div class="settings-info"><Info/></div>
                     <div class="settings-control">
                         <Slider
                             items={modelSettings}
@@ -103,7 +186,6 @@
                 <div class="settings-row">
                     <div class="settings-icon"><Mail/></div>
                     <div class="settings-description">Mode</div>
-                    <div class="settings-info"><Info/></div>
                     <div class="settings-control">
                         <Slider
                             items={outputMode}
@@ -128,14 +210,6 @@
             <div class="settings-section-inner section-inner settings-content">
 
                 <div class="settings-row">
-                    <div class="action-item">
-                        <div class="action-item-icon">
-                            <Download />
-                        </div>
-                        <div class="action-item-description">
-                            Download
-                        </div>
-                    </div>
                     <div class="action-item">
                         <div class="action-item-icon">
                             <Share />
@@ -196,6 +270,7 @@
         </div>
     </div>
 </div>
+{/if}
 
 <style lang="scss">
 
@@ -206,6 +281,8 @@
         flex:1;
         position:sticky;
         top:0;
+
+        min-width:20rem;
 
         .settings-category {
             margin-bottom:2.5rem;
@@ -236,7 +313,7 @@
                         display:flex;
                         flex-direction: row;
                         align-items: center;
-                        gap:5px;
+                        gap:10px;
 
                         .settings-icon,
                         .settings-info {
@@ -245,6 +322,7 @@
 
                         .settings-info {
                             font-size:0.6rem;
+                            width:fit-content;
                         }
 
                         .settings-description {
@@ -289,6 +367,10 @@
                                     background:#484bff;
                                     color:$secondary-color;
                                 }
+                            }
+
+                            .payment-item-description {
+                                white-space: nowrap;
                             }
                         }
                     }

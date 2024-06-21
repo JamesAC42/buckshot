@@ -25,6 +25,13 @@
     justify-content: center;
 }
 
+@mixin wrap-flex-row {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width:100%;
+}
+
 @mixin pop-in-transition {
     animation:pop-in .2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1;
 }

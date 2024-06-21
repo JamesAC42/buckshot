@@ -18,6 +18,8 @@ const getSession = async (req, res, datamodels) => {
             let settings = await getUserSettings(user.id);
             let jobs = await getUserJobs(user.id);
 
+            console.log(jobs);
+
             res.json({
                 success:true,
                 user,

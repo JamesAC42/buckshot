@@ -90,7 +90,6 @@
                         let newUsernameStore = newUsername;
                         userStore.update(oldUser => {
                             if (oldUser) {
-                                // @ts-ignore
                                 oldUser.username = newUsernameStore;
                             }
                             return oldUser;
@@ -101,9 +100,7 @@
                         let newEmailStore = newEmail;
                         userStore.update(oldUser => {
                             if (oldUser) {
-                                // @ts-ignore
                                 oldUser.email = newEmailStore;
-                                // @ts-ignore
                                 oldUser.verified = false;
                             }
                             return oldUser;

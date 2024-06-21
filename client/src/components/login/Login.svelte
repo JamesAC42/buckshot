@@ -1,8 +1,7 @@
 <script>
-  import { goto } from "$app/navigation";
-
-
+    import { goto } from "$app/navigation";
     import {userStore, jobsStore, settingsStore} from "../../stores/stores.js";
+    import serializeJobInput from "$lib/serializeJobInput";
 
     let email = '';
     let password = '';
@@ -11,8 +10,6 @@
     let loading = false;
 
     function handleSubmit() {
-
-        console.log("asdfads");
 
         if (!email || !password) {
             error = 'Email and password are required.';
@@ -41,7 +38,8 @@
             loading = false;
             if (data.success) {
                 userStore.set(data.user);
-                jobsStore.set(data.jobs);
+                const newJobs = serializeJobInput(data.jobs);
+                jobsStore.set(newJobs);
                 settingsStore.set(data.settings);
                 goto("/account");
             } else {

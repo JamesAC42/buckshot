@@ -45,6 +45,8 @@ CREATE TABLE job_output
     job uuid NOT NULL,
     id smallint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 32767 CACHE 1 ),
     output text COLLATE pg_catalog."default" NOT NULL,
+    tone smallint NOT NULL,
+    model smallint NOT NULL,
     CONSTRAINT job_output_pkey PRIMARY KEY (job, id),
     CONSTRAINT job FOREIGN KEY (job)
         REFERENCES public.job_input (id) MATCH SIMPLE
@@ -58,7 +60,7 @@ CREATE TABLE settings
     tone smallint NOT NULL,
     copy_personal_info boolean NOT NULL,
     model smallint NOT NULL,
-    " generate_mode" smallint NOT NULL,
+    generate_mode smallint NOT NULL,
     CONSTRAINT settings_pkey PRIMARY KEY (user_id),
     CONSTRAINT user_id FOREIGN KEY (user_id)
         REFERENCES public.users (id) MATCH SIMPLE

@@ -1,26 +1,27 @@
 <script>
     import Diamond from "~icons/cil/diamond";
     import HandCoin from "~icons/mdi/hand-coin";
+    import Check from "~icons/material-symbols/check-circle";
 </script>
 
 <div class="buy">
-  <div class="buy-card">
-    <div class="buy-title">Credits</div>
+  <div class="buy-card free">
+    <div class="buy-title">Free</div>
     <div class="buy-pricing">
-      <div class="amount">$5</div>
-      <div class="frequency">/ credit</div>
+      <div class="amount">$0</div>
+      <div class="frequency">/ month</div>
     </div>
-    <div class="purchase-button">Buy Now</div>
+    <div class="purchase-button">Account Required</div>
     <div class="transaction-items">
       <ul>
-        <li>
-          1 credit = 3 resumes (or cover letters if you have a premium
-          subscription)
-        </li>
+        <li>2 credits free (6 resumes)</li>
+        <li>Manage up to 10 jobs at once</li>
+        <li>Generate using state of the art language model GPT-4O</li>
+        <li>Limited access to community features</li>
       </ul>
     </div>
     <div class="buy-icon">
-      <HandCoin />
+      <Check />
     </div>
   </div>
   <div class="buy-card premium">
@@ -32,15 +33,36 @@
     <div class="purchase-button">Subscribe</div>
     <div class="transaction-items">
       <ul>
-        <li>5 tokens per month (15 resumes)</li>
-        <li>No ads</li>
         <li>Generate cover letters</li>
-        <li>Use additional models (GPT-4-Turbo and Claude Opus)</li>
-        <li>Access to community chat and forum</li>
+        <li>5 tokens per month (15 resumes/ cover letters)</li>
+        <li>No ads</li>
+        <li>Manage unlimited jobs at once</li>
+        <li>Access to additional frontier language models (GPT-4-Turbo and Claude Opus)</li>
+        <li>Full access to community chat and forum</li>
       </ul>
     </div>
     <div class="buy-icon">
       <Diamond />
+    </div>
+  </div>
+  
+  <div class="buy-card">
+    <div class="buy-title">Credits</div>
+    <div class="buy-pricing">
+      <div class="amount">$5</div>
+      <div class="frequency">/ credit</div>
+    </div>
+    <div class="purchase-button">Buy Now</div>
+    <div class="transaction-items">
+      <ul>
+        <li>
+          3 resumes (or cover letters if you have a premium
+          subscription)
+        </li>
+      </ul>
+    </div>
+    <div class="buy-icon">
+      <HandCoin />  
     </div>
   </div>
 </div>
@@ -63,12 +85,26 @@
             background: $primary-color;
             color: $secondary-color;
             position: relative;
-            min-width: 12rem;
+            min-width: 16rem;
 
             &.premium {
                 background: #484bff;
                 color: $secondary-color;
                 box-shadow: 0 0 15px 2px #484bff;
+                box-shadow: 0 0 20px 4px #484bff;
+            }
+
+            &.free {
+              background:$secondary-color;
+              color: $primary-color;
+              border:1px solid $primary-color;
+
+              .purchase-button {
+                cursor:default;
+                &:hover {
+                  opacity:1;
+                }
+              }
             }
 
             .buy-title {
@@ -100,6 +136,12 @@
                 &:hover {
                 opacity: 0.8;
                 }
+            }
+            .transaction-items {
+              ul {
+                padding-left:1.8rem;
+                padding-right:0.5rem;
+              }
             }
             .buy-icon {
                 position: absolute;

@@ -2,14 +2,19 @@ const datamodels = require('../datamodels/datamodels');
 const models = require('../llm/models');
 
 const tone = {
-    CURT: 1,
-    HAMMY: 2,
-    CASUAL: 3
+    STANDARD: 1,
+    CURT: 2,
+    HAMMY: 3,
+    1: "STANDARD",
+    2: "CURT",
+    3: "HAMMY"
 };
 
 const mode = {
     RESUME: 1,
-    COVER: 2
+    COVER: 2,
+    1: "RESUME",
+    2: "COVER"
 }
 
 const sections = {
@@ -42,7 +47,17 @@ const getUserSettings = async (userid) => {
                 generateMode: mode.RESUME // Default generate mode
             });
         }
-        return settings;
+
+        const settings_object = {
+            tone: settings.tone,
+            copyPersonalInfo: settings.copyPersonalInfo ? 1 : 2,
+            model: settings.model,
+            mode: settings.generateMode
+        }
+
+        console.log(settings_object);
+
+        return settings_object;
     } catch (error) {
         console.error('Error getting user settings:', error);
         throw error;

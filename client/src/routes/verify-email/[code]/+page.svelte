@@ -26,9 +26,7 @@
 
             if (data.success) {
                 success = true;
-                // @ts-ignore
                 userStore.update((oldUser) => {
-                    // @ts-ignore
                     user.verified = true;
                     return user;
                 })

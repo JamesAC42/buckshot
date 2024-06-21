@@ -1,12 +1,14 @@
 
 import { userStore, jobsStore, settingsStore } from "../stores/stores";
 import { getSession } from "../lib/getSession";
+import serializeJobInput from "../lib/serializeJobInput";
 export async function load() {
-    console.log("load");
     const sessionData = await getSession();
     if (sessionData.success) {
         userStore.set(sessionData.user);
-        jobsStore.set(sessionData.job);
+        let jobs = sessionData.jobs;
+        const newJobs = serializeJobInput(jobs);
+        jobsStore.set(newJobs);
         settingsStore.set(sessionData.settings);
     }
 }
