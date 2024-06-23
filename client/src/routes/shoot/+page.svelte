@@ -142,8 +142,15 @@
         
         loading.set(true);
         try {
-            const response = await postFetch("/api/generate", { jobId: $activeJob });
+            const response = await postFetch("/api/generate", { job: $activeJob });
             if (response.success) {
+
+                let resumeText = "";
+                for(let section of Object.keys(response.resume)) {
+                    resumeText += response.resume[section] + "\n\n";
+                }
+                outputText.set(resumeText);
+                return;
                 outputText.set(response.generatedText);
                 jobsStore.update(jobs => {
                     if (jobs && jobs[$activeJob]) {
@@ -155,14 +162,13 @@
                             output: response.generatedText,
                             tone: response.tone || 0,  // Assuming tone is provided in the response, default to 0 if not
                             model: response.model || 0,  // Assuming model is provided in the response, default to 0 if not
-                            timestamp: new Date().toISOString()
                         });
                     }
                     return jobs;
                 });
             } else {
                 console.error("Generation failed:", response.message);
-                outputText.set("Generation failed. Please try again.");
+                outputText.set("Generation failed: " + response.message);
             }
         } catch (error) {
             console.error("Error during generation:", error);

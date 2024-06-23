@@ -21,6 +21,27 @@ const getUserJobs = async (userid) => {
     }
 };
 
+const getJobInput = async (userid, job) => {
+
+    try {
+        const valid = await validateJob(userid, job);
+        if(!valid) {
+            throw new Error("User does not own job");
+        }
+
+        const jobInput = await datamodels.JobInput.findOne({ where: { id: job } });
+        if (!jobInput) {
+            throw new Error("Job not found");
+        }
+        return jobInput;
+
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+
+}
+
 const createJob = async (userid, title) => {
 
     const newJob = {
@@ -51,10 +72,7 @@ const createJob = async (userid, title) => {
 
 // returns bool based on whether userid is owner of job
 const validateJob = async (userid, job) => {
-
-    console.log(userid, job);
     const userJob = await datamodels.JobInput.findOne({ where: { id: job, userId: userid } });
-    console.log(userJob);
     return !!userJob;
 }
 
@@ -97,13 +115,19 @@ const setJobRequiredSections = async (job, requiredSections) => {
     return updatedJob;
 }
 
-const addJobOutput = async (job, outputText) => {
-    const newOutput = await datamodels.JobOutput.create({ job: job, output: outputText });
+const addJobOutput = async (job, outputText, tone, model) => {
+    const newOutput = await datamodels.JobOutput.create({ 
+        job: job, 
+        output: outputText,
+        tone,
+        model
+    });
     return newOutput;
 }
 
 module.exports = {
     getUserJobs,
+    getJobInput,
     createJob,
     deleteJob,
     validateJob,

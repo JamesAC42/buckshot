@@ -100,7 +100,7 @@ app.use((err, req, res, next) => {
 });
 
 app.post('/api/generate', async (req, res) => {
-  generate(req, res, models, redisClient);
+  generate(req, res, redisClient);
 });
 
 app.post('/api/login', async(req, res) => {

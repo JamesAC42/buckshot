@@ -55,8 +55,6 @@ const getUserSettings = async (userid) => {
             mode: settings.generateMode
         }
 
-        console.log(settings_object);
-
         return settings_object;
     } catch (error) {
         console.error('Error getting user settings:', error);

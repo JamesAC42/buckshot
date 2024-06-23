@@ -1,4 +1,5 @@
 <script>
+    import SvelteMarkdown from 'svelte-markdown';
     import { writable } from "svelte/store";
 
     export let loading = false;
@@ -41,7 +42,7 @@
         </div>
     {:else}
         <pre class="output-inner">
-            {output}
+            <SvelteMarkdown source={$outputStream} />
         </pre>
     {/if}
 </Section>
@@ -54,7 +55,7 @@
         margin: 1rem 0;
     }
 
-    pre {
+    .output-inner {
         padding: 0 1rem;
         width: calc(#{$input-section-width} - 3rem);
         white-space: pre-line;
