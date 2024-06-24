@@ -31,6 +31,7 @@
     let outputText = writable("");
     let stopStreaming = writable(false);
     let activePage = writable(0);
+    let outputError = writable(false);
 
     let title = "";
 
@@ -141,10 +142,12 @@
         if (!jobs || !jobs[$activeJob]) return;
         
         loading.set(true);
+        outputError.set(false);
         try {
             const response = await postFetch("/api/generate", { job: $activeJob });
             if (response.success) {
 
+                outputError.set(false);
                 let resumeText = "";
                 for(let section of Object.keys(response.resume)) {
                     resumeText += response.resume[section] + "\n\n";
@@ -169,10 +172,12 @@
             } else {
                 console.error("Generation failed:", response.message);
                 outputText.set("Generation failed: " + response.message);
+                outputError.set(true);
             }
         } catch (error) {
             console.error("Error during generation:", error);
             outputText.set("An error occurred. Please try again.");
+            outputError.set(true);
         } finally {
             loading.set(false);
         }
@@ -254,7 +259,9 @@
             
             <Output
                 loading={$loading}
-                output={$outputText} />
+                output={$outputText} 
+                error={$outputError}
+                activeJob={$activeJob}/>
                 <div class="input-container-footer"></div>
         </div>
 

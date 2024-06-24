@@ -53,6 +53,7 @@ const updateTone = require('./controllers/settings/updateTone');
 const updateModel = require('./controllers/settings/updateModel');
 const createJob = require('./controllers/jobs/createJob');
 const requestDeleteJob = require('./controllers/jobs/deleteJob');
+const downloadOutput = require('./controllers/jobs/downloadOutput');
 const {
   requestSaveJobInput,
   requestSaveJobTitle,
@@ -185,6 +186,10 @@ app.post('/api/saveJobRequiredSections', async (req, res) => {
 
 app.get('/api/getSession', async (req, res) => {
   getSession(req, res, datamodels);
+});
+
+app.get('/api/downloadOutput/:jobId', async (req, res) => {
+  downloadOutput(req, res);
 });
 
 io.on('connection', handleConnection);

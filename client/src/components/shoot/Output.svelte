@@ -3,8 +3,10 @@
     import { writable } from "svelte/store";
 
     export let loading = false;
+    export let error = false;
     export let output = "";
     export let stopStreaming = false;
+    export let activeJob = "";
 
     import Section from "../Section.svelte";
     import Loading from "~icons/svg-spinners/pulse-2";
@@ -32,6 +34,20 @@
     }
 
 </script>
+
+{#if output && !error && activeJob}
+<div class="output-options">
+    <div class="output-model">
+        GPT-4O
+    </div>
+    <div class="output-tone">
+        CURT
+    </div>
+    <div class="output-download">
+        <a href={"/api/downloadOutput/" + activeJob}>DOWNLOAD</a>
+    </div>
+</div>
+{/if}
 
 <Section>
     {#if loading}
