@@ -28,7 +28,7 @@ async function prompt(req, res, cache) {
 
         const flags = await getUserInputFlags(userId, cache);
         if(flags > 5) {
-            return res.status(400).json({ success: false, message: "Your account has been flagged for manual review due to too many invalid inputs. You cannot generate any cover letters or resumes until the suspension is lifted. Please contact buckshotfeedback@gmail.com to notify an administrator." });
+            return res.status(400).json({ success: false, message: "Your account has been flagged for manual review due to too many invalid inputs. You cannot generate any cover letters or resumes until the suspension is lifted. Please contact (buckshotfeedback@gmail.com)[buckshotfeedback@gmail.com] to notify an administrator." });
         }
 
         if(!user.verified) {

@@ -1,4 +1,4 @@
-const { sections } = require("../datamodels/settings");
+const { sections, tone } = require("../datamodels/settings");
 const promptLoop = require("./promptLoop");
 const prompts = require("./prompts/resumePrompts");
 
@@ -28,21 +28,35 @@ const validator = (result) => {
     return true;
 }
 
-const generateResume = async (qualifications, jobInfo, requiredSections, tone, model) => {
+const generateResume = async (qualifications, jobInfo, requiredSections, userTone, model) => {
 
-    const promptText = 
+    let promptText = 
         prompts.resume_generateResume_prompt
         + prompts.resume_generateResume_qualifications
         + qualifications + "\n"
         + prompts.resume_generateResume_jobInformation
         + jobInfo + "\n"
         + prompts.resume_generateResume_requiredSections
-        + requiredSections + "\n"
-        + prompts.resume_generateResume_tone 
-        + tone;
+        + requiredSections + "\n";
+
+    console.log(userTone, typeof(userTone), tone);
+    const toneString = tone[userTone.toString()].toLowerCase();
+    if(userTone !== tone.STANDARD) {
+        promptText += prompts.resume_generateResume_tone + toneString; 
+    }
+    switch(userTone) {
+        case tone.CURT:
+            promptText += " " + prompts.resume_generateResume_tone_curtDescription;
+            break;
+        case tone.HAMMY:
+            promptText += " " + prompts.resume_generateResume_tone_hammyDescription;
+            break;
+        default:
+    }
 
     try {
 
+        console.log(promptText);
         const result = await promptLoop(promptText, model, validator);
         return result;
 

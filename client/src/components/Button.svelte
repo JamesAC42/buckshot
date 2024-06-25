@@ -15,6 +15,7 @@
     }
 
     function handleClick() {
+        if(disabled) return;
         if(onClick) {
             onClick();
         }

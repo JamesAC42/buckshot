@@ -32,7 +32,7 @@
     });
 
     async function savePersonalInfo() {
-        if(personalInfo.length > 5000) return;
+        if(personalInfo.length > 10000) return;
         let newPersonalInfo = personalInfo;
         let job = activeJob;
         jobsStore.update((oldJobs) => {
@@ -46,7 +46,7 @@
     }
     
     async function saveJobInfo() {
-        if(jobInfo.length > 5000) return;
+        if(jobInfo.length > 10000) return;
         let newJobInfo = jobInfo;
         let job = activeJob;
         jobsStore.update(oldJobs => {

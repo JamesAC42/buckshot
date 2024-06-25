@@ -119,9 +119,9 @@
         }
     });
     
-    $: settingsSectionClass = (user) => {
+    $: settingsSectionClass = (user, blockPremium) => {
         let className = "settings-section-inner section-inner settings-content " ;
-        if(!user.premium || !user.verified) {
+        if((!user.premium && blockPremium) || !user.verified) {
             className += "disabled";
         }
         return className;
@@ -143,7 +143,7 @@
         </div>
         <div class="settings-section">
             <div class="section-background"></div>
-            <div class={settingsSectionClass(user)}>
+            <div class={settingsSectionClass(user, false)}>
 
                 <div class="settings-row">
                     <div class="settings-icon"><Face/></div>
@@ -171,7 +171,7 @@
         </div>
         <div class="settings-section">
             <div class="section-background"></div>
-            <div class={settingsSectionClass(user)}>
+            <div class={settingsSectionClass(user, true)}>
 
                 <div class="settings-row">
                     <div class="settings-icon"><Robot/></div>

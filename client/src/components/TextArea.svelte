@@ -5,7 +5,7 @@
     export let disabled = false;
     export let readonly = false;
     export let onBlur = () => {};
-    export let maxLength = 5000;
+    export let maxLength = 10000;
     export let placeholder = "Input text...";
 </script>
 

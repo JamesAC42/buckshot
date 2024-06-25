@@ -150,7 +150,7 @@
                 outputError.set(false);
                 let resumeText = "";
                 for(let section of Object.keys(response.resume)) {
-                    resumeText += response.resume[section] + "\n\n";
+                    resumeText += "### " + section + "\n" + response.resume[section] + "\n\n";
                 }
                 outputText.set(resumeText);
                 return;
@@ -246,7 +246,7 @@
                 <Button 
                     onClick={() => generate()}
                     buttonText="Generate"
-                    disabled={disableGenerateButton}
+                    disabled={disableGenerateButton && !$loading}
                     loading={$loading}></Button>
                 <div class="generate-remaining">
                     <strong>{user.remainingGenerations}</strong> remaining

@@ -28,7 +28,7 @@ const requestSaveJobInput = async (req, res) => {
         return res.status(400).json({ success: false, message: "Personal info and job info must be strings." });
     }
 
-    if (personalInfo.length > 5000 || jobInfo.length > 5000) {
+    if (personalInfo.length > 10000 || jobInfo.length > 10000) {
         return res.status(400).json({ success: false, message: "Personal info and job info must not exceed 5000 characters." });
     }
 

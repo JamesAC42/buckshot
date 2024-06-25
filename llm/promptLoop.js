@@ -4,11 +4,12 @@ const promptLoop = async (promptText, model, validator) => {
     let attempts = 0;
     let success = false;
     let result;
-    while (attempts < 1 && !success) {
+    while (attempts < 5 && !success) {
         console.log("attempting prompt #", attempts + 1);
         result = null;
         const response = await prompt(model, promptText);
         try {
+            console.log(response);
             result = JSON.parse(response);
             console.log(result);
             if (!validator(result)) {
@@ -25,7 +26,7 @@ const promptLoop = async (promptText, model, validator) => {
         }
     }
 
-    if (attempts === 1 && !success) {
+    if (attempts === 5 && !success) {
         throw new Error("Could not generate a valid response.");
     }
 
