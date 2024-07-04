@@ -4,6 +4,7 @@
 
     import { authGuard } from '$lib/authGuard';
     import postFetch from '$lib/postFetch';
+    import formatOutputAsMarkdown from '$lib/formatOutputAsMarkdown';
 
     import Navbar from "../../components/Navbar.svelte";
     import Button from '../../components/Button.svelte';
@@ -163,12 +164,31 @@
             if (response.success) {
 
                 outputError.set(false);
-                let resumeText = "";
-                for(let section of Object.keys(response.resume)) {
-                    resumeText += "### " + section + "\n" + response.resume[section] + "\n\n";
-                }
-                outputText.set(resumeText);
+                console.log(response);
+
+                const jobOutput = JSON.parse(response.jobOutput.output);
+
+                jobsStore.update((oldJobs) => {
+
+                    let jobId = response.jobOutput.job;
+                    if(!oldJobs[jobId].outputs) {
+                        oldJobs[jobId].outputs = [];
+                    }
+                    oldJobs[jobId].outputs.push({
+                        id: response.jobOutput.id,
+                        output: jobOutput,
+                        tone: response.jobOutput.tone,
+                        model: response.jobOutput.model
+                    });
+                    return oldJobs;
+
+                });
+
+                let formattedText = formatOutputAsMarkdown(jobOutput);
+                outputText.set(formattedText);
+
                 return;
+                outputText.set(resumeText);
                 outputText.set(response.generatedText);
                 jobsStore.update(jobs => {
                     if (jobs && jobs[$activeJob]) {
@@ -201,7 +221,9 @@
     }
 
     let disableGenerateButton = false;
+    let renderOutputPages = false;
     let generateLabel = "resume";
+    let pageAmount = 0;
     $: {
 
         disableGenerateButton = !jobs || 
@@ -215,6 +237,10 @@
 
         if(settings) {
             generateLabel = settings.mode === mode.COVER ? "cover letter" : "resume"; 
+        }
+        if(jobs && jobs[$activeJob] && jobs[$activeJob].output && Object.keys(jobs[$activeJob].output).length > 0) {
+            renderOutputPages = true;
+            pageAmount = Object.keys(jobs[$activeJob].output).length;
         }
     }
 
@@ -277,16 +303,22 @@
             </div>
             <div class="spacer"></div>
 
-            <OutputPages />
+            {#if renderOutputPages}
+            <OutputPages
+                activePage={$activePage}
+                pageAmt={pageAmount}
+                onPageClick={(page) => handlePageClick(page)} />
             <div class="spacer"></div>
-            
+            {/if}
+
             <Output
                 loading={$loading}
                 output={$outputText} 
                 error={$outputError}
                 activeJob={$activeJob}
                 stopStreaming={$stopStreaming}/>
-                <div class="input-container-footer"></div>
+            
+            <div class="input-container-footer"></div>
         </div>
 
         <Settings/>

@@ -1,7 +1,7 @@
 const models = require("../../llm/models");
 const { getUser } = require("../../datamodels/user");
 const { getUserSettings, mode } = require("../../datamodels/settings");
-const { getJobInput } = require("../../datamodels/jobs");
+const { getJobInput, addJobOutput } = require("../../datamodels/jobs");
 const generateResume = require("../../llm/generateResume");
 const { getUserInputFlags, addUserInputFlag } = require("../../llm/inputFlags");
 const checkInputResume = require("../../llm/checkInputResume");
@@ -78,7 +78,9 @@ async function prompt(req, res, cache) {
             }
             
             console.log("world");
-            return res.json({ success: true, resume: resumeResponse.resume });
+
+            const jobOutput = await addJobOutput(job, JSON.stringify(resumeResponse.resume), settings.tone, settings.model);
+            return res.json({ success: true, jobOutput });
 
         } else if(settings.mode === mode.COVER) {
             

@@ -20,7 +20,7 @@ export const jobsStore = writable(null);
         personalInfo: string,
         jobInfo: string,
         requiredSections: Array<string>,
-        otuput: {
+        output: {
             [id]: string
         }
     }

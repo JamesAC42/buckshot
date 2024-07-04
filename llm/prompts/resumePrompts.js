@@ -42,6 +42,7 @@ const prompts = {
        {"valid": true}
        or
        {"valid": false, "reason": "Brief explanation of invalidity"}
+       DO NOT include the keyword 'json' in the string to indicate the content type. The first character should be an open curly brace. 
     
     Remember, your role is to check for sufficient and specific information, not to judge the candidate's qualifications against the job requirements. Only extreme mismatches or clearly nonsensical job descriptions should be flagged as invalid.`,
     resume_checkInput_qualifications: "The following passage is the candidate's personal information: \n",
@@ -75,8 +76,6 @@ const prompts = {
     
     9. **Formatting**: 
        - Provide the response as a single JSON object
-       - Use markdown formatting for the resume content
-       - Use h4 headers only for subsections (e.g., company names, not main section titles)
        - Do not use multiline strings or concatenated strings
     
     10. **Refusal criteria**: Only refuse to generate the resume if:
@@ -85,22 +84,76 @@ const prompts = {
         - There is an extreme mismatch between the candidate's background and the job (e.g., a veterinarian applying for a software engineering role)
     
     Remember, your primary goal is to create an impressive resume based on the candidate's information, using the job description only as a guide for emphasis and language, not as a barrier to generation.
-    
+
     Output format:
+    The response should be a single JSON object with the following structure:
+
     {
-        "success": true,
+        "success": boolean,
         "resume": {
-            "sectionHeader1": "Resume section content...",
-            "sectionHeader2": "Resume section content...",
-            ...
+            "name": string,
+            "summary": string,
+            "objective": string,
+            "contact info": [
+                {
+                    "label": string,
+                    "info": string
+                }
+            ],
+            "education": [
+                {
+                    "school": string,
+                    "dates": string,
+                    "major": string,
+                    "description": string[]
+                }
+            ],
+            "work history": [
+                {
+                    "position": string,
+                    "company": string,
+                    "dates": string,
+                    "description": string[]
+                }
+            ],
+            "skills": {
+                "skillType1": string[],
+                "skillType2": string[]
+            },
+            "projects": [
+                {
+                    "name": string,
+                    "description": string
+                }
+            ],
+            "volunteering": string[],
+            "certifications": string[],
+            "awards": string[],
+            "academic achievements": string[],
+            "references": string[],
+            "hobbies": string[],
+            "websites": string[],
+            "other stuff": string[]
         }
     }
-    
-    Or, if generation is impossible:
+
+    Notes on the output format:
+    1. The "success" key is a boolean indicating whether the resume generation was successful.
+    2. If successful, include the "resume" object with all relevant sections.
+    3. Only include sections in the "resume" object for which you have information.
+    4. For sections that are arrays of strings (volunteering, certifications, awards, academicAchievements, references, hobbies, websites, otherInfo), each string will be treated as a bullet point.
+    5. The "contactInfo" section should include objects for each piece of contact information (e.g., phone, email, address).
+    6. The "skills" section should be an object where each key is a skill category and the value is an array of skills in that category.
+    7. The "education" and "workHistory" sections should be arrays of objects, each representing a school or job respectively, with descriptions as arrays of strings for bullet points.
+    8. The "projects" section should be an array of objects, each with a name and description.
+    9. Only include sections in the resume object that were specifically requested, except for name which should always be included.
+
+    If generation is impossible:
     {
-        "success": false,
-        "reason": "Brief explanation of why generation failed"
+    "success": false,
+    "reason": "Brief explanation of why generation failed"
     }
+    Remember to provide the output as a single-line JSON string, without any additional formatting or content type indicators.
     `,
     resume_generateResume_qualifications: "The following are the candidate's qualifications and personal information:\n ",
     resume_generateResume_jobInformation: "The following is information about the job position being applied to. It may include details about the position, the company, the culture, the location, etc. :\n",
