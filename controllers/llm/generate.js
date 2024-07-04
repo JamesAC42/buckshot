@@ -27,8 +27,8 @@ async function prompt(req, res, cache) {
         }
 
         const flags = await getUserInputFlags(userId, cache);
-        if(flags > 5) {
-            return res.status(400).json({ success: false, message: "Your account has been flagged for manual review due to too many invalid inputs. You cannot generate any cover letters or resumes until the suspension is lifted. Please contact (buckshotfeedback@gmail.com)[buckshotfeedback@gmail.com] to notify an administrator." });
+        if(flags > 20) {
+            return res.status(400).json({ success: false, message: "Your account has been flagged for manual review due to too many invalid inputs. You cannot generate any cover letters or resumes until the suspension is lifted. Please contact buckshotfeedback@gmail.com to notify an administrator." });
         }
 
         if(!user.verified) {
@@ -48,6 +48,10 @@ async function prompt(req, res, cache) {
         if(!jobInput) {
             return res.status(400).json({ success: false, message: "Invalid job provided." });
         }
+
+        console.log("test 1");
+
+        console.log(settings.mode, mode.RESUME);
         
         if(settings.mode === mode.RESUME) {
 
@@ -60,9 +64,10 @@ async function prompt(req, res, cache) {
             requiredSections = requiredSections.map((s) => s.toLowerCase().replaceAll("_", " "));
             const isValid = await checkInputResume(jobInput.personalInfo, jobInput.jobInfo, requiredSections, settings.model);
             console.log("done checking validity");
+            console.log(isValid);
             if(!isValid.valid) {
                 await addUserInputFlag(userId, cache);
-                return res.json({ success: false, message: isValid.reason + " \nContinual warnings may result in flagging your account for manual review." });
+                return res.json({ success: false, message: isValid.reason });
             }
 
             console.log("hello");

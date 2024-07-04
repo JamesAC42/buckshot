@@ -10,6 +10,7 @@
 
     import Section from "../Section.svelte";
     import Loading from "~icons/svg-spinners/pulse-2";
+    import LinkComponent from './LinkComponent.svelte';
 
     let outputStream = writable("");
 
@@ -58,7 +59,11 @@
         </div>
     {:else}
         <pre class="output-inner">
-            <SvelteMarkdown source={$outputStream} />
+            {#if error}
+                {$outputStream}
+            {:else}
+            <SvelteMarkdown source={$outputStream} renderers={{link: LinkComponent}} />
+            {/if}
         </pre>
     {/if}
 </Section>

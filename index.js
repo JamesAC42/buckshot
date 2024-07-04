@@ -101,6 +101,7 @@ app.use((err, req, res, next) => {
 });
 
 app.post('/api/generate', async (req, res) => {
+  console.log("asfsadf lkjlkjl");
   generate(req, res, redisClient);
 });
 

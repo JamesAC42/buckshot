@@ -14,10 +14,13 @@
         isPressed = false;
     }
 
-    function handleClick() {
-        if(disabled) return;
-        if(onClick) {
-            onClick();
+    function handleClick(e) {
+        console.log("button click", e);
+        if (disabled) return;
+        if (onClick) {
+            if (e.type === 'click' || (e.type === 'keydown' && e.key === 'Enter')) {
+                onClick();
+            }
         }
     }
 

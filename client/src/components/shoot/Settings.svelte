@@ -55,6 +55,13 @@
         });
         if(!success) {
             selectedTone.update(value => saveVal);
+        } else {
+            settingsStore.update(oldSettings => {
+                return {
+                    ...oldSettings,
+                    tone: tone[t]
+                }
+            });
         }
     }
 
@@ -68,6 +75,13 @@
         });
         if(!success) {
             selectedModel.update(value => saveVal);
+        } else {
+            settingsStore.update(oldSettings => {
+                return {
+                    ...oldSettings,
+                    model: models[m]
+                }
+            });
         }
     }
 
@@ -81,6 +95,13 @@
         });
         if(!success) {
             selectedOutputMode.update(value => saveVal);
+        } else {
+            settingsStore.update(oldSettings => {
+                return {
+                    ...oldSettings,
+                    mode: mode[m]
+                }
+            });
         }
     }
 
@@ -94,6 +115,13 @@
         });
         if(!success) {
             copyMode.update(value => saveVal);
+        } else {
+            settingsStore.update(oldSettings => {
+                return {
+                    ...oldSettings,
+                    copyPersonalInfo: copyPersonalInfo[c]
+                }
+            });
         }
     }
     

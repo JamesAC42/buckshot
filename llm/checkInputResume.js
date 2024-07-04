@@ -26,9 +26,10 @@ const checkInputResume = async (userInfo, jobInfo, requiredSections, model) => {
         return result;
     
     } catch(err) {
+        console.log(err);
         return {
             valid:false,
-            reason:err
+            reason:"Internal server error. Something went wrong while generating output."
         }
     }
 }

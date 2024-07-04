@@ -3,12 +3,13 @@
     import CheckBoxOutline from '~icons/material-symbols/check-box-outline-blank';
     import CheckBoxFilled from '~icons/material-symbols/check-box-rounded';
     import LoadingIcon from '~icons/svg-spinners/pulse-2';
-    import { jobsStore } from '../../stores/stores';
+    import { settingsStore, jobsStore } from '../../stores/stores';
     import { onDestroy, onMount } from 'svelte';
 
     import { sections } from '$lib/userSettings';
     import { writable } from 'svelte/store';
     import { saveJobRequiredSections } from '$lib/saveJobInput';
+    import { mode } from '../../lib/userSettings';
 
     export let activeJob = "";
 
@@ -17,17 +18,27 @@
     let enabledSections = writable({});
     
     let jobs = null;
-    let unsubscribe = null;
+    let unsubscribeJobs = null;
+    let settings = null;
+    let unsubscribeSettings = null;
 
     onMount(() => {
-        unsubscribe = jobsStore.subscribe(value => {
+        unsubscribeJobs = jobsStore.subscribe(value => {
             jobs = value;
+        });
+        console.log(settingsStore);
+        unsubscribeSettings = settingsStore.subscribe(value => {
+            settings = value;
+            console.log("settings ", settings);
         });
     });
 
     onDestroy(() => {
-        if(unsubscribe) {
-            unsubscribe();
+        if(unsubscribeJobs) {
+            unsubscribeJobs();
+        }
+        if(unsubscribeSettings) {
+            unsubscribeSettings();
         }
     });
         
@@ -74,6 +85,8 @@
         return $loadingSections[toKey(sectionName)];
     }
 
+    let hideSectionInput = true;
+
     $: {
         sectionNames = Object.keys(sections).map((s) => {
             return s.toLowerCase().replaceAll("_", " ");
@@ -92,10 +105,16 @@
                 })
             }
         }
+
+        if(settings) {
+            hideSectionInput = settings.mode === mode.COVER;
+        }
+
     }
 
 </script>
 
+{#if !hideSectionInput}
 <div class="template-section">
     <div class="template-section-description">
         Toggle which sections of the resume you would like to include and which
@@ -129,7 +148,9 @@
             </div>
         {/each}
     </div>
+    <div class="spacer"></div>
 </div>
+{/if}
 
 <style lang="scss">
 

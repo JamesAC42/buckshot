@@ -17,12 +17,15 @@
     import Trash from '~icons/ph/trash';
     import LoadingIcon from '~icons/svg-spinners/pulse-2';
 
-    import { jobsStore } from '../../stores/stores';
+    import { jobsStore, settingsStore } from '../../stores/stores';
     import { saveJobTitle } from '$lib/saveJobInput';
+    import { mode } from '../../lib/userSettings';
 
     let user = null;
     let jobs = null;
     let unsubscribe = null;
+    let settings = null;
+    let unsubscribeSettings = null;
 
     let activeJob = writable("");
 
@@ -59,11 +62,18 @@
             }
 
         });
+
+        unsubscribeSettings = settingsStore.subscribe((value) => {
+            settings = value;
+        });
     });
 
     onDestroy(() => {
         if(unsubscribe) {
             unsubscribe();
+        }
+        if(unsubscribeSettings) {
+            unsubscribeSettings();
         }
     });
 
@@ -140,11 +150,16 @@
     async function generate() {
 
         if (!jobs || !jobs[$activeJob]) return;
-        
+        if ($loading) return;
+
+        stopStreaming.set(true);
+
+        console.log("running generate....");
         loading.set(true);
         outputError.set(false);
         try {
             const response = await postFetch("/api/generate", { job: $activeJob });
+            stopStreaming.set(false);
             if (response.success) {
 
                 outputError.set(false);
@@ -180,11 +195,13 @@
             outputError.set(true);
         } finally {
             loading.set(false);
+            stopStreaming.set(false);
         }
 
     }
 
     let disableGenerateButton = false;
+    let generateLabel = "resume";
     $: {
 
         disableGenerateButton = !jobs || 
@@ -195,6 +212,10 @@
                            jobs[$activeJob].requiredSections.length === 0 || 
                            !user.verified || 
                            user.remainingGenerations <= 0;
+
+        if(settings) {
+            generateLabel = settings.mode === mode.COVER ? "cover letter" : "resume"; 
+        }
     }
 
 </script>
@@ -240,9 +261,11 @@
 
             <SectionInput 
                 activeJob={$activeJob}/>
-            <div class="spacer"></div>
 
             <div class="generate-section">
+                <div class="generate-label">
+                    Generate {generateLabel}
+                </div>
                 <Button 
                     onClick={() => generate()}
                     buttonText="Generate"
@@ -261,7 +284,8 @@
                 loading={$loading}
                 output={$outputText} 
                 error={$outputError}
-                activeJob={$activeJob}/>
+                activeJob={$activeJob}
+                stopStreaming={$stopStreaming}/>
                 <div class="input-container-footer"></div>
         </div>
 
@@ -320,6 +344,10 @@
             justify-content: center;
             gap:1rem;
             margin-top:-0.9rem;
+
+            .generate-label {
+                margin-top:0rem;
+            }
         }
         
         .input-container-footer {
