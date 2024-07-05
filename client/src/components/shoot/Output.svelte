@@ -6,7 +6,8 @@
     export let error = false;
     export let output = "";
     export let stopStreaming = false;
-    export let activeJob = "";
+
+    let fadeIn = false;
 
     import Section from "../Section.svelte";
     import Loading from "~icons/svg-spinners/pulse-2";
@@ -24,31 +25,20 @@
         if (stopStreaming) return;
         if (index > output.length) return;
         outputStream.update(
-            (value) => value + output.substring(index, index + 3),
+            (value) => value + output.substring(index, index + 15),
         );
-        index += 3;
+        index += 15;
         setTimeout(() => streamTextR(index), 1);
     }
 
     $: if (output !== "") {
-        streamText();
+        fadeIn = true;
+        setTimeout(() => {
+            fadeIn = false;
+        }, 300);
     }
 
 </script>
-
-{#if output && !error && activeJob}
-<div class="output-options">
-    <div class="output-model">
-        GPT-4O
-    </div>
-    <div class="output-tone">
-        CURT
-    </div>
-    <div class="output-download">
-        <a href={"/api/downloadOutput/" + activeJob}>DOWNLOAD</a>
-    </div>
-</div>
-{/if}
 
 <Section>
     {#if loading}
@@ -58,13 +48,19 @@
             <Loading />
         </div>
     {:else}
-        <pre class="output-inner">
+        {#if output !== ""}
+        <pre class="output-inner" class:fade-in={fadeIn}>
             {#if error}
-                {$outputStream}
+                {output}
             {:else}
-            <SvelteMarkdown source={$outputStream} renderers={{link: LinkComponent}} />
+            <SvelteMarkdown source={output} renderers={{link: LinkComponent}} />
             {/if}
         </pre>
+        {:else}
+        <div class="spacer"></div>
+        <div class="no-output">Nothing to show here yet.</div>
+        <div class="spacer"></div>
+        {/if}
     {/if}
 </Section>
 
@@ -76,11 +72,20 @@
         margin: 1rem 0;
     }
 
+    .no-output {
+        text-align:center;
+    }
+
     .output-inner {
         padding: 0 1rem;
+        margin-bottom:0;
         width: calc(#{$input-section-width} - 3rem);
         white-space: pre-line;
         word-wrap: break-word;
         font-family: "PT Mono", monospace;
+        
+        &.fade-in {
+            @include appear-text;
+        }
     }
 </style>

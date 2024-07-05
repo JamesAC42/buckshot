@@ -39,7 +39,7 @@ const formatOutputAsMarkdown = (output) => {
                 break;
             case "contact info":
                 outputString += output[section].map((c) => {
-                    return c.label + ": " + c.info
+                    return c.label+ ": " + c.info.replace(/@/g, "&#64;")
                 }).join(" | ") + "\n\n";
                 break;
             case "education":

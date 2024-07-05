@@ -4,7 +4,7 @@
     import CheckBoxFilled from '~icons/material-symbols/check-box-rounded';
     import LoadingIcon from '~icons/svg-spinners/pulse-2';
     import { settingsStore, jobsStore } from '../../stores/stores';
-    import { onDestroy, onMount } from 'svelte';
+    import { onDestroy, onMount, tick } from 'svelte';
 
     import { sections } from '$lib/userSettings';
     import { writable } from 'svelte/store';
@@ -26,10 +26,8 @@
         unsubscribeJobs = jobsStore.subscribe(value => {
             jobs = value;
         });
-        console.log(settingsStore);
         unsubscribeSettings = settingsStore.subscribe(value => {
             settings = value;
-            console.log("settings ", settings);
         });
     });
 
@@ -43,10 +41,9 @@
     });
         
     async function toggleTemplateItem(item) {
-        if(!item) return;
-        if(typeof(item) !== "string") return;
-        if(!activeJob) return;
-        let key = item.toUpperCase().replace(" ","_");
+        if(!item || typeof(item) !== "string" || !activeJob) return;
+        let key = toKey(item);
+        if($loadingSections[key]) return;
 
         if(!jobs || !jobs[activeJob]) return;
         let savedSections = JSON.parse(JSON.stringify(jobs[activeJob].requiredSections));
@@ -56,19 +53,23 @@
             savedSections.push(key);
         }
 
-        loadingSections.update(oldLoading => {
-            oldLoading[key] = 1;
-            return oldLoading;
-        });
-        const response = await saveJobRequiredSections(activeJob, savedSections);
-        loadingSections.update(oldLoading => {
-            delete oldLoading[key];
-            return oldLoading;
-        });
-        if(response) {
-            jobsStore.update(oldJobs => {
-                oldJobs[activeJob].requiredSections = savedSections;
-                return oldJobs;
+        loadingSections.update(current => ({ ...current, [key]: true }));
+        
+        await tick();
+
+        try {
+            const response = await saveJobRequiredSections(activeJob, savedSections);
+            if(response) {
+                jobsStore.update(oldJobs => ({
+                    ...oldJobs,
+                    [activeJob]: { ...oldJobs[activeJob], requiredSections: savedSections }
+                }));
+            }
+        } finally {
+            loadingSections.update(current => {
+                const updated = { ...current };
+                delete updated[key];
+                return updated;
             });
         }
     }
@@ -79,10 +80,6 @@
 
     function isEnabled(sectionName) {
         return $enabledSections[toKey(sectionName)];
-    }
-
-    function isLoading(sectionName) {
-        return $loadingSections[toKey(sectionName)];
     }
 
     let hideSectionInput = true;
@@ -133,7 +130,7 @@
                 tabindex="0"
                 role="button"
                 aria-pressed={isEnabled(item) ? "true" : "false"}>
-                {#if isLoading(item)}
+                {#if $loadingSections[toKey(item)]}
                     <LoadingIcon />
                 {:else}
                     {#if isEnabled(item)}

@@ -11,7 +11,6 @@ const getUserJobs = async (userid) => {
 
         for (const jobInput of jobInputs) {
             jobs[jobInput.id] = jobInput;
-            jobs[jobInput.id].outputs = null;
         }
         return jobs;
     
@@ -125,6 +124,15 @@ const addJobOutput = async (job, outputText, tone, model) => {
     return newOutput;
 }
 
+const getJobOutputs = async (job) => {
+    const jobOutputs = await datamodels.JobOutput.findAll({
+        where: {
+            job
+        }
+    });
+    return jobOutputs;
+}
+
 module.exports = {
     getUserJobs,
     getJobInput,
@@ -135,5 +143,6 @@ module.exports = {
     setJobPersonalInfo,
     setJobJobInfo,
     setJobRequiredSections,
-    addJobOutput
+    addJobOutput,
+    getJobOutputs
 };

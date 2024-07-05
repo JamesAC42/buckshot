@@ -24,13 +24,15 @@
     onMount(() => {
         unsubscribeJobs = jobsStore.subscribe(value => {
             jobs = value;
-            if (jobs && Object.keys(jobs).length > 0) {
-                let activeTabId = localStorage.getItem('activetab');
-                if (!activeTabId || !jobs[activeTabId]) {
-                    activeTabId = Object.keys(jobs)[0];
-                    localStorage.setItem('activetab', activeTabId);
+            if(active === "") {
+                if (jobs && Object.keys(jobs).length > 0) {
+                    let activeTabId = localStorage.getItem('activetab');
+                    if (!activeTabId || !jobs[activeTabId]) {
+                        activeTabId = Object.keys(jobs)[0];
+                        localStorage.setItem('activetab', activeTabId);
+                    }
+                    updateActive(activeTabId);
                 }
-                updateActive(activeTabId);
             }
         });
 

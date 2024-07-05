@@ -65,3 +65,20 @@
 @mixin section-click {
     transform:translate(-3px,3px);
 }
+
+@keyframes appear-text {
+    0% {
+        transform:translateY(-10px);
+        filter:blur(10px);
+        opacity:0.1;
+    }
+    100% {
+        transform:none;
+        filter:none;
+        opacity:1;
+    }
+}
+
+@mixin appear-text {
+    animation: appear-text 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) 1 backwards !important;
+}

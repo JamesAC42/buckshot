@@ -4,6 +4,7 @@
 
     import { authGuard } from '$lib/authGuard';
     import postFetch from '$lib/postFetch';
+    import getFetch from '$lib/getFetch';
     import formatOutputAsMarkdown from '$lib/formatOutputAsMarkdown';
 
     import Navbar from "../../components/Navbar.svelte";
@@ -21,6 +22,7 @@
     import { jobsStore, settingsStore } from '../../stores/stores';
     import { saveJobTitle } from '$lib/saveJobInput';
     import { mode } from '../../lib/userSettings';
+    import OutputInfo from '../../components/shoot/OutputInfo.svelte';
 
     let user = null;
     let jobs = null;
@@ -29,9 +31,14 @@
     let unsubscribeSettings = null;
 
     let activeJob = writable("");
+    let previousActiveJob = activeJob;
+    
+    let outputsLoaded = {};
+    let outputsViewed = {};
 
     let loading = writable(false);
     let loadingDelete = writable(false);
+    let loadingOutputPages = writable(false);
     let outputText = writable("");
     let stopStreaming = writable(false);
     let activePage = writable(0);
@@ -42,6 +49,7 @@
     onMount(async () => {
         user = await authGuard();
         unsubscribe = jobsStore.subscribe(async (value) => {
+
             jobs = value;
 
             if(jobs && Object.keys(jobs).length === 0) {
@@ -78,16 +86,64 @@
         }
     });
 
+    async function loadJobOutputs(job) {
+        loadingOutputPages.set(true);
+        const response = await getFetch("/api/getJobOutputs", { job });
+        loadingOutputPages.set(false);
+        if(response.success) {
+            jobsStore.update(oldJobs => {
+                if(oldJobs[response.job]) {
+                    oldJobs[response.job].outputs = [];
+                    for(let i = 0; i < response.outputs.length; i++) {
+                        oldJobs[response.job].outputs.push({
+                            id: response.outputs[i].id,
+                            model: response.outputs[i].model,
+                            tone: response.outputs[i].tone,
+                            output: JSON.parse(response.outputs[i].output)
+                        })
+                    }
+                    outputsLoaded[response.job] = true;
+                }
+                return oldJobs;
+            })
+        }
+    }
+
     function updateActiveJob(job) {
         activeJob.set(job);
         if(jobs && jobs[job]) {
             title = jobs[job].title;
         }
+        if(!jobs[job].outputs) {
+            loadJobOutputs(job);
+        } else if (outputsLoaded[job]) {
+            if(jobs[job].outputs.length === 0) {
+                activePage.set(0);
+                outputText.set("");
+            } else {
+                setActiveOutputPage(job, jobs[job].outputs.length);
+            }
+            outputsViewed[job] = true;
+        }
+    }
+
+    function setActiveOutputPage(job, page) {
+
+        if(!jobs || !jobs[job] || !jobs[job].outputs) return;
+        if(jobs[job].outputs.length === 0) return;
+
+        if(page > jobs[job].outputs.length) return;
+        activePage.set(page);
+        const formattedText = formatOutputAsMarkdown(jobs[job].outputs[page - 1].output);
+        outputText.set(formattedText);
+
     }
 
     function handlePageClick(page) {
-        activePage.set(page);
+        if($loading) return;
         stopStreaming.set(true);
+        setActiveOutputPage($activeJob, page);
+        stopStreaming.set(false);
     }
 
     function saveTitle() {
@@ -157,6 +213,7 @@
 
         console.log("running generate....");
         loading.set(true);
+        activePage.set(0);
         outputError.set(false);
         try {
             const response = await postFetch("/api/generate", { job: $activeJob });
@@ -164,7 +221,6 @@
             if (response.success) {
 
                 outputError.set(false);
-                console.log(response);
 
                 const jobOutput = JSON.parse(response.jobOutput.output);
 
@@ -180,6 +236,8 @@
                         tone: response.jobOutput.tone,
                         model: response.jobOutput.model
                     });
+
+                    activePage.set(oldJobs[jobId].outputs.length);
                     return oldJobs;
 
                 });
@@ -188,22 +246,6 @@
                 outputText.set(formattedText);
 
                 return;
-                outputText.set(resumeText);
-                outputText.set(response.generatedText);
-                jobsStore.update(jobs => {
-                    if (jobs && jobs[$activeJob]) {
-                        if (!jobs[$activeJob].outputs) {
-                            jobs[$activeJob].outputs = [];
-                        }
-                        jobs[$activeJob].outputs.push({
-                            id: jobs[$activeJob].outputs.length + 1,
-                            output: response.generatedText,
-                            tone: response.tone || 0,  // Assuming tone is provided in the response, default to 0 if not
-                            model: response.model || 0,  // Assuming model is provided in the response, default to 0 if not
-                        });
-                    }
-                    return jobs;
-                });
             } else {
                 console.error("Generation failed:", response.message);
                 outputText.set("Generation failed: " + response.message);
@@ -224,6 +266,7 @@
     let renderOutputPages = false;
     let generateLabel = "resume";
     let pageAmount = 0;
+    let activeOutput = null;
     $: {
 
         disableGenerateButton = !jobs || 
@@ -238,10 +281,32 @@
         if(settings) {
             generateLabel = settings.mode === mode.COVER ? "cover letter" : "resume"; 
         }
-        if(jobs && jobs[$activeJob] && jobs[$activeJob].output && Object.keys(jobs[$activeJob].output).length > 0) {
-            renderOutputPages = true;
-            pageAmount = Object.keys(jobs[$activeJob].output).length;
+        
+        if (jobs && jobs[$activeJob] && jobs[$activeJob].outputs) {
+            if (outputsLoaded[$activeJob] && jobs[$activeJob].outputs.length > 0) {
+                renderOutputPages = true;
+                pageAmount = jobs[$activeJob].outputs.length;
+                if(!outputsViewed[$activeJob]) {
+                    setActiveOutputPage($activeJob, jobs[$activeJob].outputs.length);
+                    outputsViewed[$activeJob] = true;
+                }
+            } else {
+                outputText.set("");
+                renderOutputPages = false;
+                pageAmount = 0;
+            }
+
+            if($activePage) {
+                activeOutput = jobs[$activeJob].outputs[$activePage - 1];
+            } else {
+                activeOutput = null;
+            }
+
         }
+        if (activeJob !== previousActiveJob) {
+            previousActiveJob = $activeJob;
+        }
+
     }
 
 </script>
@@ -295,7 +360,7 @@
                 <Button 
                     onClick={() => generate()}
                     buttonText="Generate"
-                    disabled={disableGenerateButton && !$loading}
+                    disabled={disableGenerateButton || $loading}
                     loading={$loading}></Button>
                 <div class="generate-remaining">
                     <strong>{user.remainingGenerations}</strong> remaining
@@ -303,21 +368,35 @@
             </div>
             <div class="spacer"></div>
 
-            {#if renderOutputPages}
+            {#if renderOutputPages && !$loadingOutputPages}
             <OutputPages
                 activePage={$activePage}
                 pageAmt={pageAmount}
-                onPageClick={(page) => handlePageClick(page)} />
+                onPageSelect={(page) => handlePageClick(page)} />
             <div class="spacer"></div>
             {/if}
 
+            {#if $loadingOutputPages}
+            <div class="loading-outputs">
+                <LoadingIcon/> <div class="message">Loading</div> <LoadingIcon />
+            </div>
+            {/if}
+
+            {#if !$loadingOutputPages}
+                {#if !$loading}
+                <OutputInfo 
+                    activePage={$activePage}
+                    activeOutput={activeOutput}
+                    activeJob={$activeJob}/>
+                {/if}
             <Output
                 loading={$loading}
                 output={$outputText} 
                 error={$outputError}
                 activeJob={$activeJob}
                 stopStreaming={$stopStreaming}/>
-            
+            {/if}
+
             <div class="input-container-footer"></div>
         </div>
 
@@ -349,6 +428,11 @@
             &:focus {
                 outline:none;
             }
+        }
+        
+        .loading-outputs {
+            @include flex-center-row;
+            margin-bottom:10px;
         }
 
         .delete-space {
