@@ -51,7 +51,9 @@
         {#if output !== ""}
         <pre class="output-inner" class:fade-in={fadeIn}>
             {#if error}
-                {output}
+                <div class="output-error">
+                    {output}
+                </div>
             {:else}
             <SvelteMarkdown source={output} renderers={{link: LinkComponent}} />
             {/if}
@@ -74,6 +76,10 @@
 
     .no-output {
         text-align:center;
+    }
+
+    .output-error {
+        margin-bottom:1rem;
     }
 
     .output-inner {
