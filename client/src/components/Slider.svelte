@@ -86,6 +86,7 @@
                     position:relative;
                     color:$primary-color;
                     width:4rem;
+                    margin:0 auto;
                     transition:all .1s ease-in-out;
                     height:100%;
                     @include flex-center-col;

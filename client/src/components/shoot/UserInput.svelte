@@ -72,7 +72,9 @@
     no need for polished sentences or perfect grammar. Buckshot will handle the
     rewording for you. Simply provide a straightforward list of your
     qualifications, such as education, work history, skills, notable
-    accomplishments, and anything else you would like to include.
+    accomplishments, and anything else you would like to include. <span class="emphasis">Be as specific 
+    as possible when necessary -</span> key points to include are your name, any contact 
+    info you need present, company names, school names, links, dates, etc.
 </p>
 <TextArea
     bind:value={personalInfo}
@@ -102,7 +104,9 @@
 
     p {
         margin: 1rem 0;
-        width: $input-section-width;
         color: $primary-color;
+        span.emphasis {
+            font-weight:600;
+        }
     }
 </style>

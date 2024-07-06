@@ -47,6 +47,7 @@ CREATE TABLE job_output
     output text COLLATE pg_catalog."default" NOT NULL,
     tone smallint NOT NULL,
     model smallint NOT NULL,
+    mode smallint,
     CONSTRAINT job_output_pkey PRIMARY KEY (job, id),
     CONSTRAINT job FOREIGN KEY (job)
         REFERENCES public.job_input (id) MATCH SIMPLE

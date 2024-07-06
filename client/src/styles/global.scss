@@ -31,8 +31,12 @@ body {
 .section-outer {
     position:relative;
     width:fit-content;
-    width:$input-section-width;
+    //width:$input-section-width;
     margin-bottom:1rem;
+
+    &.fill {
+        width:auto;
+    }
 }
 
 .spacer {

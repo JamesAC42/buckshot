@@ -43,7 +43,7 @@
     async function toggleTemplateItem(item) {
         if(!item || typeof(item) !== "string" || !activeJob) return;
         let key = toKey(item);
-        if($loadingSections[key]) return;
+        if(Object.keys($loadingSections).length > 0) return;
 
         if(!jobs || !jobs[activeJob]) return;
         let savedSections = JSON.parse(JSON.stringify(jobs[activeJob].requiredSections));

@@ -102,8 +102,7 @@ app.use((err, req, res, next) => {
 });
 
 app.post('/api/generate', async (req, res) => {
-  console.log("asfsadf lkjlkjl");
-  generate(req, res, redisClient);
+  generate(req, res, datamodels, redisClient);
 });
 
 app.post('/api/login', async(req, res) => {
@@ -190,8 +189,8 @@ app.get('/api/getSession', async (req, res) => {
   getSession(req, res, datamodels);
 });
 
-app.get('/api/downloadOutput/:jobId', async (req, res) => {
-  downloadOutput(req, res);
+app.get('/api/downloadOutput', async (req, res) => {
+  downloadOutput(req, res, datamodels);
 });
 
 app.get('/api/getJobOutputs', async (req, res) => {

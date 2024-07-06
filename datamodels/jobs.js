@@ -114,12 +114,13 @@ const setJobRequiredSections = async (job, requiredSections) => {
     return updatedJob;
 }
 
-const addJobOutput = async (job, outputText, tone, model) => {
+const addJobOutput = async (job, outputText, mode, tone, model) => {
     const newOutput = await datamodels.JobOutput.create({ 
         job: job, 
         output: outputText,
         tone,
-        model
+        model,
+        mode
     });
     return newOutput;
 }

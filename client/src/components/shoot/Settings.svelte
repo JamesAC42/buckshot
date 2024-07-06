@@ -306,11 +306,12 @@
     
     .settings-container {
 
-        flex:1;
+        flex:0.8;
         position:sticky;
         top:0;
 
         min-width:20rem;
+        max-width:25rem;
 
         .settings-category {
             margin-bottom:2.5rem;

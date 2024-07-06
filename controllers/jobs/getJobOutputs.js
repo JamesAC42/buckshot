@@ -19,7 +19,9 @@ const getJobOutputsAPI = async (req, res) => {
                 return res.status(400).json({ success: false, message: "You do not own this job. "});
             }
 
+            console.log("getting job outputs");
             const outputs = await getJobOutputs(job);
+            console.log(outputs);
             return res.status(200).json({ 
                 success: true, 
                 outputs,

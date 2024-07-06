@@ -28,13 +28,17 @@
     @import "../styles/variables.scss";
     @import "../styles/mixins.scss";
 
+    .section-outer {
+        width:auto;
+    }
+
     .text-area-outer {
         @include pop-in-transition;
     }
 
     textarea.info-input-inner {
-        height:18rem;
-        width:calc($input-section-width - 2rem);
+        height:28rem;
+        width:calc(100% - 2rem);
         border:1px solid $primary-color;
         border-radius:4px;
         resize:none;

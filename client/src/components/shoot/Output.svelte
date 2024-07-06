@@ -40,7 +40,7 @@
 
 </script>
 
-<Section>
+<Section fill>
     {#if loading}
         <div class="loading-output">
             <Loading />
@@ -71,6 +71,7 @@
 
     .loading-output {
         @include flex-center-row;
+        gap:0.5rem;
         margin: 1rem 0;
     }
 
@@ -85,7 +86,6 @@
     .output-inner {
         padding: 0 1rem;
         margin-bottom:0;
-        width: calc(#{$input-section-width} - 3rem);
         white-space: pre-line;
         word-wrap: break-word;
         font-family: "PT Mono", monospace;

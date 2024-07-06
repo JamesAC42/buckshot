@@ -1,4 +1,3 @@
-const models = require("../../llm/models");
 const { getUser } = require("../../datamodels/user");
 const { getUserSettings, mode } = require("../../datamodels/settings");
 const { getJobInput, addJobOutput } = require("../../datamodels/jobs");
@@ -6,7 +5,7 @@ const generateResume = require("../../llm/generateResume");
 const { getUserInputFlags, addUserInputFlag } = require("../../llm/inputFlags");
 const checkInputResume = require("../../llm/checkInputResume");
 
-async function prompt(req, res, cache) {
+async function prompt(req, res, datamodels, cache) {
 
     console.log("beginning prompt...");
     const userId = req.session.user;
@@ -78,8 +77,13 @@ async function prompt(req, res, cache) {
             }
             
             console.log("world");
-
-            const jobOutput = await addJobOutput(job, JSON.stringify(resumeResponse.resume), settings.tone, settings.model);
+            console.log(settings);
+            const jobOutput = await addJobOutput(job, JSON.stringify(resumeResponse.resume), settings.mode, settings.tone, settings.model);
+            
+            console.log(jobOutput);
+            const userModel = await datamodels.User.findOne({ where: { id: userId } });
+            await userModel.update({ remainingGenerations: user.remainingGenerations - 1 });
+            
             return res.json({ success: true, jobOutput });
 
         } else if(settings.mode === mode.COVER) {

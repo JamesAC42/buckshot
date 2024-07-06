@@ -19,7 +19,7 @@
     import Trash from '~icons/ph/trash';
     import LoadingIcon from '~icons/svg-spinners/pulse-2';
 
-    import { jobsStore, settingsStore } from '../../stores/stores';
+    import { jobsStore, settingsStore, userStore } from '../../stores/stores';
     import { saveJobTitle } from '$lib/saveJobInput';
     import { mode } from '../../lib/userSettings';
     import OutputInfo from '../../components/shoot/OutputInfo.svelte';
@@ -29,6 +29,7 @@
     let unsubscribe = null;
     let settings = null;
     let unsubscribeSettings = null;
+    let unsubscribeUser = null;
 
     let activeJob = writable("");
     let previousActiveJob = activeJob;
@@ -70,10 +71,23 @@
                 }
             }
 
+            if(jobs) {
+                let jobIds = Object.keys(jobs);
+                for(let j = 0; j < jobIds.length; j++) {
+                    if(jobs[jobIds[j]].outputs) {
+                        outputsLoaded[jobIds[j]] = true;
+                    }
+                }
+            }
+
         });
 
         unsubscribeSettings = settingsStore.subscribe((value) => {
             settings = value;
+        });
+
+        unsubscribeUser = userStore.subscribe((value) => {
+            user = value;
         });
     });
 
@@ -83,6 +97,9 @@
         }
         if(unsubscribeSettings) {
             unsubscribeSettings();
+        }
+        if(unsubscribeUser) {
+            unsubscribeUser();
         }
     });
 
@@ -99,9 +116,11 @@
                             id: response.outputs[i].id,
                             model: response.outputs[i].model,
                             tone: response.outputs[i].tone,
-                            output: JSON.parse(response.outputs[i].output)
+                            output: JSON.parse(response.outputs[i].output),
+                            mode: response.outputs[i].mode
                         })
                     }
+                    oldJobs[response.job].outputs.sort((a, b) => a.id - b.id);
                     outputsLoaded[response.job] = true;
                 }
                 return oldJobs;
@@ -211,7 +230,6 @@
 
         stopStreaming.set(true);
 
-        console.log("running generate....");
         loading.set(true);
         activePage.set(0);
         outputError.set(false);
@@ -234,12 +252,18 @@
                         id: response.jobOutput.id,
                         output: jobOutput,
                         tone: response.jobOutput.tone,
-                        model: response.jobOutput.model
+                        model: response.jobOutput.model,
+                        mode: response.jobOutput.mode
                     });
 
                     activePage.set(oldJobs[jobId].outputs.length);
                     return oldJobs;
 
+                });
+
+                userStore.update((oldUser) => {
+                    oldUser.remainingGenerations = oldUser.remainingGenerations - 1;
+                    return oldUser;
                 });
 
                 let formattedText = formatOutputAsMarkdown(jobOutput);
@@ -393,7 +417,6 @@
                 loading={$loading}
                 output={$outputText} 
                 error={$outputError}
-                activeJob={$activeJob}
                 stopStreaming={$stopStreaming}/>
             {/if}
 
@@ -414,13 +437,14 @@
     .input-container {
         
         flex:1;
+        min-width:35rem;
         position: relative;
         
         input.job-name-field {
             padding:1rem 0;
             font-size:1.4rem;
             border:none;
-            width:calc(#{$input-section-width} - 10vw  + 2rem);
+            width:calc(100% - 5rem);
             border-bottom:1px solid $primary-color;
             font-family: 'Questrial',sans-serif;
             color:$primary-color;
@@ -443,7 +467,7 @@
             font-size:1.3rem;
             transition:all .2s ease-in-out;
             cursor:pointer;
-            transform:translate(0,50%);
+            transform:translate(0,30%);
             .delete-icon {
                 transform:translate(0,2px);
             }

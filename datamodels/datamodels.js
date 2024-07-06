@@ -125,6 +125,10 @@ const JobOutput = sequelize.define('JobOutput', {
     tone: {
         type: DataTypes.SMALLINT,
         allowNull: false,
+    },
+    mode: {
+        type: DataTypes.SMALLINT,
+        allowNull: true   
     }
 }, {
     tableName: 'job_output',
