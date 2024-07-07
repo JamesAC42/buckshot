@@ -1,9 +1,11 @@
-const { getUserJobs, createJob } = require("../../datamodels/jobs");
+const { getUserJobs, createJob, getJobInput } = require("../../datamodels/jobs");
+const { getUserSettings } = require("../../datamodels/settings");
 const { getUser } = require("../../datamodels/user");
 
 const requestCreateJob = async (req, res) => {
 
     const userId = req.session.user;
+    const currentActive = req.body.currentActive;
     if(!userId) {
         return res.status(400).json({ success: false, message: 'Invalid session.' });
     }
@@ -20,8 +22,19 @@ const requestCreateJob = async (req, res) => {
                 });
             }
         }
+
+        const settings = await getUserSettings(userId);
+
+        let personalInfo = "";
+        if(settings.copyPersonalInfo === 1 && currentActive) {
+            const jobInput = await getJobInput(userId, currentActive);
+            if(!jobInput) {
+                return res.status(400).json({ success: false, message: "Invalid job provided. "});
+            }
+            personalInfo = jobInput.personalInfo;
+        }
         
-        const newJob = await createJob(userId, "");
+        const newJob = await createJob(userId, "", personalInfo);
 
         return res.status(200).json({
             success: true,

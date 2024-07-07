@@ -41,13 +41,13 @@ const getJobInput = async (userid, job) => {
 
 }
 
-const createJob = async (userid, title) => {
+const createJob = async (userid, title, personalInfo) => {
 
     const newJob = {
         id: uuidv4(),
         userId: userid,
         title: title,
-        personalInfo: '',
+        personalInfo,
         jobInfo: '',
         requiredSections: JSON.stringify([
             sections.EDUCATION,

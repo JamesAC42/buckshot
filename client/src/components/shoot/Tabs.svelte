@@ -69,7 +69,7 @@
         if(loading) return;
 
         loading = true;
-        const response = await postFetch('/api/createJob', null);
+        const response = await postFetch('/api/createJob', {currentActive: active});
         loading = false;
         if(response.success) {
             jobsStore.update(oldJobs => {
