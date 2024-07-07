@@ -149,6 +149,8 @@
             max-height:72dvh;
             overflow-y:auto;
             box-shadow:0px -17px 11px -1px #f1f1f1 inset;
+            scrollbar-color: #969696 #f0f0f0;
+            scrollbar-width: thin;
         }
     }
     .tab-add {

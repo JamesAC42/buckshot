@@ -46,6 +46,8 @@
         font-size:1.1rem;
         padding:1rem;
         color:$primary-color;
+        scrollbar-color: #969696 #f0f0f0;
+        scrollbar-width: thin;
     }
 
     textarea.info-input-inner:focus {
