@@ -1,4 +1,18 @@
 const { prompt } = require("./prompt");
+
+const cleanJsonString = (jsonString) => {
+    // Remove any newline characters
+    let cleaned = jsonString.replace(/\n|\r/g, '');
+
+    // Ensure all quotes within the "letter" value are escaped
+    cleaned = cleaned.replace(
+        /(?<=letter":")(.+?)(?="})/,
+        (match) => match.replace(/"/g, '\\"')
+    );
+
+    return cleaned;
+};
+
 const promptLoop = async (promptText, model, validator) => {
 
     let attempts = 0;
@@ -8,9 +22,10 @@ const promptLoop = async (promptText, model, validator) => {
         console.log("attempting prompt #", attempts + 1);
         result = null;
         const response = await prompt(model, promptText);
+        const cleaned = cleanJsonString(response);
         try {
-            console.log(response);
-            result = JSON.parse(response);
+            console.log(cleaned);
+            result = JSON.parse(cleaned);
             console.log(result);
             if (!validator(result)) {
                 attempts++;

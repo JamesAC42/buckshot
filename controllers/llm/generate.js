@@ -4,6 +4,8 @@ const { getJobInput, addJobOutput } = require("../../datamodels/jobs");
 const generateResume = require("../../llm/generateResume");
 const { getUserInputFlags, addUserInputFlag } = require("../../llm/inputFlags");
 const checkInputResume = require("../../llm/checkInputResume");
+const checkInputCoverLetter = require("../../llm/checkInputCoverLetter");
+const generateCoverLetter = require("../../llm/generateCoverLetter");
 
 async function prompt(req, res, datamodels, cache) {
 
@@ -51,6 +53,9 @@ async function prompt(req, res, datamodels, cache) {
         console.log("test 1");
 
         console.log(settings.mode, mode.RESUME);
+
+        let generationResponse;
+        let generationContent;
         
         if(settings.mode === mode.RESUME) {
 
@@ -68,29 +73,40 @@ async function prompt(req, res, datamodels, cache) {
                 await addUserInputFlag(userId, cache);
                 return res.json({ success: false, message: isValid.reason });
             }
-
-            console.log("hello");
             
-            const resumeResponse = await generateResume(jobInput.personalInfo, jobInput.jobInfo, requiredSections, settings.tone, settings.model);
-            if(!resumeResponse.success) {
-                return res.status(400).json({ success: false, message: resumeResponse.reason });
-            }
-            
-            console.log("world");
-            console.log(settings);
-            const jobOutput = await addJobOutput(job, JSON.stringify(resumeResponse.resume), settings.mode, settings.tone, settings.model);
-            
-            console.log(jobOutput);
-            const userModel = await datamodels.User.findOne({ where: { id: userId } });
-            await userModel.update({ remainingGenerations: user.remainingGenerations - 1 });
-            
-            return res.json({ success: true, jobOutput });
+            generationResponse = await generateResume(jobInput.personalInfo, jobInput.jobInfo, requiredSections, settings.tone, settings.model);
 
         } else if(settings.mode === mode.COVER) {
             
+            const isValid = await checkInputCoverLetter(jobInput.personalInfo, jobInput.jobInfo, settings.model);
+            if(!isValid.valid) {
+                await addUserInputFlag(userId, cache);
+                return res.json({ success: false, message: isValid.reason });
+            }
+
+            generationResponse = await generateCoverLetter(jobInput.personalInfo, jobInput.jobInfo, settings.tone, settings.model);
+
         } else {
             return res.status(400).json({ success: false, message: "Invalid mode in settings object." });
         }
+        
+        if(!generationResponse || !generationResponse.success) {
+            return res.status(400).json({ success: false, message: generationResponse.reason });
+        }
+
+        if(settings.mode === mode.RESUME) {
+            generationContent = JSON.stringify(generationResponse.resume);
+        } else {
+            generationContent = JSON.stringify(generationResponse.letter);
+        }
+
+        const jobOutput = await addJobOutput(job, generationContent, settings.mode, settings.tone, settings.model);
+        
+        console.log(jobOutput);
+        const userModel = await datamodels.User.findOne({ where: { id: userId } });
+        await userModel.update({ remainingGenerations: user.remainingGenerations - 1 });
+        
+        return res.json({ success: true, jobOutput });
 
       } catch (error) {
         console.error('Error:', error);

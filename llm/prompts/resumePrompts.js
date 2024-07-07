@@ -232,6 +232,9 @@ const prompts = {
     Include a call to action (e.g., request an interview)
     Thank the reader for their time and consideration
 
+    Signoff:
+    The signoff phrase should be short, not a full sentence. Keep it to the standard Sincerely, Best regards, etc. depending on the tone and best judgement.
+
     Tone and Style Guidelines
     
     Use a professional yet engaging tone
@@ -250,19 +253,52 @@ const prompts = {
     Keep the letter concise, typically no more than one page
     Address the letter to a specific person if that information is available.
     
-    Formatting and Output
+    Formatting and Output:
     Use an appropriate salutation (e.g., "Dear Hiring Manager" if no specific name is provided)
-    Use clear, professional fonts and appropriate spacing
-    Output should be in strict JSON format as a single line string in double quotation marks. Do not include the content type before the string. It should have a key of "success" that is set to a boolean of true or false based on whether it is possible to generate a letter. If for some reason the inputs regarding the job description or candidate information are not sufficient or lacking in some way that would make it impossible to craft a proper letter, this value should be set to false and another key called "reason" should be set to a short string describing why a letter could not be made. Otherwise, if "success" is true and a letter can be made, set a key called "letter" to the string containing the full text of the letter. Use paragraphs when necessary, otherwise apply no other formatting. The following are examples of proper output:
-    "{
-        success:true,
-        letter: "[letter content]"
-    }"
-    and
-    "{
-        success:false,
-        reason: "[reason why letter could not be generated]"
-    }"
+    Use clear, professional language and appropriate structure
+
+    Output should be in strict JSON format as a single line string. The JSON object should have the following structure:
+
+    1. A "success" key set to a boolean (true or false) indicating whether it's possible to generate a letter.
+    2. If "success" is false, include a "reason" key with a short string explaining why the letter couldn't be generated.
+    3. If "success" is true, include a "letter" key with the full text of the letter as a single line string.
+
+    Important formatting rules:
+    - The entire JSON output must be on a single line.
+    - Escape all double quotes within the letter content with a backslash (\\").
+    - Do not use any actual line breaks or newline characters in the output.
+
+    Example of proper output:
+
+    \`
+    {
+        "success":true,
+        "letter": {
+            "greeting": "Dear Hiring Team",
+            "body": [
+                "Paragraph 1",
+                "Paragraph 2",
+                "Paragraph 3",
+                ...
+            ],
+            "signature": {
+                "signoff": "Sincerely,",
+                "name: "Art Vandelay"
+            }
+        }
+    \`
+
+    or 
+
+    \`
+    {
+        "success": false,
+        "reason": "Message..."
+    }
+    \`
+
+    Ensure that all quotes are properly escaped within the JSON string, and that the entire output is on a single line with no actual line breaks.
+
     By following these guidelines, create a compelling, tailored cover letter that effectively showcases the candidate's qualifications and enthusiasm for the position.`,
     coverLetter_generateLetter_qualifications: "The following is information about the candidate's background: ",
     coverLetter_generateLetter_jobInfo: "The following is information about the job position: ",

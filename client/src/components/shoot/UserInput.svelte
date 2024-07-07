@@ -103,6 +103,7 @@
     @import "../../styles/mixins.scss";
 
     p {
+        font-size:1.1rem;
         margin: 1rem 0;
         color: $primary-color;
         span.emphasis {

@@ -12,6 +12,7 @@
     import LoadingIcon from '~icons/svg-spinners/pulse-2';
     import DownloadIcon from '~icons/solar/download-outline';
     import CloseIcon from '~icons/material-symbols/tab-close-outline';
+  import { mode } from "../../lib/userSettings";
 
     let isDownloading = false;
     let progress = 0;
@@ -83,6 +84,25 @@
         }
     }
 
+    let previewUrl = "";
+    
+    $: {
+        previewUrl = "/images/download_examples/download_example_";
+        if($selectedFont === 1) {
+            if(activeOutput.mode === mode.COVER) {
+                previewUrl += "serif_white_medium_letter.png";
+            } else {
+                previewUrl += "serif_white_medium.png";
+            }
+        } else {
+            if(activeOutput.mode === mode.COVER) {
+                previewUrl += "sansserif_white_medium_letter.png";
+            } else {
+                previewUrl += "sansserif_white_medium.png";
+            }
+        }
+    }
+
 </script>
 
 <div class="download-options-outer">
@@ -100,11 +120,7 @@
 
                 <div class="download-options-content">
                     <div class="download-preview">
-                        {#if $selectedFont === 1}
-                            <img src="/images/download_examples/download_example_serif_white_medium.png" alt="preview"/>
-                        {:else}
-                            <img src="/images/download_examples/download_example_sansserif_white_medium.png" alt="preview"/>
-                        {/if}
+                        <img src={previewUrl} alt="preview"/>
                     </div>
                     <div class="download-options-controls">
                         
@@ -189,7 +205,7 @@
                     opacity:0;
                 }
                 100% {
-                    transform:translate(-50%,-59%);
+                    transform:translate(-50%,-55%);
                     filter:none;
                     opacity:1;
                 }
@@ -217,7 +233,7 @@
             .download-options-container {
                 position:absolute;
                 top:50%;left:50%;
-                transform:translate(-50%,-59%);
+                transform:translate(-50%,-55%);
                 z-index:1000;
                 max-height:80dvh;
                 animation:fade-in .2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1;

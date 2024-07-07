@@ -50,6 +50,8 @@ const prompt = async (model, fullPrompt) => {
         case models.CLAUDE35_SONNET:
             console.log("using claude");
             completion = await promptClaude("claude-3-5-sonnet-20240620", fullPrompt);
+            console.log("raw completion:");
+            console.log(completion);
             break;
         default:
             throw new Error("Invalid model provided.");

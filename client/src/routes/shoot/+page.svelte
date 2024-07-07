@@ -6,6 +6,7 @@
     import postFetch from '$lib/postFetch';
     import getFetch from '$lib/getFetch';
     import formatOutputAsMarkdown from '$lib/formatOutputAsMarkdown';
+    import formatLetterAsMarkdown from '$lib/formatLetterAsMarkdown';
 
     import Navbar from "../../components/Navbar.svelte";
     import Button from '../../components/Button.svelte';
@@ -112,13 +113,15 @@
                 if(oldJobs[response.job]) {
                     oldJobs[response.job].outputs = [];
                     for(let i = 0; i < response.outputs.length; i++) {
-                        oldJobs[response.job].outputs.push({
+
+                        let outputItem = {
                             id: response.outputs[i].id,
                             model: response.outputs[i].model,
                             tone: response.outputs[i].tone,
-                            output: JSON.parse(response.outputs[i].output),
-                            mode: response.outputs[i].mode
-                        })
+                            mode: response.outputs[i].mode,
+                            output: JSON.parse(response.outputs[i].output)
+                        }
+                        oldJobs[response.job].outputs.push(outputItem)
                     }
                     oldJobs[response.job].outputs.sort((a, b) => a.id - b.id);
                     outputsLoaded[response.job] = true;
@@ -153,8 +156,13 @@
 
         if(page > jobs[job].outputs.length) return;
         activePage.set(page);
-        const formattedText = formatOutputAsMarkdown(jobs[job].outputs[page - 1].output);
-        outputText.set(formattedText);
+
+        let outputItem = jobs[job].outputs[page - 1];
+        if(outputItem.mode === mode.RESUME) {
+            outputText.set(formatOutputAsMarkdown(outputItem.output));
+        } else {
+            outputText.set(formatLetterAsMarkdown(outputItem.output));
+        }
 
     }
 
@@ -240,7 +248,13 @@
 
                 outputError.set(false);
 
-                const jobOutput = JSON.parse(response.jobOutput.output);
+                let jobOutput;
+                jobOutput = JSON.parse(response.jobOutput.output);
+                if(response.jobOutput.mode === mode.RESUME) {
+                    outputText.set(formatOutputAsMarkdown(jobOutput));
+                } else {
+                    outputText.set(formatLetterAsMarkdown(jobOutput));
+                }
 
                 jobsStore.update((oldJobs) => {
 
@@ -265,9 +279,6 @@
                     oldUser.remainingGenerations = oldUser.remainingGenerations - 1;
                     return oldUser;
                 });
-
-                let formattedText = formatOutputAsMarkdown(jobOutput);
-                outputText.set(formattedText);
 
                 return;
             } else {

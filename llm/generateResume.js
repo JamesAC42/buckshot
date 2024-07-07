@@ -140,6 +140,7 @@ const generateResume = async (qualifications, jobInfo, requiredSections, userTon
         return result;
 
     } catch(err) {
+        console.log(err);
         return {
             valid:false,
             reason:err
