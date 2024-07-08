@@ -12,7 +12,7 @@
     import LoadingIcon from '~icons/svg-spinners/pulse-2';
     import DownloadIcon from '~icons/solar/download-outline';
     import CloseIcon from '~icons/material-symbols/tab-close-outline';
-  import { mode } from "../../lib/userSettings";
+    import { mode } from "../../lib/userSettings";
 
     let isDownloading = false;
     let progress = 0;
@@ -198,45 +198,21 @@
             position:relative;
             z-index:1;
 
-            @keyframes fade-in {
-                0% {
-                    transform:translate(-50%,calc(-55% + 4rem));
-                    filter:blur(10px);
-                    opacity:0;
-                }
-                100% {
-                    transform:translate(-50%,-55%);
-                    filter:none;
-                    opacity:1;
-                }
-            }
-
-            @keyframes appear {
-                0% {
-                    opacity:0;
-                    filter:blur(10px);
-                }
-                100% {
-                    opacity:1;
-                    filter:none;
-                }
-            }
-
             .download-options-background {
                 position:relative;
                 height:100dvh;width:100dvw;
                 background:#ffffffdd;
                 z-index:1;
-                animation:appear .1s cubic-bezier(0.445, 0.05, 0.55, 0.95) 1;
+                animation:modal-appear .1s cubic-bezier(0.445, 0.05, 0.55, 0.95) 1;
             }
 
             .download-options-container {
                 position:absolute;
                 top:50%;left:50%;
-                transform:translate(-50%,-55%);
+                transform:translate(-50%,-50%);
                 z-index:1000;
                 max-height:80dvh;
-                animation:fade-in .2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1;
+                animation:modal-fade-in .2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1;
 
                 .download-options-content {
                     display:flex;
@@ -244,11 +220,10 @@
                     align-items:stretch;
                     overflow:hidden;
                     .download-preview {
-                        flex:1;
                         height:100%;
                         border-right:1px solid $primary-color;
                         img {
-                            max-width:39dvw;
+                            max-height:80dvh;
                         }
                     }
                     .download-options-controls {

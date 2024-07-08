@@ -82,3 +82,87 @@
 @mixin appear-text {
     animation: appear-text 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) 1 backwards !important;
 }
+
+@keyframes modal-fade-in {
+    0% {
+        transform:translate(-50%,calc(-50% + 4rem));
+        filter:blur(10px);
+        opacity:0;
+    }
+    100% {
+        transform:translate(-50%,-50%);
+        filter:none;
+        opacity:1;
+    }
+}
+
+@keyframes modal-appear {
+    0% {
+        opacity:0;
+        filter:blur(10px);
+    }
+    100% {
+        opacity:1;
+        filter:none;
+    }
+}
+
+@mixin simple-button {
+    @include flex-center-row;
+    gap:0.5rem;
+    border:1px solid $primary-color;
+    border-radius:0.3rem;
+    padding:0.2rem 0.8rem;
+    text-align:center;
+    cursor:pointer;
+    .btn-label {transform:translateY(2px)}
+    .btn-icon {transform:translate(2px,2px)}
+
+    &:hover {
+        background:$primary-color;
+        color:$secondary-color;
+        border-color:$secondary-color;
+        outline:1px solid $primary-color;
+    }
+
+    &.disabled {
+        opacity:0.5;
+        cursor:default;
+        &:hover {
+            background:$secondary-color;
+            color:$primary-color;
+            border-color:$primary-color;
+            outline:none;
+        }
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@mixin section-edit-input {
+    font-family: "PT Mono", monospace;
+    padding:0.7rem 1rem;
+    border-radius:0.2rem;
+    border:1px solid #6d6d6d;
+    outline:none;
+    font-size:0.9rem;
+}
+
+@mixin section-edit-inner {
+    border:1px solid #4e4e4e;
+    border-left:none;
+    border-right:none;
+    overflow-y:auto;
+    max-height:30rem;
+    margin:1rem 0;
+    overflow-x:hidden;
+    scrollbar-width: thin;
+    padding:1rem 0;
+}

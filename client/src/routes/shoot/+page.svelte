@@ -41,7 +41,8 @@
     let loading = writable(false);
     let loadingDelete = writable(false);
     let loadingOutputPages = writable(false);
-    let outputText = writable("");
+    let outputText = writable(null);
+    let outputMode = writable("");
     let stopStreaming = writable(false);
     let activePage = writable(0);
     let outputError = writable(false);
@@ -141,7 +142,8 @@
         } else if (outputsLoaded[job]) {
             if(jobs[job].outputs.length === 0) {
                 activePage.set(0);
-                outputText.set("");
+                outputText.set(null);
+                outputMode.set("");
             } else {
                 setActiveOutputPage(job, jobs[job].outputs.length);
             }
@@ -158,11 +160,8 @@
         activePage.set(page);
 
         let outputItem = jobs[job].outputs[page - 1];
-        if(outputItem.mode === mode.RESUME) {
-            outputText.set(formatOutputAsMarkdown(outputItem.output));
-        } else {
-            outputText.set(formatLetterAsMarkdown(outputItem.output));
-        }
+        outputMode.set(outputItem.mode === mode.RESUME ? "RESUME" : "COVER");
+        outputText.set(outputItem.output);
 
     }
 
@@ -250,11 +249,8 @@
 
                 let jobOutput;
                 jobOutput = JSON.parse(response.jobOutput.output);
-                if(response.jobOutput.mode === mode.RESUME) {
-                    outputText.set(formatOutputAsMarkdown(jobOutput));
-                } else {
-                    outputText.set(formatLetterAsMarkdown(jobOutput));
-                }
+                outputText.set(response.jobOutput.mode === mode.RESUME ? "RESUME": "COVER");
+                outputText.set(jobOutput);
 
                 jobsStore.update((oldJobs) => {
 
@@ -283,13 +279,15 @@
                 return;
             } else {
                 console.error("Generation failed:", response.message);
-                outputText.set("Generation failed: " + response.message);
+                outputText.set({message: "Generation failed: " + response.message});
                 outputError.set(true);
+                outputMode.set("");
             }
         } catch (error) {
             console.error("Error during generation:", error);
-            outputText.set("An error occurred. Please try again.");
+            outputText.set({message: "An error occurred. Please try again."});
             outputError.set(true);
+            outputMode.set("");
         } finally {
             loading.set(false);
             stopStreaming.set(false);
@@ -326,7 +324,8 @@
                     outputsViewed[$activeJob] = true;
                 }
             } else {
-                outputText.set("");
+                outputText.set(null);
+                outputMode.set("");
                 renderOutputPages = false;
                 pageAmount = 0;
             }
@@ -427,6 +426,7 @@
             <Output
                 loading={$loading}
                 output={$outputText} 
+                outputMode={$outputMode}
                 error={$outputError}
                 stopStreaming={$stopStreaming}/>
             {/if}
