@@ -1,7 +1,8 @@
 const { validateJob } = require("../../datamodels/jobs");
+const {escape} = require("html-escaper");
 
 const validateString = (string) => { 
-    return typeof(string) === "string" && string.length < 5000;
+    return typeof(string) === "string" && string.trim().length > 0 && string.length < 5000;
 }
 
 const validateArrayStructure = (array, structure) => {
@@ -37,6 +38,42 @@ const validateEducation = (content) => {
     }) && content.every(item => validateArrayOfStrings(item.description));
 }
 
+const cleanContent = (data) => {
+    if (typeof data === 'string') {
+        return escape(data.trim());
+    } else if (Array.isArray(data)) {
+        return data.map(cleanContent);
+    } else if (typeof data === 'object' && data !== null) {
+        return Object.fromEntries(
+            Object.entries(data).map(([key, value]) => [cleanContent(key), cleanContent(value)])
+        );
+    }
+    return data;
+};
+
+// Specific validation for complex structures
+const sectionValidators = {
+    "name": validateString,
+    "summary": validateString,
+    "objective": validateString,
+    "contact info": (content) => validateArrayStructure(content, { label: "string", info: "string" }),
+    "education":  validateEducation,
+    "work history": validateWorkHistory,
+    "skills": (content) => typeof content === "object" && Object.values(content).every(validateArrayOfStrings),
+    "projects": (content) => validateArrayStructure(content, { name: "string", description: "string" }),
+    "volunteering": validateArrayOfStrings,
+    "certifications": validateArrayOfStrings,
+    "awards": validateArrayOfStrings,
+    "academic achievements": validateArrayOfStrings,
+    "references": validateArrayOfStrings,
+    "hobbies": validateArrayOfStrings,
+    "websites": validateArrayOfStrings,
+    "other stuff": validateArrayOfStrings,
+    "greeting": validateString,
+    "body": validateString,
+    "signature": validateString
+};
+
 const editSectionContent = async (req, res, datamodels) => {
 
     const { name, content, job, outputId } = req.body;
@@ -52,31 +89,7 @@ const editSectionContent = async (req, res, datamodels) => {
         return res.status(401).json({ success: false, message: "User not logged in." });
     }
 
-    // Specific validation for complex structures
-    const sectionValidators = {
-        "name": validateString,
-        "summary": validateString,
-        "objective": validateString,
-        "contact info": (content) => validateArrayStructure(content, { label: "string", info: "string" }),
-        "education":  validateEducation,
-        "work history": validateWorkHistory,
-        "skills": (content) => typeof content === "object" && Object.values(content).every(validateArrayOfStrings),
-        "projects": (content) => validateArrayStructure(content, { name: "string", description: "string" }),
-        "volunteering": validateArrayOfStrings,
-        "certifications": validateArrayOfStrings,
-        "awards": validateArrayOfStrings,
-        "academic achievements": validateArrayOfStrings,
-        "references": validateArrayOfStrings,
-        "hobbies": validateArrayOfStrings,
-        "websites": validateArrayOfStrings,
-        "other stuff": validateArrayOfStrings,
-        "greeting": validateString,
-        "body": validateString,
-        "signature": validateString
-    };
-
     const letterSections = ["greeting", "body", "signature"];
-
 
     // Validate user owns the job
     const ownsJob = await validateJob(userId, job);
@@ -98,6 +111,13 @@ const editSectionContent = async (req, res, datamodels) => {
         return res.status(400).json({ success: false, message: "Invalid section name for resume mode." });
     }
 
+    const cleanedContent = cleanContent(content);
+    console.log(cleanedContent);
+
+    if(!sectionValidators[name](cleanedContent)) {
+        return res.status(400).json({ success: false, message: "Invalid content format provided." });
+    }
+
     // Parse the output as JSON
     let output;
     try {
@@ -108,15 +128,17 @@ const editSectionContent = async (req, res, datamodels) => {
 
     // Stringify the given content and set the property (name) in the output
     if(name === "body") {
-        output[name] = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        output[name] = cleanedContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
     } else if (name === "signature") {
-        const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        const lines = cleanedContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
         const name = lines.pop();
         const signoff = lines.join(' ');
         output[name] = { signoff, name };
     } else {
-        output[name] = content;
+        output[name] = cleanedContent;
     }
+
+    console.log(output);
 
     // Save back to the output in db
     try {

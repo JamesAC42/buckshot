@@ -166,3 +166,12 @@
     scrollbar-width: thin;
     padding:1rem 0;
 }
+
+@mixin section-edit-error {
+    @include pop-in-transition;
+    color:#ff5b5b;
+    text-align:center;
+    margin:1rem auto;
+    margin-bottom:0;
+    font-size:0.9rem;
+}

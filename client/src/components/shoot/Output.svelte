@@ -6,6 +6,8 @@
     export let error = false;
     export let output = null;
     export let outputMode = "";
+    export let activePage = 0;
+    export let activeJob = "";
     // export let stopStreaming = false;
 
     let previousOutput;
@@ -57,6 +59,7 @@
     let sections = [];
 
     $: if (output !== null && previousOutput !== output) {
+
         fadeIn = true;
         setTimeout(() => {
             fadeIn = false;
@@ -77,6 +80,8 @@
 <SectionEdit
     name={$activeEdit}
     output={output}
+    activePage={activePage}
+    activeJob={activeJob}
     closeEdit={() => activeEdit.set("")}/>
 {/if}
 
@@ -150,6 +155,7 @@
         }
         
         .output-section {
+
             .section-name {
                 position:relative;
                 width:fit-content;

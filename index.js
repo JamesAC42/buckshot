@@ -62,6 +62,7 @@ const {
   requestSaveJobJobInfo,
   requestSaveJobRequiredSections
 } = require('./controllers/jobs/saveJobInput');
+const editSectionContent = require('./controllers/jobs/editSectionContent');
 
 sequelize.sync()
   .then(() => {
@@ -183,6 +184,10 @@ app.post('/api/saveJobJobInfo', async (req, res) => {
 
 app.post('/api/saveJobRequiredSections', async (req, res) => {
   requestSaveJobRequiredSections(req, res);
+});
+
+app.post('/api/editSectionContent', async (req, res) => {
+  editSectionContent(req, res, datamodels);
 });
 
 app.get('/api/getSession', async (req, res) => {

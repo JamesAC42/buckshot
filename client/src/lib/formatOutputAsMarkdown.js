@@ -2,7 +2,6 @@ const formatOutputAsMarkdown = (output) => {
 
     let sections = [];
 
-    let outputString = "";
     let sectionOrder = [
         "name", "contact info", "summary", "objective", "skills",
         "work history", "education", "projects", "certifications",
@@ -38,9 +37,9 @@ const formatOutputAsMarkdown = (output) => {
                 text += output[section] + "\n\n";
                 break;
             case "contact info":
-                text += "    ";
+                text += "";
                 text += output[section].map((c) => {
-                    return c.label + ": " + c.info
+                    return c.label + ": " + c.info.replaceAll("@","~@~");
                 }).join(" | ") + "\n\n";
                 break;
             case "education":

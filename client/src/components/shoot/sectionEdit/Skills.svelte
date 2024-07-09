@@ -9,10 +9,49 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
 
+    export let error;
+    export let loading = false;
+
     let skillItems = writable([]);
+
+    function handleOnSave() {
+
+        let skills = {};
+        for(let s = 0; s < $skillItems.length; s++) {
+            let skillItem = $skillItems[s];
+            let skillType = skillItem.skillType.trim();
+            if(skillType.length === 0) {
+                error.set("Cannot have empty skill category name.");
+                return;
+            }
+            if(skillType.length > 200) {
+                error.set("Skill type too long.");
+                return;
+            }
+            if(skills[skillItem.skillType]) {
+                error.set("Cannot have more than one category with the same name.");
+                return;
+            }
+
+            let filteredItems = skillItem.skills.filter(sk => sk.trim().length > 0);
+            if(filteredItems.length === 0) {
+                error.set("Each category must have at least one skill.");
+                return;
+            }
+            for(let k = 0; k < filteredItems.length; k++) {
+                if(filteredItems[k].length > 200) {
+                    error.set("Value too long.");
+                    return;
+                }
+            }
+            skills[skillItem.skillType] = filteredItems;
+        }
+        onSave(skills);
+
+    }
 
     function scrollBottom() {
         setTimeout(() => {
@@ -102,13 +141,13 @@
         <div class="skills-edit-column skill-type">
             <div class="skills-edit-row">
                 <Delete onDelete={() => removeSkill(index)}/>
-                <input type="text" placeholder="skill type..." bind:value={$skillItems[index].skillType}>
+                <input maxLength={200} type="text" placeholder="skill type..." bind:value={$skillItems[index].skillType}>
             </div>
         </div>
         <div class="skills-edit-column skills">
             {#each $skillItems[index].skills as descItem, descIndex}
                 <div class="skills-edit-row">
-                    <input type="text" placeholder="skill..." bind:value={$skillItems[index].skills[descIndex]}/>
+                    <input maxLength={200} type="text" placeholder="skill..." bind:value={$skillItems[index].skills[descIndex]}/>
                     <Delete onDelete={() => removeDescItem(index, descIndex)}/>
                 </div>
             {/each}
@@ -137,9 +176,16 @@
             <div class="btn-icon"><Plus/></div>
         </div>
     </div>
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -199,6 +245,9 @@
             margin:0 auto;
             width:fit-content;
         }
+    }
+    .error {
+        @include section-edit-error;   
     }
 
 </style>

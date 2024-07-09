@@ -9,15 +9,46 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
 
+    export let error;
+    export let loading = false;
+
     let projectItems = writable([]);
+
+    function handleOnSave() {
+        
+        let filtered = [];
+        for(let i = 0; i < $projectItems.length; i++) {
+            
+            if(
+                $projectItems[i].name.trim().length === 0 ||
+                $projectItems[i].description.trim().length === 0
+            ) {
+                error.set("Cannot have empty value.");
+                return;
+            }
+
+            filtered.push({
+                name: $projectItems[i].name.trim(),
+                description: $projectItems[i].description.trim()
+            });
+        }
+        if(filtered.length === 0) {
+            error.set("Need at least 1 project.");
+            return;
+        }
+        onSave(filtered);
+    }
 
     function addNewItem() {
         if($projectItems.length >= 10) return;
         projectItems.update(oldItems => {
-            oldItems.push("");
+            oldItems.push({
+                name: "",
+                description:""
+            });
             return oldItems;
         });
         setTimeout(() => {
@@ -59,8 +90,8 @@
     <div class="project-item">
 
         <Delete onDelete={() => removeItem(index)}/>
-        <input class="project-name" type="text" placeholder="project name..." bind:value={$projectItems[index].name} />
-        <input class="project-description" type="text" placeholder="description..." bind:value={$projectItems[index].description} />
+        <input class="project-name" maxLength={200} type="text" placeholder="project name..." bind:value={$projectItems[index].name} />
+        <input class="project-description" maxLength={200} type="text" placeholder="description..." bind:value={$projectItems[index].description} />
     </div>
     {/each}
     <div class="add-item">
@@ -74,8 +105,16 @@
             <div class="btn-icon"><Plus/></div>
         </div>
     </div>
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
+
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -109,7 +148,8 @@
             width:fit-content;
         }
     }
-
-
+    .error {
+        @include section-edit-error;   
+    }
 
 </style>

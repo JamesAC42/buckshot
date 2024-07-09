@@ -80,6 +80,13 @@
                         outputsLoaded[jobIds[j]] = true;
                     }
                 }
+
+                if(!$activePage || !$activeJob) return;
+                if(outputsLoaded[$activeJob]) {
+                    let outputItem = jobs[$activeJob].outputs[$activePage - 1];
+                    outputMode.set(outputItem.mode === mode.RESUME ? "RESUME" : "COVER");
+                    outputText.set(outputItem.output);
+                }
             }
 
         });
@@ -426,8 +433,10 @@
             <Output
                 loading={$loading}
                 output={$outputText} 
+                activeJob={$activeJob}
                 outputMode={$outputMode}
                 error={$outputError}
+                activePage={$activePage}
                 stopStreaming={$stopStreaming}/>
             {/if}
 

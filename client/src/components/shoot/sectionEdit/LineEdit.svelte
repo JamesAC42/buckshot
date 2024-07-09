@@ -6,8 +6,23 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (newContent) => {}
     export let onClose = () => {}
+
+    export let error;
+    export let loading = false;
+
+    function handleOnSave() {
+        if($lineItem.trim().length === 0) {
+            error.set("Enter a name");
+            return;
+        }
+        if($lineItem.length > 100) {
+            error.set("Name too long");
+            return;
+        }
+        onSave($lineItem.trim());
+    }
 
     let lineItem = writable("");
 
@@ -21,10 +36,17 @@
 
 <div class="line-edit-outer">
     <div class="line-edit-inner">
-        <input bind:value={$lineItem} placeholder="Enter text..."/>
+        <input bind:value={$lineItem} maxLength={100} placeholder="Enter text..."/>
     </div>
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    loading={loading}
+    disabled={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -44,6 +66,9 @@
                 width:70%;
             }
         }
+    }
+    .error {
+        @include section-edit-error;   
     }
 
 </style>

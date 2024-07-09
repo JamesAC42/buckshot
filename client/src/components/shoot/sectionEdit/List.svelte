@@ -9,10 +9,34 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
 
+    export let error;
+    export let loading = false;
+
     let listItems = writable([]);
+
+    function handleOnSave() {
+        
+        let filtered = $listItems.filter(l => {
+            let trimmed = l.trim();
+            return trimmed.length > 0;
+        });        
+        for(let i = 0; i < filtered.length; i++) {
+            if(filtered[i].length > 200) {
+                error.set("Item too long. Max 500 characters.");
+                return;
+            }
+        }
+        if(filtered.length === 0) {
+            error.set("At least one item is required");
+            return;
+        }
+
+        onSave(filtered);
+
+    }
     
     function addNewItem() {
         if($listItems.length >= 10) return;
@@ -54,7 +78,7 @@
     {#each $listItems as item, index}
         <div class="list-item">
             <Delete onDelete={() => removeItem(index)}/>
-            <input type="text" placeholder="Enter item..." bind:value={$listItems[index]} />
+            <input type="text" maxLength={200} placeholder="Enter item..." bind:value={$listItems[index]} />
         </div>
     {/each}
     <div class="add-item">
@@ -68,8 +92,15 @@
             <div class="btn-icon"><Plus/></div>
         </div>
     </div>
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -96,6 +127,10 @@
             margin:0 auto;
             width:fit-content;
         }
+    }
+
+    .error {
+        @include section-edit-error;   
     }
 
 </style>

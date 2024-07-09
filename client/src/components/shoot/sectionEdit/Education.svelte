@@ -9,18 +9,77 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
+
+    export let error;
+    export let loading = false;
 
     let educationItems = writable([]);
 
+    function handleOnSave() {
+        if($educationItems.length < 1) {
+            error.set("Must have at least 1 education item.");
+            return;
+        }
+
+        let cleanedEducationItems = [];
+        for(let i = 0; i < $educationItems.length; i++) {
+            let {
+                school,dates,major,description
+            } = $educationItems[i];
+            school = school.trim();
+            dates = dates.trim();
+            major = major.trim();
+            if(
+                school.length === 0 ||
+                dates.length === 0 ||
+                major.length === 0
+            ) {
+                error.set("School name, dates, and major must have values.");
+                return;
+            }
+            if(
+                school.length > 200 ||
+                dates.length > 200 ||
+                major.length > 200
+            ) { 
+                error.set("Value too long. Max length is 200 characters.");
+                return;
+            }
+
+            let trimmedDescription = description.filter(d => d.trim().length > 0);
+            if(trimmedDescription.length === 0) {
+                error.set("At least one item of description is required.");
+                return;
+            }
+            for(let d = 0; d < trimmedDescription.length; d++) {
+                if(trimmedDescription[d].length > 200) {
+                    error.set("Value too long. Max length is 200 characters.");
+                    return;
+                }
+            }
+            cleanedEducationItems.push({
+                school,
+                dates,
+                major,
+                description: trimmedDescription
+            });
+        }
+        if(cleanedEducationItems.length === 0) {
+            error.set("No valid education items to save.");
+            return;
+        }
+        onSave(cleanedEducationItems);
+    }
+
     function newSchool() {
         return {
-                    school: "",
-                    dates: "",
-                    major: "",
-                    description: [""]
-                };
+            school: "",
+            dates: "",
+            major: "",
+            description: [""]
+        };
     }
 
     function scrollBottom() {
@@ -97,17 +156,17 @@
     <div class="education-edit-item">
         <div class="education-edit-row">
             <Delete onDelete={() => removeSchool(index)}/>
-            <input type="text" placeholder="school name..." bind:value={$educationItems[index].school}>
+            <input maxLength={200} type="text" placeholder="school name..." bind:value={$educationItems[index].school}>
         </div>
         <div class="education-edit-row">
-            <input type="text" placeholder="school dates..." bind:value={$educationItems[index].dates}>
-            <input type="text" placeholder="major..." bind:value={$educationItems[index].major}>
+            <input maxLength={200} type="text" placeholder="school dates..." bind:value={$educationItems[index].dates}>
+            <input maxLength={200} type="text" placeholder="major..." bind:value={$educationItems[index].major}>
         </div>
         <div class="education-edit-description">
         {#each $educationItems[index].description as descItem, descIndex}
             <div class="education-edit-row">
                 <Delete onDelete={() => removeDescItem(index, descIndex)}/>
-                <input type="text" placeholder="additional info..." bind:value={$educationItems[index].description[descIndex]}/>
+                <input maxLength={200} type="text" placeholder="additional info..." bind:value={$educationItems[index].description[descIndex]}/>
             </div>
         {/each}
         </div>
@@ -135,9 +194,17 @@
             <div class="btn-icon"><Plus/></div>
         </div>
     </div>
+    
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -182,6 +249,10 @@
             margin:0 auto;
             width:fit-content;
         }
+    }
+
+    .error {
+        @include section-edit-error;   
     }
 
 </style>

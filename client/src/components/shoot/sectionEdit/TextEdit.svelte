@@ -6,10 +6,29 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
 
+    export let error;
+    export let loading = false;
+
     let textItem = writable("");
+
+    function handleOnSave() {
+
+        let text = $textItem.trim();
+        if(text.length === 0) {
+            error.set("Enter some text.");
+            return;
+        }
+        if(text.length > 5000) {
+            error.set("Text too long");
+            return;
+        }
+
+        onSave(text);
+
+    }
 
     $: {
         if(output[name]) {
@@ -28,11 +47,18 @@
 <div class="text-edit-outer">
 
     <div class="text-edit-inner">
-        <textarea bind:value={$textItem} placeholder="Enter text..."/>
+        <textarea bind:value={$textItem} maxLength={5000} placeholder="Enter text..."/>
     </div>
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 
 <style lang="scss">
@@ -62,6 +88,10 @@
                 scrollbar-width:thin;
             }
         }
+    }
+
+    .error {
+        @include section-edit-error;   
     }
 
 </style>

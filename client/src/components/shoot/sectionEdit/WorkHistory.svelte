@@ -9,10 +9,70 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
 
+    export let error;
+    export let loading = false;
+
     let workItems = writable([]);
+
+    function handleOnSave() {
+
+        if($workItems.length < 1) {
+            error.set("Must have at least 1 work history item.");
+            return;
+        }
+
+        let cleanedWorkItems = [];
+        for(let i = 0; i < $workItems.length; i++) {
+            let {
+                position,dates,company,description
+            } = $workItems[i];
+            position = position.trim();
+            dates = dates.trim();
+            company = company.trim();
+            if(
+                position.length === 0 ||
+                dates.length === 0 ||
+                company.length === 0
+            ) {
+                error.set("Position, dates, and company must have values.");
+                return;
+            }
+            if(
+                position.length > 200 ||
+                dates.length > 200 ||
+                company.length > 200
+            ) { 
+                error.set("Value too long. Max length is 200 characters.");
+                return;
+            }
+
+            let trimmedDescription = description.filter(d => d.trim().length > 0);
+            if(trimmedDescription.length === 0) {
+                error.set("At least one item of description is required.");
+                return;
+            }
+            for(let d = 0; d < trimmedDescription.length; d++) {
+                if(trimmedDescription[d].length > 200) {
+                    error.set("Value too long. Max length is 200 characters.");
+                    return;
+                }
+            }
+            cleanedWorkItems.push({
+                position,
+                dates,
+                company,
+                description: trimmedDescription
+            });
+        }
+        if(cleanedWorkItems.length === 0) {
+            error.set("No valid work items to save.");
+            return;
+        }
+        onSave(cleanedWorkItems);
+    }
 
     function newJob() {
         return {
@@ -97,17 +157,17 @@
     <div class="workhistory-edit-item">
         <div class="workhistory-edit-row">
             <Delete onDelete={() => removeSchool(index)}/>
-            <input type="text" placeholder="position title..." bind:value={$workItems[index].position}>
+            <input maxLength={200} type="text" placeholder="position title..." bind:value={$workItems[index].position}>
         </div>
         <div class="workhistory-edit-row">
-            <input type="text" placeholder="position dates..." bind:value={$workItems[index].dates}>
-            <input type="text" placeholder="company name..." bind:value={$workItems[index].company}>
+            <input maxLength={200} type="text" placeholder="position dates..." bind:value={$workItems[index].dates}>
+            <input maxLength={200} type="text" placeholder="company name..." bind:value={$workItems[index].company}>
         </div>
         <div class="workhistory-edit-description">
         {#each $workItems[index].description as descItem, descIndex}
             <div class="workhistory-edit-row">
                 <Delete onDelete={() => removeDescItem(index, descIndex)}/>
-                <input type="text" placeholder="additional info..." bind:value={$workItems[index].description[descIndex]}/>
+                <input maxLength={200} type="text" placeholder="additional info..." bind:value={$workItems[index].description[descIndex]}/>
             </div>
         {/each}
         </div>
@@ -135,9 +195,17 @@
             <div class="btn-icon"><Plus/></div>
         </div>
     </div>
+    
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -182,6 +250,10 @@
             margin:0 auto;
             width:fit-content;
         }
+    }
+
+    .error {
+        @include section-edit-error;   
     }
 
 </style>

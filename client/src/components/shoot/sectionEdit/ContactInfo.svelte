@@ -9,15 +9,46 @@
     export let name = "";
     export let output = null;
 
-    export let onSave = () => {}
+    export let onSave = (content) => {}
     export let onClose = () => {}
 
+    export let error;
+    export let loading = false;
+
     let contactItems = writable([]);
+    
+    function handleOnSave() {
+        
+        let filtered = [];
+        for(let i = 0; i < $contactItems.length; i++) {
+            
+            if(
+                $contactItems[i].label.trim().length === 0 ||
+                $contactItems[i].info.trim().length === 0
+            ) {
+                error.set("Cannot have empty value.");
+                return;
+            }
+
+            filtered.push({
+                label: $contactItems[i].label.trim(),
+                info: $contactItems[i].info.trim()
+            });
+        }
+        if(filtered.length === 0) {
+            error.set("Need at least 1 contact item.");
+            return;
+        }
+        onSave(filtered);
+    }
 
     function addNewItem() {
         if($contactItems.length >= 10) return;
         contactItems.update(oldItems => {
-            oldItems.push("");
+            oldItems.push({
+                label:"",
+                info:""
+            });
             return oldItems;
         });
         setTimeout(() => {
@@ -59,8 +90,8 @@
     <div class="contact-item">
 
         <Delete onDelete={() => removeItem(index)}/>
-        <input class="contact-label" type="text" placeholder="Enter item..." bind:value={$contactItems[index].label} />
-        <input class="contact-info" type="text" placeholder="Enter item..." bind:value={$contactItems[index].info} />
+        <input class="contact-label" maxLength={200} type="text" placeholder="Enter item..." bind:value={$contactItems[index].label} />
+        <input class="contact-info" maxLength={200} type="text" placeholder="Enter item..." bind:value={$contactItems[index].info} />
     </div>
     {/each}
     <div class="add-item">
@@ -74,8 +105,15 @@
             <div class="btn-icon"><Plus/></div>
         </div>
     </div>
+    {#if $error}
+    <div class="error">{$error}</div>
+    {/if}
 </div>
-<Actions onClose={onClose} onSave={onSave}/>
+<Actions 
+    disabled={loading}
+    loading={loading}
+    onClose={onClose} 
+    onSave={handleOnSave}/>
 
 <style lang="scss">
 
@@ -110,6 +148,8 @@
         }
     }
 
-
+    .error {
+        @include section-edit-error;   
+    }
 
 </style>
