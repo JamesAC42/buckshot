@@ -112,8 +112,6 @@ const editSectionContent = async (req, res, datamodels) => {
     }
 
     const cleanedContent = cleanContent(content);
-    console.log(cleanedContent);
-
     if(!sectionValidators[name](cleanedContent)) {
         return res.status(400).json({ success: false, message: "Invalid content format provided." });
     }
@@ -137,8 +135,6 @@ const editSectionContent = async (req, res, datamodels) => {
     } else {
         output[name] = cleanedContent;
     }
-
-    console.log(output);
 
     // Save back to the output in db
     try {

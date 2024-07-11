@@ -40,18 +40,13 @@ const prompt = async (model, fullPrompt) => {
     let completion;
     switch (model) {
         case models.GPT_4O:
-            console.log("using gpt 4o");
             completion = await promptGPT("gpt-4o", fullPrompt);
             break;
         case models.GPT_4TURBO:
-            console.log("using gpt 4t");
             completion = await promptGPT("gpt-4-turbo", fullPrompt);
             break;
         case models.CLAUDE35_SONNET:
-            console.log("using claude");
             completion = await promptClaude("claude-3-5-sonnet-20240620", fullPrompt);
-            console.log("raw completion:");
-            console.log(completion);
             break;
         default:
             throw new Error("Invalid model provided.");

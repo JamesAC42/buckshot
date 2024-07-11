@@ -21,7 +21,6 @@ const checkInputResume = async (userInfo, jobInfo, requiredSections, model) => {
 
     try {
 
-        console.log(promptText);
         const result = await promptLoop(promptText, model, validator);
         return result;
     

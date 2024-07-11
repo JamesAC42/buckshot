@@ -19,18 +19,14 @@ const promptLoop = async (promptText, model, validator) => {
     let success = false;
     let result;
     while (attempts < 5 && !success) {
-        console.log("attempting prompt #", attempts + 1);
         result = null;
         const response = await prompt(model, promptText);
         const cleaned = cleanJsonString(response);
         try {
-            console.log(cleaned);
             result = JSON.parse(cleaned);
-            console.log(result);
             if (!validator(result)) {
                 attempts++;
             } else {
-                console.log("good");
                 success = true;
                 break;
             }

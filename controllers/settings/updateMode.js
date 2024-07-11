@@ -40,7 +40,6 @@ const updateMode = async (req, res, datamodels) => {
             throw new Error("Settings object not found.");
         }
 
-        console.log(mode[newMode]);
         await settings.update({ generateMode: mode[newMode] });
         res.status(200).json({ success: true });
 

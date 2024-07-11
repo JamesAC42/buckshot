@@ -42,7 +42,6 @@ const generateCoverLetter = async (qualifications, jobInfo, userTone, model) => 
 
     try {
 
-        console.log(promptText);
         const result = await promptLoop(promptText, model, validator);
         return result;
 

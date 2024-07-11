@@ -4,8 +4,6 @@ const updateModel = async (req, res, datamodels) => {
 
     const newModel = req.body.model;
     const userId = req.session.user;
-
-    console.log(newModel);
     
     if(!userId) {
         return res.status(400).json({ success: false, message: 'Invalid session.' });

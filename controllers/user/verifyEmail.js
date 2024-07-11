@@ -5,8 +5,6 @@ const verifyEmail = async (req, res, datamodels, cache) => {
         const { code } = req.body;
         const { user } = req.session;
 
-        console.log(code, user);
-
         if (!user) {
             res.status(401).json({ success: false, message: 'User is not logged in.' });
             return;
@@ -14,7 +12,6 @@ const verifyEmail = async (req, res, datamodels, cache) => {
 
         const validCode = await verifyEmailCode(cache, user, code);
         if (!validCode) {
-            console.log("asdfasdf");
             res.json({ success: false, message: 'Verification code does not match.' });
             return;
         }

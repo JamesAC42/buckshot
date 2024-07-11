@@ -18,7 +18,6 @@ const checkInputCoverLetter = async (userInfo, jobInfo, model) => {
 
     try {
 
-        console.log(promptText);
         const result = await promptLoop(promptText, model, validator);
         return result;
     

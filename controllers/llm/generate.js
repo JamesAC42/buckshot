@@ -9,7 +9,6 @@ const generateCoverLetter = require("../../llm/generateCoverLetter");
 
 async function prompt(req, res, datamodels, cache) {
 
-    console.log("beginning prompt...");
     const userId = req.session.user;
     if(!userId) {
         return res.status(400).json({ success: false, message: "Invalid session." });
@@ -50,16 +49,10 @@ async function prompt(req, res, datamodels, cache) {
             return res.status(400).json({ success: false, message: "Invalid job provided." });
         }
 
-        console.log("test 1");
-
-        console.log(settings.mode, mode.RESUME);
-
         let generationResponse;
         let generationContent;
         
         if(settings.mode === mode.RESUME) {
-
-            console.log("adsfasdfad");
             
             let requiredSections = JSON.parse(jobInput.requiredSections);
             if(requiredSections.length === 0) {
@@ -67,8 +60,6 @@ async function prompt(req, res, datamodels, cache) {
             }
             requiredSections = requiredSections.map((s) => s.toLowerCase().replaceAll("_", " ")).join("\n") + "\n";
             const isValid = await checkInputResume(jobInput.personalInfo, jobInput.jobInfo, requiredSections, settings.model);
-            console.log("done checking validity");
-            console.log(isValid);
             if(!isValid.valid) {
                 await addUserInputFlag(userId, cache);
                 return res.json({ success: false, message: isValid.reason });
@@ -114,7 +105,6 @@ async function prompt(req, res, datamodels, cache) {
 
         const jobOutput = await addJobOutput(job, JSON.stringify(generationContent), settings.mode, settings.tone, settings.model);
         
-        console.log(jobOutput);
         const userModel = await datamodels.User.findOne({ where: { id: userId } });
         await userModel.update({ remainingGenerations: user.remainingGenerations - 1 });
         
