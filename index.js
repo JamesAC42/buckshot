@@ -8,7 +8,7 @@ const { Server } = require('socket.io');
 const app = express();
 const httpServer = http.createServer(app);
 const redisClient = redis.createClient({ legacyMode: true });
-const port = 5000;
+const port = 5010;
 
 const config = require('./config.json');
 const redisLogin = require('./redis_login.json');
