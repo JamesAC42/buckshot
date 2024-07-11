@@ -4,7 +4,7 @@
 
     import {userStore,jobsStore,settingsStore} from "../../stores/stores.js";
     import { goto } from "$app/navigation";
-    import serializeJobInputs from "$lib/serializeJobInput";
+    import serializeJobInput from "$lib/serializeJobInput";
 
     let username = '';
     let email = '';

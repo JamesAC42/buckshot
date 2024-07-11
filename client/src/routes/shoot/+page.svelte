@@ -24,6 +24,9 @@
     import { saveJobTitle } from '$lib/saveJobInput';
     import { mode } from '../../lib/userSettings';
     import OutputInfo from '../../components/shoot/OutputInfo.svelte';
+  import Modal from '../../components/Modal.svelte';
+
+    let showVerifyMessage = writable(false);
 
     let user = null;
     let jobs = null;
@@ -97,6 +100,9 @@
 
         unsubscribeUser = userStore.subscribe((value) => {
             user = value;
+            if(!user.verified) {
+                showVerifyMessage.set(true);
+            }
         });
     });
 
@@ -448,6 +454,12 @@
     </div>
 {:else}
     <p class="redirecting">Redirecting...</p>
+{/if}
+
+{#if $showVerifyMessage}
+    <Modal 
+        message="You must first verify your account before you can make any resumes. Check your email for the verification link."
+        onClose={() => showVerifyMessage.set(false)} />
 {/if}
 
 <style lang="scss">
