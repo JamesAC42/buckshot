@@ -65,7 +65,7 @@ async function prompt(req, res, datamodels, cache) {
             if(requiredSections.length === 0) {
                 return res.status(400).json({ success: false, message: "Must include at least 1 required section for resumes. "})
             }
-            requiredSections = requiredSections.map((s) => s.toLowerCase().replaceAll("_", " "));
+            requiredSections = requiredSections.map((s) => s.toLowerCase().replaceAll("_", " ")).join("\n") + "\n";
             const isValid = await checkInputResume(jobInput.personalInfo, jobInput.jobInfo, requiredSections, settings.model);
             console.log("done checking validity");
             console.log(isValid);
@@ -95,12 +95,24 @@ async function prompt(req, res, datamodels, cache) {
         }
 
         if(settings.mode === mode.RESUME) {
-            generationContent = JSON.stringify(generationResponse.resume);
+            generationContent = generationResponse.resume;
         } else {
-            generationContent = JSON.stringify(generationResponse.letter);
+            generationContent = generationResponse.letter;
         }
 
-        const jobOutput = await addJobOutput(job, generationContent, settings.mode, settings.tone, settings.model);
+        let generationKeys = Object.keys(generationContent);
+        for(let k = 0; k < generationKeys.length; k++) {
+            let genVal = generationContent[generationKeys[k]];
+            if(
+                (typeof genVal === "object" && Object.keys(genVal).length === 0) ||
+                (typeof genVal === "string" && genVal.trim().length === 0) ||
+                (Array.isArray(genVal) && genVal.length === 0)
+            ) {
+                delete generationContent[generationKeys[k]];
+            }
+        }
+
+        const jobOutput = await addJobOutput(job, JSON.stringify(generationContent), settings.mode, settings.tone, settings.model);
         
         console.log(jobOutput);
         const userModel = await datamodels.User.findOne({ where: { id: userId } });

@@ -34,10 +34,9 @@
     <div class="transaction-items">
       <ul>
         <li>Generate cover letters</li>
-        <li>5 tokens per month (15 resumes/ cover letters)</li>
-        <li>No ads</li>
+        <li>5 free tokens per month (15 resumes/ cover letters)</li>
         <li>Manage unlimited jobs at once</li>
-        <li>Access to additional frontier language models (GPT-4-Turbo and Claude Opus)</li>
+        <li>Access to additional frontier language models (GPT-4-Turbo and Claude 3.5 Sonnet)</li>
         <li>Full access to community chat and forum</li>
       </ul>
     </div>

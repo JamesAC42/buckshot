@@ -41,15 +41,11 @@ const getJobInput = async (userid, job) => {
 
 }
 
-const createJob = async (userid, title, personalInfo) => {
+const createJob = async (userid, title, personalInfo, requiredSections) => {
 
-    const newJob = {
-        id: uuidv4(),
-        userId: userid,
-        title: title,
-        personalInfo,
-        jobInfo: '',
-        requiredSections: JSON.stringify([
+    let sectionsSave = requiredSections;
+    if(sectionsSave.length === 0) {
+        sectionsSave = [
             sections.EDUCATION,
             sections.WORK_HISTORY,
             sections.SUMMARY,
@@ -57,7 +53,16 @@ const createJob = async (userid, title, personalInfo) => {
             sections.PROJECTS,
             sections.ACADEMIC_ACHIEVEMENTS,
             sections.VOLUNTEERING
-        ])
+        ]
+    }
+
+    const newJob = {
+        id: uuidv4(),
+        userId: userid,
+        title: title,
+        personalInfo,
+        jobInfo: '',
+        requiredSections: JSON.stringify(sectionsSave)
     };
 
     try {

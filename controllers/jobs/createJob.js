@@ -26,15 +26,17 @@ const requestCreateJob = async (req, res) => {
         const settings = await getUserSettings(userId);
 
         let personalInfo = "";
+        let requiredSections = [];
         if(settings.copyPersonalInfo === 1 && currentActive) {
             const jobInput = await getJobInput(userId, currentActive);
             if(!jobInput) {
                 return res.status(400).json({ success: false, message: "Invalid job provided. "});
             }
+            requiredSections = JSON.parse(jobInput.requiredSections);
             personalInfo = jobInput.personalInfo;
         }
         
-        const newJob = await createJob(userId, "", personalInfo);
+        const newJob = await createJob(userId, "", personalInfo, requiredSections);
 
         return res.status(200).json({
             success: true,

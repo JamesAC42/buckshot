@@ -46,7 +46,7 @@ const prompts = {
     
     Remember, your role is to check for sufficient and specific information, not to judge the candidate's qualifications against the job requirements. Only extreme mismatches or clearly nonsensical job descriptions should be flagged as invalid.`,
     resume_checkInput_qualifications: "The following passage is the candidate's personal information: \n",
-    resume_checkInput_requiredSections: "The following passage is the requested resume sections to include based on their personal information: \n",
+    resume_checkInput_requiredSections: "The following sections are the ones being requested to be made. ONLY THESE will be necessary to check the input regarding: \n",
     resume_checkInput_jobInfo: "The following passage is the job information provided by the candidate: \n",
 
     resume_generateResume_prompt:`
@@ -158,7 +158,7 @@ const prompts = {
     `,
     resume_generateResume_qualifications: "The following are the candidate's qualifications and personal information:\n ",
     resume_generateResume_jobInformation: "The following is information about the job position being applied to. It may include details about the position, the company, the culture, the location, etc. :\n",
-    resume_generateResume_requiredSections: "The following are sections of the resume that must be included: ",
+    resume_generateResume_requiredSections: "Only include THESE following sections in the output:\n ",
     resume_generateResume_tone: "The resume should be worded professionally and in a standard way that will maximize the appeal to recruiters and managers, utilizing all principles mentioned previously. However, when possible, try to have a tone of being more: ",
     resume_generateResume_tone_curtDescription: "This means, while maintaining an impactful tone, prioritize brevity and directness. Use concise phrasing and limit descriptive language. Focus on presenting key achievements and skills in a straightforward manner. Aim for a no-nonsense, efficient style that conveys information quickly and clearly.",
     resume_generateResume_tone_hammyDescription: "This means, amplify the persuasive and impressive qualities of each accomplishment to the fullest extent possible without compromising truthfulness. Use superlatives, power words, and dynamic phrasing to create a sense of grandeur around each achievement. Paint a vivid picture of the candidate's impact, making every responsibility sound crucial and every success monumental. The resume should read like a highlight reel of professional triumphs.",

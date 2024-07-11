@@ -5,8 +5,6 @@
 
   import { userStore, jobsStore, settingsStore } from "../../stores/stores";
 
-  console.log("asdfasdf");
-
   onMount(async () => {
     try {
       // Make a POST request to the logout API endpoint

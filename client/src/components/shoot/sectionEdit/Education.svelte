@@ -49,10 +49,6 @@
             }
 
             let trimmedDescription = description.filter(d => d.trim().length > 0);
-            if(trimmedDescription.length === 0) {
-                error.set("At least one item of description is required.");
-                return;
-            }
             for(let d = 0; d < trimmedDescription.length; d++) {
                 if(trimmedDescription[d].length > 200) {
                     error.set("Value too long. Max length is 200 characters.");
