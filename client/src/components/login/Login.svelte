@@ -9,7 +9,9 @@
 
     let loading = false;
 
-    function handleSubmit() {
+    function handleSubmit(e) {
+
+        e.preventDefault();
 
         if (!email || !password) {
             error = 'Email and password are required.';

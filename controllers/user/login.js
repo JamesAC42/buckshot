@@ -17,7 +17,7 @@ const login = async (req, res, datamodels) => {
     }
 
     try {
-        const user = await datamodels.User.findOne({ email: email });
+        const user = await datamodels.User.findOne({ where: { email } });
 
         if (!user) {
             res.json({ success: false, message: 'User not found.' });
