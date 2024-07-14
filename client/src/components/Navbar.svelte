@@ -26,20 +26,20 @@
     <h1>buckshot</h1>
   </a>
   <div class="links-outer">
-    <a href="/">home</a>
     {#if user}
+        <a href="/">home</a>
         <a href="/shoot">shoot</a>
         <a href="/connect">connect</a>
         <a href="/premium">
           {#if !user.premium}
           <span class="notif"></span>
           {/if}
-          premium
+          pricing
         </a>
         <a href="/account">account</a>
         <a href="/logout">logout</a>
     {:else}
-        <a href="/premium"><span class="notif"></span>premium</a>
+        <a href="/premium"><span class="notif"></span>pricing</a>
         <a href="/login">login</a>
     {/if}
   </div>
@@ -50,14 +50,17 @@
 
   .banner {
     margin: 0;
-    padding: 0 5rem;
+    padding: 0 17rem;
     background: $primary-color;
+    background: $background;
     color: $secondary-color;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     height: 5rem;
+    position:relative;
+    z-index:1000;
 
     h1 {
       display: inline-block;

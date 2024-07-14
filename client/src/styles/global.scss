@@ -36,11 +36,14 @@ body {
 
     &.fill {
         width:auto;
-    }
-}
+        height:100%;
 
-.spacer {
-    height:0.7rem;
+        .section-inner {
+            width:auto;
+            height:calc(100% - 0.6rem);
+        }
+    }
+
 }
 
 .section-background {
@@ -54,4 +57,17 @@ body {
     border-radius:4px;
     color:$primary-color;
     padding:0.2rem 0.5rem;
+}
+
+.spacer {
+    height:0.7rem;
+}
+
+.section-title {
+    margin:0 auto;
+    width:fit-content;
+    text-align:center;
+    font-size:1.6rem;
+    margin-bottom:2rem;
+    border-bottom:1px solid #b8b8b8;
 }
