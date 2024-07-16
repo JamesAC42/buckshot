@@ -58,7 +58,7 @@
 {/if}
 
 {#if activeOutput && activeJob}
-<Section fill>
+<Section fillWidth>
     <div class="output-options" class:fade-in={fadeIn}>
         <div class="output-mode">
             {mode[activeOutput.mode]}
