@@ -6,6 +6,7 @@ const {
     isUserAdmin,
     isUserMuted
 } = require('../../datamodels/feedback.js');
+const datamodels = require('../../datamodels/datamodels.js');
 const { getUser } = require('../../datamodels/user.js');
 
 const getTestimonialsController = async (req, res) => {
@@ -60,6 +61,11 @@ const addTestimonialController = async (req, res, redis) => {
         }
 
         const newTestimonial = await addTestimonial(req.session.user, name, comment);
+
+        const userItem = await datamodels.User.findOne({where: {id: req.session.user}});
+        userItem.remainingGenerations += 5;
+        userItem.save();
+
         res.status(201).json({ success: true, data: newTestimonial });
 
     } catch (err) {

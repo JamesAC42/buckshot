@@ -62,6 +62,14 @@
                 return old;
             });
 
+            userStore.update(oldUser => {
+                let newUser = {...oldUser};
+                newUser.remainingGenerations += 5;
+                return newUser;
+            });
+
+            alert("Thank you for writing a testimonial! You can now generate 5 additional resumes.");
+
         } else {
             error.set(response.message);
         }
