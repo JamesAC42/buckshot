@@ -18,6 +18,7 @@ const sequelize = require('./database');
 let io;
 if(config.local) {
   io = new Server(httpServer, {
+  	path:'/socket',
     cors: {
       origin: '*'
     }
@@ -63,6 +64,10 @@ const {
   requestSaveJobRequiredSections
 } = require('./controllers/jobs/saveJobInput');
 const editSectionContent = require('./controllers/jobs/editSectionContent');
+const testimonialsController = require('./controllers/feedback/testimonialsController');
+const forumController = require('./controllers/feedback/forumController');
+const chatController = require('./controllers/feedback/chatController');
+const adminController = require('./controllers/feedback/adminController');
 
 sequelize.sync()
   .then(() => {
@@ -200,6 +205,49 @@ app.get('/api/downloadOutput', async (req, res) => {
 
 app.get('/api/getJobOutputs', async (req, res) => {
   getJobOutputs(req, res);
+});
+
+// Testimonials routes
+app.get('/api/testimonials', async (req, res) => {
+  testimonialsController.getTestimonialsController(req, res);
+});
+
+app.post('/api/addTestimonial', async (req, res) => {
+  testimonialsController.addTestimonialController(req, res, redisClient);
+});
+
+app.post('/api/testimonials/:id', async (req, res) => {
+  testimonialsController.deleteTestimonialController(req, res, redisClient);
+});
+
+// Forum routes
+app.post('/api/forum/rooms', async (req, res) => {
+  forumController.createRoom(req, res, redisClient);
+});
+
+app.get('/api/forum/rooms', async (req, res) => {
+  forumController.getRooms(req, res, redisClient);
+});
+
+app.get('/api/forum/rooms/:roomId/posts', async (req, res) => {
+  forumController.getPosts(req, res, redisClient);
+});
+
+app.post('/api/forum/rooms/:roomId/posts', async (req, res) => {
+  forumController.addPost(req, res, redisClient);
+});
+
+app.post('/api/forum/rooms/:roomId/posts/:postId', async (req, res) => {
+  forumController.deletePost(req, res, redisClient);
+});
+
+// Chat routes
+app.get('/api/chat', async (req, res) => {
+  chatController.getChatMessages(req, res, redisClient);
+});
+
+app.post('/api/chat', async(req, res) => {
+  chatController.addChatMessage(req, res, redisClient, io);
 });
 
 io.on('connection', handleConnection);

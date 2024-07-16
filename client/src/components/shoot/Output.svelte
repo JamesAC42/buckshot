@@ -85,7 +85,7 @@
     closeEdit={() => activeEdit.set("")}/>
 {/if}
 
-<Section fill>
+<Section>
     {#if loading}
         <div class="loading-output">
             <Loading />

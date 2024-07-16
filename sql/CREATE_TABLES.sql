@@ -68,3 +68,13 @@ CREATE TABLE settings
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
+
+CREATE TABLE public.testimonials
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    user_id uuid NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default",
+    comment character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    date_created timestamp without time zone NOT NULL,
+    CONSTRAINT testimonials_pkey PRIMARY KEY (id)
+);

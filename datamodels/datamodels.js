@@ -165,6 +165,36 @@ const Settings = sequelize.define('Settings', {
     timestamps: false,
 });
 
+const Testimonials = sequelize.define('Testimonials', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        field: 'user_id',
+    },
+    name: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+    },
+    comment: {
+        type: DataTypes.STRING(500),
+        allowNull: false,
+    },
+    dateCreated: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'date_created',
+    },
+}, {
+    tableName: 'testimonials',
+    timestamps: false,
+});
+
 // Define associations
 User.hasMany(Feedback, { foreignKey: 'user_id' });
 Feedback.belongsTo(User, { foreignKey: 'user_id' });
@@ -178,10 +208,14 @@ JobOutput.belongsTo(JobInput, { foreignKey: 'job' });
 User.hasOne(Settings, { foreignKey: 'user_id' });
 Settings.belongsTo(User, { foreignKey: 'user_id' });
 
+User.hasMany(Testimonials, { foreignKey: 'user_id' });
+Testimonials.belongsTo(User, {foreignKey: 'user_id' })
+
 module.exports = {
     User,
     Feedback,
     JobInput,
     JobOutput,
     Settings,
+    Testimonials
 };

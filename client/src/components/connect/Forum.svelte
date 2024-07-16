@@ -1,7 +1,73 @@
 <script>
-    export let active = false;
     import Write from "~icons/material-symbols/edit-document-rounded";
-    import Submit from "~icons/material-symbols/edit-square-rounded";
+
+    import { writable } from "svelte/store";
+    import getFetch from "$lib/getFetch";
+    import postFetch from "$lib/postFetch";
+    import { onMount } from 'svelte';
+    
+    import LoadingIcon from '~icons/svg-spinners/pulse-2';
+    import Room from "./Room.svelte";
+
+    export let active = false;
+
+    let topic = "";
+    let post = "";
+
+    let rooms = writable([]); 
+    let error = writable("");
+
+    let loadingData = writable(true);
+    let loadingSubmit = writable(false);
+
+    let activeRoom = writable({});
+
+    onMount(async () => {
+        let response = await getFetch("/api/forum/rooms");
+        loadingData.set(false);
+        if(response.success) {
+            rooms.set(response.data);
+            if(response.data.length > 0) {
+                activeRoom.set(response.data[0]);
+            }
+        }
+    });
+
+    function setActiveRoom(roomId) {
+        for(let i = 0; i < $rooms.length; i++) {
+            if($rooms[i].createdAt === roomId) {
+                activeRoom.set($rooms[i]);
+            }
+        }
+    }
+
+    async function submitNewRoom() {
+
+        if(!topic || !post) {
+            error.set("Enter a subject and comment.");
+            return;
+        }
+        error.set("");
+        loadingSubmit.set(true);
+        let response = await postFetch("/api/forum/rooms", {
+            name: topic,
+            initialPost: post
+        });
+        loadingSubmit.set(false);
+        if(response.success) {
+            rooms.update(old => {
+                return [response.data, ...old];
+            });
+            activeRoom.set(response.data);
+            topic = "";
+            post = "";
+            error.set("");
+        } else {
+            error.set(response.message);
+        }
+
+    }
+
 </script>
 
 {#if active}
@@ -20,116 +86,54 @@
         <div class="forum-rooms">
             <div class="forum-new-room">
                 <p>Start a new discussion:</p>
-                <textarea placeholder="Topic of discussion..."></textarea>
-                <div class="submit-button">
-                    <div class="btn-text">Submit</div>
+                <input bind:value={topic} type="text" placeholder="Subject" maxlength={100}>
+                <textarea bind:value={post} placeholder="Topic of discussion..." maxlength={500}></textarea>
+                <div 
+                    on:click={submitNewRoom}
+                    on:keydown={(e) => {if(e.key === "Enter") submitNewRoom()}}
+                    role="button"
+                    tabindex="0"
+                    class:disabled={$loadingData || $loadingSubmit}
+                    class="submit-button">
+                    {#if $loadingSubmit}
+                    <div class="btn-icon">
+                        <LoadingIcon />
+                    </div>
+                    {/if}
+                    <div class="btn-label">Submit</div>
                 </div>
+                {#if $error}
+                <div class="error">
+                    {$error}
+                </div>
+                {/if}
             </div>
             <div class="forum-room-list">
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
+                {#each $rooms as room}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div
+                    on:click={() => setActiveRoom(room.createdAt)} 
+                    class="forum-room-item">
+                    <div class="forum-room-name">{room.name}</div>
+                    <div class="forum-room-last-comment">{room.lastReply}</div>
                 </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
-                <div class="forum-room-item">
-                    <div class="forum-room-name">topic of discussion</div>
-                    <div class="forum-room-last-comment">this is the last thing that was said in this room</div>
-                </div>
+                {/each}
+                {#if $loadingData}
+                    <div class="loading-rooms">
+                        <div class="loading-icon"><LoadingIcon/></div>
+                        <div class="loading-text">Loading rooms...</div>
+                        <div class="loading-icon"><LoadingIcon/></div>
+                    </div>
+                {/if}
+                {#if $rooms.length === 0 && !$loadingData}
+                    <div class="no-rooms">No rooms yet.</div>
+                {/if}
             </div>
         </div>
-        <div class="forum-room-outer">
-            <div class="forum-room-info">
-                <div class="room-name">room 123</div>
-                <div class="room-stats">12 posts / 3 users</div>
-            </div>
-            <div class="forum-room-posts">
-                <div class="forum-post">
-                    <div class="forum-post-info">
-                        <div class="username">user123</div>
-                        <div class="timestamp">03:12:12 12/12/12</div>
-                    </div>
-                    <div class="forum-post-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla hic assumenda optio ea ipsa eos omnis, rerum minima voluptates nemo? Omnis, dolores non optio assumenda alias eum quibusdam, totam magni rerum fugiat unde velit, officiis dignissimos ipsa corrupti! Quaerat, delectus!
-                    </div>
-                </div>
-                <div class="forum-post">
-                    <div class="forum-post-info">
-                        <div class="username">user123</div>
-                        <div class="timestamp">03:12:12 12/12/12</div>
-                    </div>
-                    <div class="forum-post-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla hic assumenda optio ea ipsa eos omnis, rerum minima voluptates nemo? Omnis, dolores non optio assumenda alias eum quibusdam, totam magni rerum fugiat unde velit, officiis dignissimos ipsa corrupti! Quaerat, delectus!
-                    </div>
-                </div>
-                <div class="forum-post">
-                    <div class="forum-post-info">
-                        <div class="username">user123</div>
-                        <div class="timestamp">03:12:12 12/12/12</div>
-                    </div>
-                    <div class="forum-post-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla hic assumenda optio ea ipsa eos omnis, rerum minima voluptates nemo? Omnis, dolores non optio assumenda alias eum quibusdam, totam magni rerum fugiat unde velit, officiis dignissimos ipsa corrupti! Quaerat, delectus!
-                    </div>
-                </div>
-                <div class="forum-post">
-                    <div class="forum-post-info">
-                        <div class="username">user123</div>
-                        <div class="timestamp">03:12:12 12/12/12</div>
-                    </div>
-                    <div class="forum-post-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla hic assumenda optio ea ipsa eos omnis, rerum minima voluptates nemo? Omnis, dolores non optio assumenda alias eum quibusdam, totam magni rerum fugiat unde velit, officiis dignissimos ipsa corrupti! Quaerat, delectus!
-                    </div>
-                </div>
-                <div class="forum-post">
-                    <div class="forum-post-info">
-                        <div class="username">user123</div>
-                        <div class="timestamp">03:12:12 12/12/12</div>
-                    </div>
-                    <div class="forum-post-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla hic assumenda optio ea ipsa eos omnis, rerum minima voluptates nemo? Omnis, dolores non optio assumenda alias eum quibusdam, totam magni rerum fugiat unde velit, officiis dignissimos ipsa corrupti! Quaerat, delectus!
-                    </div>
-                </div>
-                <div class="forum-post">
-                    <div class="forum-post-info">
-                        <div class="username">user123</div>
-                        <div class="timestamp">03:12:12 12/12/12</div>
-                    </div>
-                    <div class="forum-post-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla hic assumenda optio ea ipsa eos omnis, rerum minima voluptates nemo? Omnis, dolores non optio assumenda alias eum quibusdam, totam magni rerum fugiat unde velit, officiis dignissimos ipsa corrupti! Quaerat, delectus!
-                    </div>
-                </div>
-            </div>
-            <div class="forum-room-input">
-                <input type="text" placeholder="Comment something...">
-                <div class="forum-room-submit">
-                    <div class="submit-button">
-                        <div class="btn-icon"><Submit/></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
+        <Room activeRoom={$activeRoom} />
+
     </div>
 
 </div>
@@ -166,6 +170,11 @@
                         text-align:center;
                         font-size:1.09rem;
                     }
+                    input {
+                        @include text-input;
+                        width:calc(100% - 1rem);
+                        margin-bottom:0.5rem;
+                    }
                     textarea {
                         @include text-input;
                         width:calc(100% - 1rem);
@@ -178,11 +187,16 @@
                         margin:0 auto;
                         margin-top:0.5rem;
                     }
+                    .error {
+                        padding:1rem;
+                        color:$error-color;
+                        text-align:center;
+                    }
                 }
                 .forum-room-list {
                     overflow-y:auto;
                     margin-top:1rem;
-                    max-height:21rem;
+                    max-height:16rem;
                     scrollbar-width: thin;
                     .forum-room-item {
                         padding:0.5rem;
@@ -201,67 +215,20 @@
                             font-size:0.9rem;
                         }
                     }
-                }
-            }
-            .forum-room-outer {
-                margin-right:2rem;
-                .forum-room-info {
-                    @include flex-center-row;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding:1rem;
-                    background:#1d1d1d;
-                    color:$secondary-color;
-                    margin-bottom:0.5rem;
-                    border-radius:0.2rem;
-                    .room-name {
-                        font-size:1.3rem;
-                    }
-                    .room-stats {
-                        font-size:0.9rem;
-                    }
-                }
-                .forum-room-posts {
-                    .forum-post {
-                        padding:1rem;
+                    
+
+                    .loading-rooms, .no-rooms {
+                        @include flex-center-row;
                         background:#f6f6f6;
-                        margin-bottom:0.5rem;
-                        .forum-post-info {
-                            @include flex-center-row;
-                            justify-content: flex-start;
-                            gap:1rem;
-                            margin-bottom:0.5rem;
-                            .username {
-                                font-weight:600;
-                            }
-                        }
-                        .forum-post-text {
-                            font-size:1.1rem;
-                        }
-                    }
-                }
-                .forum-room-input {
-                    @include flex-center-row;
-                    gap:1rem;
-                    margin-top:1rem;
-                    input {
-                        @include text-input;
-                        flex:1;
-                    }
-                    .forum-room-submit {
-                        .submit-button {
-                            @include simple-button;
-                            border:none;
-                            transform:translateY(4px);
-                            &:hover {
-                                outline:none;
-                                background:$secondary-color;
-                                color:#9a9a9a;
-                            }
-                        }
+                        padding:2rem;
+                        height:fit-content;
+                        text-align:center;
+                        border-radius:1rem;
+                        gap:0.5rem;
                     }
                 }
             }
+            
         }
     }
 
