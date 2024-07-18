@@ -43,7 +43,7 @@ const getUserSettings = async (userid) => {
                 userId: userid,
                 tone: tone.HAMMY, // Default tone
                 copyPersonalInfo: true, // Default value
-                model: models.GPT_4O, // Default mode
+                model: models.CLAUDE35_SONNET, // Default mode
                 generateMode: mode.RESUME // Default generate mode
             });
         }

@@ -200,17 +200,6 @@
         <div class="settings-section">
             <div class="section-background"></div>
             <div class={settingsSectionClass(user, true)}>
-
-                <div class="settings-row">
-                    <div class="settings-icon"><Robot/></div>
-                    <div class="settings-description">Model</div>
-                    <div class="settings-control">
-                        <Slider
-                            items={modelSettings}
-                            selected={$selectedModel}
-                            setSelected={updateModel}/>
-                    </div>
-                </div>
                 <div class="settings-row">
                     <div class="settings-icon"><Mail/></div>
                     <div class="settings-description">Mode</div>
