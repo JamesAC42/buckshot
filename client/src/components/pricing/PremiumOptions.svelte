@@ -34,6 +34,11 @@
     if(user === null) {
       goto('/login');
       return;
+    } else {
+      if(user.premium) {
+        goto('/account');
+        return;
+      }
     }
 
     let response = await postFetch("/api/createCheckoutSession", {priceId, mode});

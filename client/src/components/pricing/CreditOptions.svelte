@@ -68,7 +68,7 @@
         onBuy={() => buyCredits("tier1")}
         Icon={HandCoin}>
         <ul>
-            <li>15 resumes</li>
+            <li>Generate 15 resumes</li>
         </ul>
     </BuyCard>
     <BuyCard 
@@ -80,7 +80,7 @@
         onBuy={() => buyCredits("tier2")}
         Icon={HandCoin}>
         <ul>
-            <li>50 resumes</li>
+            <li>Generate 50 resumes</li>
         </ul>
     </BuyCard>
     <BuyCard 
@@ -92,7 +92,7 @@
         onBuy={() => buyCredits("tier3")}
         Icon={HandCoin}>
         <ul>
-            <li>150 resumes</li>
+            <li>Generate 150 resumes</li>
         </ul>
     </BuyCard>
 </div>
