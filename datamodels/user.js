@@ -19,6 +19,78 @@ const getUser = async (userid) => {
 
 }
 
+const addMonthlyGenerations = async (userid) => {
+    try {
+        const user = await datamodels.User.findOne({ where: { id: userid } });
+        if (user) {
+            user.remainingGenerations += 15;
+            await user.save();
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error adding generations to user:', error);
+        return false;
+    }
+}
+
+const removePremium = async (userid) => {
+
+    try {
+        const user = await datamodels.User.findOne({ where: { id: userid } });
+        if (user) {
+            user.premium = false;
+            await user.save();
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error adding generations to user:', error);
+        return false;
+    }
+
+}
+
+const makePremium = async (userid) => {
+    try {
+        const user = await datamodels.User.findOne({ where: { id: userid } });
+        if (user) {
+            user.premium = true;
+            user.remainingGenerations += 15;
+            await user.save();
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error making user premium:', error);
+        return false;
+    }
+}
+
+const addCredits = async (userid, amount) => {
+
+    try {
+        const user = await datamodels.User.findOne({ where: { id: userid } });
+        if (user) {
+            user.remainingGenerations += amount
+            await user.save();
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error making user premium:', error);
+        return false;
+    }
+}
+
 module.exports = {
-    getUser
+    getUser,
+    addMonthlyGenerations,
+    removePremium,
+    makePremium,
+    addCredits
 };

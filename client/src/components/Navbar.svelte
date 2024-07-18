@@ -30,7 +30,7 @@
         <a href="/">home</a>
         <a href="/shoot">shoot</a>
         <a href="/connect">connect</a>
-        <a href="/premium">
+        <a href="/pricing">
           {#if !user.premium}
           <span class="notif"></span>
           {/if}
@@ -39,7 +39,7 @@
         <a href="/account">account</a>
         <a href="/logout">logout</a>
     {:else}
-        <a href="/premium"><span class="notif"></span>pricing</a>
+        <a href="/pricing"><span class="notif"></span>pricing</a>
         <a href="/login">login</a>
     {/if}
   </div>

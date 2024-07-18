@@ -209,7 +209,6 @@ const getChat = async (redis) => {
             }
         });
     }) 
-    console.log(messages);
     return messages.map(JSON.parse);
 }
 

@@ -12,6 +12,8 @@ const port = 5010;
 
 const config = require('./config.json');
 const redisLogin = require('./redis_login.json');
+const stripeLogin = require('./stripe.json');
+const stripe = require('stripe')(stripeLogin.testKey);
 
 const sequelize = require('./database');
 
@@ -68,6 +70,8 @@ const testimonialsController = require('./controllers/feedback/testimonialsContr
 const forumController = require('./controllers/feedback/forumController');
 const chatController = require('./controllers/feedback/chatController');
 const adminController = require('./controllers/feedback/adminController');
+const createCheckoutSession = require('./controllers/payment/createCheckoutSession');
+const handleWebhook = require('./controllers/payment/handleWebhook');
 
 sequelize.sync()
   .then(() => {
@@ -84,6 +88,7 @@ try {
   console.error('Unable to connect to the database:', error);
 }
 
+app.use('/api/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('trust proxy', 1);
@@ -241,6 +246,10 @@ app.post('/api/forum/rooms/:roomId/posts/:postId', async (req, res) => {
   forumController.deletePost(req, res, redisClient);
 });
 
+app.post('/api/createCheckoutSession', async (req, res) => {
+  createCheckoutSession(req, res, stripe);
+});
+
 // Chat routes
 app.get('/api/chat', async (req, res) => {
   chatController.getChatMessages(req, res, redisClient);
@@ -248,6 +257,10 @@ app.get('/api/chat', async (req, res) => {
 
 app.post('/api/chat', async(req, res) => {
   chatController.addChatMessage(req, res, redisClient, io);
+});
+
+app.post('/api/webhook', express.raw({type: 'application/json'}), async (req, res) => {
+  handleWebhook(req, res, stripe, stripeLogin);
 });
 
 io.on('connection', handleConnection);

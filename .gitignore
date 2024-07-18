@@ -9,6 +9,7 @@ openai_key.json
 paypal_info.json
 captcha.json
 email.json
+stripe.json
 
 .DS_Store
 build

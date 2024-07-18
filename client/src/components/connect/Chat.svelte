@@ -5,6 +5,7 @@
   	import { writable } from "svelte/store";
   	import getFetch from "$lib/getFetch";
   	import postFetch from "$lib/postFetch";
+    import { tick } from "svelte";
   	import { onDestroy, onMount } from "svelte";
 	import { io } from 'socket.io-client';
 
@@ -19,13 +20,23 @@
 	let error = writable("");
 	let loadingChat = writable(true);
 	let loadingSubmit = writable(false);
-	let message = "";
+	let message = ""; 
+	
+	let inputElement;
 
 	onMount(async () => {
 		if (socket) {
 			socket.on("newChatMessage", (data) => {
 				messages.update((old) => {
 					return [...old, data];
+				});
+
+				// Scroll to the bottom of the tabs-container
+				tick().then(() => {
+					const messagesContainer = document.querySelector('.chat-messages');
+					if(messagesContainer) {
+						messagesContainer.scrollTop = messagesContainer.scrollHeight;
+					}
 				});
 			});
 		}
@@ -59,6 +70,10 @@
 		loadingSubmit.set(false);
 		if (response) {
 			message = "";
+			await tick();
+      		if(inputElement) {
+				inputElement.focus();
+			}
 		} else {
 			error.set(response.message);
 		}
@@ -106,6 +121,8 @@
 						disabled={$loadingChat || $loadingSubmit}
 						maxlength={500}
 						bind:value={message}
+						bind:this={inputElement}
+						on:keydown={(e) => { if(e.key === "Enter") sendMessage() }}
 						placeholder="Message..."
 						type="text"/>
 					<div class="chat-submit">
@@ -193,6 +210,7 @@
 				}
 				.chat-submit {
 					.chat-submit-button {
+						@include simple-button;
 						@include flex-center-row;
 						border: none;
 						gap:0.5rem;

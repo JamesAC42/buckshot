@@ -214,6 +214,9 @@
                         .forum-room-last-comment {
                             font-size:0.9rem;
                         }
+                        &:last-child {
+                            margin-bottom:0;
+                        }
                     }
                     
 

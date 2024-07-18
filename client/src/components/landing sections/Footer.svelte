@@ -11,7 +11,7 @@
                 <ul>
                     <li><a href="/shoot">Shoot</a></li>
                     <li><a href="/connect">Connect</a></li>
-                    <li><a href="/premium">Pricing</a></li>
+                    <li><a href="/pricing">Pricing</a></li>
                     <li><a href="/account">Account</a></li>
                 </ul>
             </div>

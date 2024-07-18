@@ -87,7 +87,7 @@
                             Professional Output
                         </div>
                         <div class="feature-description">
-                            Export as a neatly formatted PDF in just a few clicks.
+                            Export as a neatly formatted PDF in just a few clicks, no hidden extra charges.
                         </div>
                     </div>
                     <div class="feature-image">
