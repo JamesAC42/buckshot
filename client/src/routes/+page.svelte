@@ -13,6 +13,7 @@
     import Screenshot from "../components/landing sections/Screenshot.svelte";
     import Banner from "../components/landing sections/Banner.svelte";
     import Companies from "../components/landing sections/Companies.svelte";
+  import Faq from "../components/landing sections/FAQ.svelte";
     
 </script>
 
@@ -25,6 +26,8 @@
 
     <Features />
     <HowItWorks />
+
+    <Faq />
 
     <div class="cta-outer">
         <Cta float={true}/>
