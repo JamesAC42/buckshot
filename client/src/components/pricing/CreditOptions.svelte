@@ -22,19 +22,19 @@
         }
     });
 
-    // test
-    const productIds = {
-        tier1: "price_1PdkytP7bDDw4hG26toOgjYB",
-        tier2: "price_1PdkzBP7bDDw4hG2kU3HZUuB",
-        tier3: "price_1PdkzNP7bDDw4hG29hqAt8Zs"
-    }
-
-    // // live 
+    // // test
     // const productIds = {
-    //     tier1: "price_1Pc01wP7bDDw4hG2dLJcJOA0",
-    //     tier2: "price_1PdkQzP7bDDw4hG2wVDjh0oQ",
-    //     tier3: "price_1PdkRaP7bDDw4hG2m7H2tuRM"
+    //     tier1: "price_1PdkytP7bDDw4hG26toOgjYB",
+    //     tier2: "price_1PdkzBP7bDDw4hG2kU3HZUuB",
+    //     tier3: "price_1PdkzNP7bDDw4hG29hqAt8Zs"
     // }
+
+    // live 
+    const productIds = {
+        tier1: "price_1Pc01wP7bDDw4hG2dLJcJOA0",
+        tier2: "price_1PdkQzP7bDDw4hG2wVDjh0oQ",
+        tier3: "price_1PdkRaP7bDDw4hG2m7H2tuRM"
+    }
 
     function buyCredits(tier) {
       const priceId = productIds[tier];

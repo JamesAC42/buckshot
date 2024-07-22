@@ -24,8 +24,8 @@
   });
 
   function buyPremium() {
-    //const priceId = "price_1Pc00JP7bDDw4hG2f2SgGmew";
-    const priceId = "price_1PdNuVP7bDDw4hG2d9Ri6ntz";
+    const priceId = "price_1Pc00JP7bDDw4hG2f2SgGmew";
+    //const priceId = "price_1PdNuVP7bDDw4hG2d9Ri6ntz";
     checkout(priceId, 'subscription');
   }
 

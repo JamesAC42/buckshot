@@ -1,19 +1,19 @@
 const { addCredits, makePremium, removePremium, getUser } = require("../../datamodels/user");
 const { sendPaymentFailedEmail } = require("../../lib/sendEmail");
 
-// test
-const productIds = {
-    tier1: "prod_QUkT5Tt24SKIpb",
-    tier2: "prod_QUkU6AGWvPjxAr",
-    tier3: "prod_QUkUDI4WxLLgZt"
-}
-
-// // live 
+// // test
 // const productIds = {
-//     tier1: "prod_QSvt1OsaubQ5a9",
-//     tier2: "prod_QUjuJwd3D5HMTq",
-//     tier3: "prod_QUjvwWj1SLpVZQ"
+//     tier1: "prod_QUkT5Tt24SKIpb",
+//     tier2: "prod_QUkU6AGWvPjxAr",
+//     tier3: "prod_QUkUDI4WxLLgZt"
 // }
+
+// live 
+const productIds = {
+    tier1: "prod_QSvt1OsaubQ5a9",
+    tier2: "prod_QUjuJwd3D5HMTq",
+    tier3: "prod_QUjvwWj1SLpVZQ"
+}
 
 async function handleWebhook(request, response, stripe, stripeLogin) {
 
