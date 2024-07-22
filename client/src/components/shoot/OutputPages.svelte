@@ -93,4 +93,17 @@
             }
         }
     }
+    
+    @media screen and (max-width: 600px) {
+
+        .result-pages {
+            gap: 0.3rem;
+            .result-page {
+                .result-page-inner {
+                    padding: 0.2rem 0.4rem;
+                }
+            }
+        }
+    }
+
 </style>

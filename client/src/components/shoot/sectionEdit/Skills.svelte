@@ -250,4 +250,14 @@
         @include section-edit-error;   
     }
 
+    @media screen and (max-width: 600px) {
+
+        .skills-edit-outer {
+            .skills-edit-item {
+                flex-direction: column;
+            }
+        }
+
+    }
+
 </style>

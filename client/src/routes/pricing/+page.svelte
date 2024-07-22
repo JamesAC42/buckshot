@@ -58,4 +58,61 @@
         }
     }
 
+    @media screen and (max-width: 900px) {
+    
+        .payment-options-container {
+            padding:3rem 0 0 0;
+            height:calc(100vh - 5rem - 3rem);
+            gap:2rem;
+        }
+
+        .pricing-options {
+            padding:0 3rem;
+            h1 {
+                font-size:2rem;
+            }
+            p {
+                padding:0 5rem;
+                font-size:1.1rem;
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+    
+        .payment-options-container {
+            padding:1rem 0 0 0;
+            height:calc(100vh - 5rem - 1rem);
+            gap:1rem;
+        }
+
+        .pricing-options {
+            padding:0 1rem;
+            h1 {
+                font-size:1.7rem;
+            }
+            p {
+                padding:0 3rem;
+                font-size:1rem;
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+
+        .pricing-options {
+            padding:0 1rem;
+            h1 {
+                font-size:1.4rem;
+            }
+            p {
+                padding:0 1rem;
+                font-size:1rem;
+            }
+        }
+
+    }
+
 </style>

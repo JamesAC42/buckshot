@@ -202,6 +202,7 @@
 				background:$secondary-color;
 				padding:1rem 0;
 				padding-bottom:0;
+				overflow-x:hidden;
 				input {
 					@include text-input;
 					flex: 1;
@@ -230,4 +231,35 @@
 			gap: 0.5rem;
 		}
 	}
+    
+	@media screen and (max-width: 1100px) {
+
+		.chat-outer {
+			padding:0;
+			.header {
+				margin-top:1rem;
+			}
+			.chat-content {
+				margin-top: 1rem;
+				position:relative;
+				height:calc(100dvh - 5rem - 3rem - 5rem);
+
+				.chat-messages {
+					height:100%;
+					max-height:100%;
+					padding-right:0;
+					.chat-message {
+						padding: 0.5rem;
+					}
+				}
+				.chat-input {
+					padding:1rem;
+					input {
+						width:50%;
+					}
+				}
+			}
+		}
+	}
+
 </style>

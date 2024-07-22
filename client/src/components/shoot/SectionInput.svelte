@@ -187,4 +187,25 @@
             }
         }
     }
+
+    
+    @media screen and (max-width: 400px) {
+
+        .template-section {
+            .template-section-description {
+                margin-bottom: 0.5rem;
+                text-align: center;
+            }
+            .template-section-items {
+                gap: 0.2rem;
+                .template-section-item {
+                    padding: 0.2rem 0.6rem;
+                    gap: 0.3rem;
+                    font-size:0.9rem;
+                    width:fit-content;
+                    text-align:center;
+                }
+            }
+        }
+    }
 </style>

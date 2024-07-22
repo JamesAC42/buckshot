@@ -57,6 +57,15 @@
             padding:0 2rem;
         }
     }
+    
+    @media screen and (max-width: 900px) {
+
+        .faq {
+            .faq-inner {
+                padding:0 0rem;
+            }
+        }
+    }
 
 
 </style>

@@ -19,7 +19,7 @@
 
         .screenshot-container {
             position:relative;
-            transform:scale(0.984) translate(10px,-5vh);
+            transform:scale(0.984) translate(0,-5vh);
             height:fit-content;
             width:auto;
 
@@ -48,4 +48,33 @@
         }
 
     }
+
+    @media screen and (max-width: 1000px) { 
+        .screenshot-outer {
+            .screenshot-container {
+                .screenshot-inner {
+                    img {
+                        max-width:80vw;
+                    }
+                }
+            }
+        }
+    }
+
+
+    @media screen and (max-width: 700px) { 
+
+        .screenshot-outer {
+            .screenshot-container {
+                transform:scale(1) translate(0,-5vh);
+                .screenshot-inner {
+                    img {
+                        max-width:85vw;
+                    }
+                }
+            }
+        }
+
+    }
+
 </style>

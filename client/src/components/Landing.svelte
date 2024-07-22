@@ -44,6 +44,7 @@
             @include flex-center-row;
             height:50rem;
             align-items:center;
+            margin-top:3rem;
             .payment-landing-container {
                 @include flex-center-row;
                 height:fit-content;
@@ -61,6 +62,25 @@
                 }
                 .payment-message {
                     padding:2rem;
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 400px) {
+        .payment-landing-outer {
+            .payment-landing-inner {
+                .payment-landing-container {
+                    display:flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    .logo {
+                        width:100%;
+                        img {
+                            display:block;
+                            margin:0 auto;
+                            transform:none;
+                        }
+                    }
                 }
             }
         }

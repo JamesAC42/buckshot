@@ -71,4 +71,144 @@
             font-weight:500;
         }
     }
+
+    @media screen and (max-width: 1200px) {
+
+        .banner {
+            .banner-inner {
+                .title {
+                    .title-inner {
+                        font-size:2.4rem;
+                    }
+                    .subtitle {
+                        font-size:1rem;
+                    }
+                }
+                .logo {
+                    max-height:18vh;
+                }
+            }
+        }
+    
+    }
+
+    @media screen and (max-width: 800px) {
+        .banner {
+            min-height:60dvh;
+            border-radius:0 0 1rem 1rem;
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .banner {
+            min-height:50dvh;
+            border-radius:0;
+            .banner-inner {
+                padding:1rem 2rem;
+                flex-direction: column;
+                transform:translate(0,-3rem);
+                .title {
+                    .title-inner {
+                        font-size:2rem;
+                    }
+                    .subtitle {
+                        font-size:0.9rem;
+                    }
+                }
+                .logo {
+                    max-height:20vh;
+                    &:last-child {
+                        display:none;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-height: 700px) {
+
+        .banner {
+            min-height:80dvh;
+        }
+
+    }
+
+    @media screen and (max-width: 750px) {
+
+        .banner {
+            min-height:70dvh;
+            .banner-inner {
+                transform:translate(0,-2rem);
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 460px) {
+
+        .banner {
+            .banner-inner {
+                padding:1rem 2rem;
+                .title {
+                    gap:0.58rem;
+                    .title-inner {
+                        font-size:1.8rem;
+                    }
+                    .subtitle {
+                        font-size:0.9rem;
+                    }
+                }
+                .logo {
+                    max-height:14vh;
+                }
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 320px) {
+
+        .banner {
+            .banner-inner {
+                padding:0.5rem 2rem;
+                .title {
+                    gap:0.8rem;
+                    .title-inner {
+                        font-size:1.8rem;
+                    }
+                    .subtitle {
+                        font-size:0.9rem;
+                    }
+                }
+                .logo {
+                    max-height:12vh;
+                }
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 280px) {
+
+        
+        .banner {
+            .banner-inner {
+                padding:0.2rem 1rem;
+                .title {
+                    gap:0.8rem;
+                    .title-inner {
+                        font-size:1.6rem;
+                    }
+                    .subtitle {
+                        font-size:0.9rem;
+                    }
+                }
+                .logo {
+                    max-height:12vh;
+                }
+            }
+        }
+
+    }
+
 </style>

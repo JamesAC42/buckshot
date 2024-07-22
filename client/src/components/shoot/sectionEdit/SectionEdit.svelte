@@ -173,7 +173,7 @@
     .section-edit-outer {
         @include center-fixed;
         height:100dvh;width:100dvw;
-        z-index:1000;
+        z-index:1300;
         .section-edit-inner {
             height:100dvh;width:100dvw;
             position:relative;
@@ -195,6 +195,29 @@
                 h2 {
                     font-size:1.4rem;
                     text-align:center;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 1100px) {
+        .section-edit-outer {
+            .section-edit-inner {
+                .section-edit-container {
+                    width:85dvw;
+                    h2 {
+                        font-size:1.2rem;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .section-edit-outer {
+            .section-edit-inner {
+                .section-edit-container {
+                    width:95dvw;
                 }
             }
         }

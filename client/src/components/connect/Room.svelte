@@ -225,4 +225,36 @@
         }
     }
 
+    @media screen and (max-width: 1100px) {
+        .forum-room-outer {
+            margin-right:0;
+            .forum-room-info {
+                padding:0.5rem;
+                gap:1rem;
+                .room-name {
+                    font-size:1rem;
+                }
+            }
+            .forum-room-posts {
+                .forum-post {
+                    padding:0.5rem;
+                    margin-bottom:0.3rem;
+                    .forum-post-info {
+                        gap:0.5rem;
+                    }
+                    .forum-post-text {
+                        font-size:0.9rem;
+                    }
+                }
+            }
+            .forum-room-input {
+                position:relative;
+                gap:0.5rem;
+                input {
+                    font-size:0.9rem;
+                }
+            }
+        }
+    }
+
 </style>

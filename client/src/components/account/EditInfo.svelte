@@ -199,6 +199,11 @@
                             bind:value={newPasswordConfirm}>
                     </div>
                 {/if}
+                {#if accountEditError}
+                <div class="account-error-inline">
+                    {accountEditError}
+                </div>
+                {/if}
             </div>
 
         </div>
@@ -310,6 +315,9 @@
                             padding:0.4rem 0.4rem;
                         }
                     }
+                    .account-error-inline {
+                        display:none;
+                    }
                 }
             }
 
@@ -353,6 +361,58 @@
                 height:2rem;width:100%;
                 transform:translate(0,100%);
                 background:$secondary-color;
+            }
+        }
+    }
+
+    
+    @media screen and (max-width: 450px) {
+        .account-edit-info {
+            .account-edit-info-inner {
+                height:100%;
+                .account-edit-content {
+                    .account-edit-header,
+                    .account-edit-input,
+                    .account-edit-error {
+                        margin:0 1rem;
+                    }
+                    .account-edit-header {
+                        margin:1rem;
+                        margin-bottom:0.7rem;
+                        font-size:1.2rem;
+                    }
+                    .account-edit-input {
+                        width:calc(100% - 2rem);
+                        .account-edit-input-item {
+                            flex-direction: column;
+                            .input-label {
+                                width:100%;
+                            }
+                            input {
+                                width:calc(100% - 1rem);
+                                padding:0.5rem 0.5rem;
+                            }
+                        }
+                        .account-error-inline {
+                            display:block;
+                            margin:1rem 2rem;
+                            text-align:center;
+                            color:$error-color;
+                        }
+                    }
+                }
+
+                .account-edit-error {
+                    display:none;
+                }
+
+                .account-edit-actions {
+                    margin:0.5rem 1rem;
+                }
+
+                .account-edit-bumper {
+                    height:1rem;width:100%;
+                }
             }
         }
     }

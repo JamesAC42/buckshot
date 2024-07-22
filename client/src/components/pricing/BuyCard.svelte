@@ -115,4 +115,98 @@
         }
     }
 
+    @media screen and (max-width: 1200px) {
+        .buy-card {
+            padding: 2rem;
+            min-width: 10rem;
+            .buy-title {
+                font-size: 1.2rem;
+            }
+            .buy-pricing {
+                .amount {
+                    font-size: 1.6rem;
+                }
+                .frequency {
+                    font-size: 0.9rem;
+                }
+            }
+            .purchase-button {
+                margin-top: 0.8rem;
+            }
+            .transaction-items {
+                ul {
+                    padding:0 2rem;
+                }
+            }
+            .buy-icon {
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .buy-card {
+            padding: 2rem;
+            min-width: 10rem;
+            max-width:100%;
+            width:calc(100% - 4rem);
+            .buy-title {
+                font-size: 1.2rem;
+            }
+            .buy-pricing {
+                .amount {
+                    font-size: 1.6rem;
+                }
+                .frequency {
+                    font-size: 0.9rem;
+                }
+            }
+            .purchase-button {
+                margin-top: 0.8rem;
+            }
+            .transaction-items {
+                ul {
+                    padding:0 2rem;
+                }
+            }
+            .buy-icon {
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .buy-card {
+            padding: 0.7rem;
+            min-width:1rem;
+            min-width: 10rem;
+            max-width:100%;
+            width:calc(100% - 1.4rem);
+            .buy-title {
+                font-size: 1rem;
+                margin-top:0.6rem;
+            }
+            .buy-pricing {
+                .amount {
+                    font-size: 1.6rem;
+                }
+                .frequency {
+                    font-size: 0.9rem;
+                }
+            }
+            .purchase-button {
+                margin-top: 0.8rem;
+            }
+            .transaction-items {
+                ul {
+                    padding:0 !important;
+                }
+            }
+            .buy-icon {
+                font-size: 1.1rem;
+            }
+        }
+
+    }
+
 </style>

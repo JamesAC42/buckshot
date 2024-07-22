@@ -149,4 +149,89 @@
 
     }
 
+    @media screen and (max-width: 1000px) {
+        
+        .features {
+            padding:0 2rem;
+            .features-inner {
+                .feature-item {
+                    .feature-item-inner {
+                        .feature-info {
+                            width:12rem;
+                            .feature-title {
+                                font-size:1.6rem;
+                            }
+                            .feature-description {
+                                font-size:1.1rem;
+                            }
+                        }
+                        .feature-image {
+                            img {
+                                width:30rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+        
+        .features {
+            padding:0 1rem;
+            .features-inner {
+                .feature-item {
+                    margin-bottom:1rem;
+                    .feature-item-inner {
+                        flex-direction: column;
+                        align-items: stretch;
+                        padding:0rem;
+                        .feature-info {
+                            width:100%;
+                            text-align:center;
+                            .feature-title {
+                                font-size:1.6rem;
+                            }
+                            .feature-description {
+                                font-size:1.1rem;
+                            }
+                        }
+                        .feature-image {
+                            width:100%;
+                            img {
+                                max-width:calc(100%);
+                                width:100%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+        
+        .features {
+            padding:0 0.5rem;
+            .features-inner {
+                .feature-item {
+                    margin-bottom:0.2rem;
+                    .feature-item-inner {
+                        padding:0;
+                        .feature-info {
+                            .feature-title {
+                                font-size:1.4rem;
+                            }
+                            .feature-description {
+                                font-size:1rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 </style>

@@ -55,7 +55,7 @@
         flex:1;
 
         width:fit-content;
-        max-width:90dvw;
+        max-width:100%;
         position:relative;
 
         transition:max-width 0.1s cubic-bezier(0.19, 1, 0.22, 1);
@@ -95,6 +95,22 @@
 
         }
 
+    }
+
+    @media screen and (max-width: 1100px) {
+        .connect-section {
+            .section-outer {
+                .section-background {
+                    display:none;
+                }
+                .section-inner {
+                    border:none;
+                }
+            }
+            &.collapsed {
+                display:none;
+            }
+        }
     }
 
 </style>

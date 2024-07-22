@@ -108,5 +108,39 @@
         }
     }
 
+    
+    @media screen and (max-width: 900px) {
+
+        
+        .faq-item {
+            .faq-item-inner {
+                position:relative;
+                width:calc(90dvw - 2rem);
+                font-size:1rem;
+        
+                .faq-question {
+                    padding:0.7rem;
+                }
+        
+                @keyframes show-answer {
+                    0% {
+                        transform:translateY(20px);
+                        filter: blur(10px);
+                    }
+                    100% {
+                        max-height:50rem;
+                        transform:translateY(0);
+                        filter: none;
+                    }
+                }
+                .faq-answer {
+                    padding:0.7rem;
+                }
+                
+            }
+        }
+
+    }
+
 
 </style>

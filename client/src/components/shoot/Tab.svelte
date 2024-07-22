@@ -56,4 +56,12 @@
         }
     }
 
+    @media screen and (max-width: 800px) {
+        .tab-outer {
+            .tab-inner {
+                padding:0.6rem 0;
+            }
+        }
+    }
+
 </style>

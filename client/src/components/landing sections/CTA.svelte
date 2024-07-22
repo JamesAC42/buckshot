@@ -144,4 +144,25 @@
         }
     }
 
+    
+    @media screen and (max-width: 350px) {
+        .cta-button {
+            border-radius:0.8rem;
+            .cta-button-inner {
+                padding:0.6rem 1rem;
+                padding-right:0.8rem;
+                border-radius:0.9rem;
+                gap:1.2rem;
+                font-size:0.9rem;
+            }
+            .cta-button-background {
+                position:absolute;
+                height:100%;width:100%;
+                top:0;left:0;
+                border-radius:0.8rem;
+            }
+        }
+
+    }
+
 </style>

@@ -26,6 +26,9 @@
     let unsubscribeSettings = null;
     let unsubscribeUser = null;
 
+    export let show = false;
+    export let leaving = false;
+
     import { onDestroy, onMount } from 'svelte';
 
     async function saveSetting(url, settingObject) {
@@ -160,7 +163,7 @@
 {#if !user || !settings}
 <div class="empty"></div>
 {:else}
-<div class="settings-container">
+<div class="settings-container" class:show={show} class:leaving={leaving}>
 
     <div class="settings-category">
         <div class="settings-section">
@@ -260,28 +263,32 @@
             <div class="section-background"></div>
             <div class="settings-section-inner section-inner settings-content">
                 <div class="settings-row">
-                    <div class="payment-item">
-                        <div class="payment-item-icon">
-                            <HandCoin />
+                    <a href="/pricing">
+                        <div class="payment-item">
+                            <div class="payment-item-icon">
+                                <HandCoin />
+                            </div>
+                            <div class="payment-item-description">
+                                Purchase Credits
+                            </div>
+                            <div class="payment-item-info">
+                                <Info />
+                            </div>
                         </div>
-                        <div class="payment-item-description">
-                            Purchase Credits
+                    </a>
+                    <a href="/pricing">
+                        <div class="payment-item premium">
+                            <div class="payment-item-icon">
+                                <Subscription />
+                            </div>
+                            <div class="payment-item-description">
+                                Go Premium
+                            </div>
+                            <div class="payment-item-info">
+                                <Info />
+                            </div>
                         </div>
-                        <div class="payment-item-info">
-                            <Info />
-                        </div>
-                    </div>
-                    <div class="payment-item premium">
-                        <div class="payment-item-icon">
-                            <Subscription />
-                        </div>
-                        <div class="payment-item-description">
-                            Go Premium
-                        </div>
-                        <div class="payment-item-info">
-                            <Info />
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -353,6 +360,14 @@
 
                         justify-content: space-around;
 
+                        a {
+                            text-decoration: none;
+                            color:$primary-color;
+
+                            .premium {
+                                color:#484bff;
+                            }
+                        }
 
                         .action-item,
                         .payment-item {
@@ -402,4 +417,75 @@
             }
         }
     }
+    
+    @media screen and (max-width: 1200px) {
+
+        @keyframes slide-in-settings {
+            0% {
+                transform:translate(100%,0);
+            }
+            100% {
+                transform:none;
+            }
+        }
+        @keyframes slide-out-settings {
+            0% {
+                transform:none;
+            }
+            100% {
+                transform:translate(100%,0);
+            }
+        }
+
+        .settings-container {
+            position:fixed;
+            top:5rem;right:0;
+            max-width:100dvw;
+            height:calc(100dvh - 5rem - 3rem);
+            transform:translate(100%,0);
+            background:$secondary-color;
+            z-index:1000;
+            padding:5rem;
+            width:calc(100dvw - 10rem);
+            &.show {
+                animation:slide-in-settings 0.1s cubic-bezier(0.68, -0.55, 0.265, 1.1) 1;
+                transform:none;
+            }
+            
+            &.leaving {
+                animation:slide-out-settings 0.1s cubic-bezier(0.075, 0.82, 0.165, 1) 1;
+            }
+        }
+
+    }
+    @media screen and (max-width: 800px) {
+        .settings-container {
+            padding:2rem;
+            width:calc(100dvw - 4rem);
+        }
+    }
+    @media screen and (max-width: 400px) {
+        .settings-container {
+            padding:1rem;
+            height:calc(100dvh - 5rem - 3rem - 2rem);
+            width:calc(100dvw - 2rem);
+            min-width:calc(100dvw - 2rem);
+            overflow-y:auto;
+            .settings-section {
+
+                .settings-section-inner {
+                    &.settings-content {
+                        
+                        .settings-row {
+                            flex-direction:column;
+                            .settings-control {
+                                margin:0 auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 </style>

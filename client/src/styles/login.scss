@@ -40,3 +40,26 @@
         margin-bottom:0.7rem;
     }
 }
+    
+@media screen and (max-width: 500px) {
+
+    .login-outer {
+        padding:1rem;
+
+        .login-header {
+            margin:0;
+            margin-top:1rem;
+        }
+        .form-group {
+            display:block;
+            text-align:left;
+            input {
+                width:90%;
+            }
+            button {
+                margin-top:1rem;
+            }
+        }
+    }
+
+}

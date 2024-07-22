@@ -1,5 +1,6 @@
 <script>
     import Button from "../../components/Button.svelte";
+  import Footer from "../../components/landing sections/Footer.svelte";
     import Navbar from "../../components/Navbar.svelte";
 
     let email = '';
@@ -71,15 +72,26 @@
     <p class="success">{success}</p>
     {/if}
 
+    <div class="forgot-bumper"></div>
+
+    <Footer />
 </div>
+
 
 <style lang="scss">
 
     @import "../../styles/mixins.scss";
 
     .forgot-password {
-        @include center-fixed-container;
         text-align:center;
+        max-height:calc(100dvh - 5rem);
+        overflow-y:auto;
+        h2 {
+            margin-top:5rem;
+        }
+        p {
+            padding:0 3rem;
+        }
         input {
             font-family: "Questrial";
             padding:0.4rem;
@@ -93,8 +105,23 @@
             @include flex-center-row;
         }
 
+        .forgot-bumper {
+            min-height:5rem;
+        }
+
         p.error {
             color:$error-color;
+        }
+    }
+    @media screen and (max-width: 600px) {
+
+        .forgot-password {
+            p {
+                padding:0 1rem;
+            }
+            input {
+                width:80%;
+            }
         }
     }
 

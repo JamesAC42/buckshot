@@ -90,6 +90,19 @@
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
+        position:relative;
+        @media screen and (max-width: 900px) {
+            display:flex;
+            flex-direction: column;
+            gap:1rem;
+            width:100%;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+      ul {
+        padding-left:1.8rem;
+      }
     }
 
 </style>

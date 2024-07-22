@@ -110,4 +110,11 @@
             font-weight:600;
         }
     }
+    
+    @media screen and (max-width: 400px) {
+        p {
+            font-size:1rem;
+            line-height:1rem;
+        }
+    }
 </style>

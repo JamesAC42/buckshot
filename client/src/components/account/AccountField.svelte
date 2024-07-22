@@ -92,5 +92,37 @@
         }
 
     }
+    
+    @media screen and (max-width: 650px) {
+
+        .info-item {
+            gap:3rem;
+        }
+
+    }
+    
+    @media screen and (max-width: 400px) {
+
+        .info-item {
+            display:flex;
+            flex-direction: column;
+            gap:0rem;
+            width:100%;
+            margin-bottom:0.5rem;
+            text-align:left;
+            align-items: stretch;
+            .info-label {
+                font-size:0.9rem;
+            }
+            .info-value {
+                font-size:0.9rem;
+                .pen {
+                    display:none;
+                    animation:none;
+                }
+            }
+        }
+
+    }
 
 </style>

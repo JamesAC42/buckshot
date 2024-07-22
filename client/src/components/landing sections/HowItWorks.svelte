@@ -101,6 +101,7 @@
             gap: 1rem;
             max-width: 800px;
             margin: 0 auto;
+            padding:0 2rem;
 
             .hiw-item {
                 display: flex;
@@ -142,6 +143,66 @@
                 }
             }
         }
+    }
+    
+    @media screen and (max-width: 1000px) {
+
+        .how-it-works {
+            
+            .hiw-video {
+                .hiw-video-inner {
+                    width:90%;
+                }
+            }
+        }
+
+    }
+    
+    @media screen and (max-width: 800px) {
+
+        .how-it-works {
+            
+            .hiw-video {
+                .hiw-video-inner {
+                    width:90%;
+                    border-radius:0.4rem;
+                }
+            }
+            .hiw-inner {
+                gap: 0.5rem;
+                .hiw-item {
+                    gap: 0.5rem;
+
+                    .hiw-number {
+                        width: 3rem;
+                        height: 3rem;
+
+                        .background-char {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            @include flex-center-col;
+                            font-size: 2rem;
+                            color: $primary-color;
+                            z-index:0;
+                        }
+
+                        .hiw-char {
+                            transform: translate(calc(-50% - 1px), calc(-50% + 4px));
+                            font-size: 0.9rem;
+                        }
+                    }
+
+                    .hiw-text {
+                        flex: 1;
+                        font-size: 1.1rem;
+                    }
+                }
+            }
+        }
+
     }
 
 </style>

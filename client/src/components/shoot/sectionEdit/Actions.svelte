@@ -53,5 +53,15 @@
         }
 
     }
+    @media screen and (max-width: 600px) {
+        .action-outer {
+            .save, .close {
+                font-size:0.9rem;
+                .btn-label {
+                    transform:translateY(3px);
+                }
+            }
+        }
+    }
 
 </style>

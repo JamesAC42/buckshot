@@ -101,8 +101,12 @@
                 </div>
             {:else}
                 {#each sections as section}
-                    <div class="output-section">
-                        <div class="section-name">
+                <div class="output-section">
+                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <div 
+                            on:click={() => showEditWindow(section.name)}
+                            class="section-name">
                             <div 
                             on:click={() => showEditWindow(section.name)}
                             on:keydown={(e) => { if(e.key === "Enter") showEditWindow(section.name)}}
@@ -179,5 +183,34 @@
             }
         }
     
+    }
+    
+    @media screen and (max-width: 600px) {
+
+        .output-inner {
+            padding: 0 0.2rem;
+            margin-bottom:0;
+            white-space: pre-line;
+            word-wrap: break-word;
+            font-family: "PT Mono", monospace;
+            
+            &.fade-in {
+                @include appear-text;
+            }
+            
+            .output-section {
+                font-size:0.9rem;
+                .section-name {
+                    cursor:pointer;
+                    .output-edit-button {
+                        transform: translate(150%, calc(-50% + 2px)); 
+                        opacity:1;
+                        animation:none;
+                        cursor:pointer;
+                    }
+                }
+            }
+        
+        }
     }
 </style>

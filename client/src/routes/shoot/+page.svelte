@@ -1,12 +1,10 @@
 <script>
-    import { onDestroy, onMount } from 'svelte';
+    import { onDestroy, onMount, tick } from 'svelte';
     import { get, writable } from 'svelte/store';
 
     import { authGuard } from '$lib/authGuard';
     import postFetch from '$lib/postFetch';
     import getFetch from '$lib/getFetch';
-    import formatOutputAsMarkdown from '$lib/formatOutputAsMarkdown';
-    import formatLetterAsMarkdown from '$lib/formatLetterAsMarkdown';
 
     import Navbar from "../../components/Navbar.svelte";
     import Button from '../../components/Button.svelte';
@@ -24,7 +22,10 @@
     import { saveJobTitle } from '$lib/saveJobInput';
     import { mode } from '../../lib/userSettings';
     import OutputInfo from '../../components/shoot/OutputInfo.svelte';
-  import Modal from '../../components/Modal.svelte';
+    import Modal from '../../components/Modal.svelte';
+
+    import TabsIcon from "~icons/ic/round-playlist-add-circle";
+    import SettingsIcon from "~icons/ic/round-settings-input-component";
 
     let showVerifyMessage = writable(false);
 
@@ -49,6 +50,40 @@
     let stopStreaming = writable(false);
     let activePage = writable(0);
     let outputError = writable(false);
+
+    let showTabs = writable(false);
+    let tabsLeaving = writable(false);
+    let showSettings = writable(false);
+    let settingsLeaving = writable(false);
+
+    function toggleTabs() {
+        showSettings.set(false);
+        tick();
+        if ($showTabs) {
+            tabsLeaving.set(true);
+            setTimeout(() => {
+                showTabs.set(false);
+                tick();
+                tabsLeaving.set(false);
+            }, 90);
+        } else {
+            showTabs.set(true);
+        }
+    }
+
+    function toggleSettings() {
+        showTabs.set(false); 
+        tick();
+        if ($showSettings) {
+            settingsLeaving.set(true);
+            setTimeout(() => {
+                showSettings.set(false);
+                settingsLeaving.set(false);
+            }, 90);
+        } else {
+            showSettings.set(true);
+        }
+    }
 
     let title = "";
 
@@ -147,6 +182,9 @@
 
     function updateActiveJob(job) {
         activeJob.set(job);
+        if($showTabs) {
+            toggleTabs();
+        }
         if(jobs && jobs[job]) {
             title = jobs[job].title;
         }
@@ -369,6 +407,8 @@
         
         <Tabs 
             active={$activeJob}
+            show={$showTabs}
+            leaving={$tabsLeaving}
             updateActive={(job) => updateActiveJob(job)}/>
 
         <div class="input-container">
@@ -449,7 +489,9 @@
             <div class="input-container-footer"></div>
         </div>
 
-        <Settings/>
+        <Settings
+            show={$showSettings}
+            leaving={$settingsLeaving}/>
 
     </div>
 {:else}
@@ -462,9 +504,34 @@
         onClose={() => showVerifyMessage.set(false)} />
 {/if}
 
+<div class="section-nav-outer">
+    <div class="section-nav-inner">
+        <div
+            on:click={toggleTabs} 
+            class="section-nav-item"
+            on:keydown={(e) => { if(e.key === "Enter") toggleTabs() }}
+            tabindex={0}
+            role="button">
+            <TabsIcon />
+        </div>
+        <div 
+            class="section-nav-item"
+            on:click={toggleSettings}
+            on:keydown={(e) => { if(e.key === "Enter") toggleSettings() }}
+            tabindex={0}
+            role="button">
+            <SettingsIcon />
+        </div>
+    </div>
+</div>
+
 <style lang="scss">
 
     @import "../../styles/mixins.scss";
+
+    .container {
+        position:relative;
+    }
 
     .input-container {
         
@@ -532,5 +599,81 @@
         font-size:1.5rem;
         text-align:center;
     }
+
+    .section-nav-outer {
+        display:none;
+    }
+
+    @media screen and (max-width: 1200px) {
+
+        .section-nav-outer {
+            display:block;
+            position:fixed;
+            z-index:1000;
+            width:100dvw;
+            bottom:0;left:0;
+            background:$primary-color;
+            height:4rem;
+            @include flex-center-row;
+            align-items: center;
+            .section-nav-inner {
+                color:$secondary-color;
+                @include flex-center-row;
+                justify-content:space-between;
+                gap:4rem;
+                opacity:0.8;
+                .section-nav-item {
+                    transform:translateY(2px);
+                    font-size:1.4rem;
+                    cursor:pointer;
+                }
+            }
+        }
+
+        .container {
+            .input-container {
+                .input-container-footer {
+                    height:5rem;
+                }
+            }
+        }
+
+    }
+
+    
+    @media screen and (max-width: 600px) {
+
+        .container {
+            padding:1rem 1.4rem;
+            .input-container {
+                min-width:calc(100dvw - 4rem);
+                
+                input.job-name-field {
+                    padding:1rem 0;
+                    font-size:1.1rem;
+                }
+
+                .delete-space {
+                    font-size:1rem;
+                }
+
+                .generate-section {
+                    gap:0rem;
+                    margin-top:0;
+                    margin-bottom:1rem;
+                    font-size:1rem;
+                    flex-direction:column;
+                    .generate-remaining {
+                        flex:1;
+                    }
+                    .generate-label {
+                        flex:1;
+                        text-align:right;
+                    }
+                }
+            }
+        }
+    }
+
 
 </style>

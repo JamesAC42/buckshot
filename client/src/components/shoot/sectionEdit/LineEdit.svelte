@@ -70,5 +70,14 @@
     .error {
         @include section-edit-error;   
     }
+    @media screen and (max-width: 900px) {
+        .line-edit-outer {
+            .line-edit-inner {
+                input {
+                    width:80%;
+                }
+            }
+        }
+    }
 
 </style>

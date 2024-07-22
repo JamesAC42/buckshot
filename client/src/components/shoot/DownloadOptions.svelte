@@ -192,6 +192,7 @@
         width:100dvw;
         top:0;left:0;
         z-index:1;
+        z-index:2000;
 
         .download-options-inner {
             height:100dvh;width:100dvw;
@@ -299,6 +300,39 @@
 
                         .close-button {
                             margin:auto auto 2rem auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 910px) {
+        
+        .download-options-outer {
+            .download-options-inner {
+                .download-options-container {
+                    .download-options-content {
+                        .download-preview {
+                            img {
+                                max-height:60dvh;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 750px) {
+        .download-options-outer {
+            z-index:2000;
+            .download-options-inner {
+                .download-options-container {
+                    .download-options-content {
+                        height:25rem;
+                        .download-preview {
+                            display:none;
                         }
                     }
                 }

@@ -135,6 +135,12 @@
             outline:none;
         }
     }
+    @media screen and (max-width: 900px) {
+        font-size:0.9rem;
+        .btn-label {
+            transform:translateY(3px);
+        }
+    }
 }
 
 @keyframes spin {
@@ -162,6 +168,12 @@
     border:1px solid #6d6d6d;
     outline:none;
     font-size:0.9rem;
+
+    @media screen and (max-width: 900px) {
+        padding:0.5rem;
+        font-size:0.8rem;
+    }
+
 }
 
 @mixin section-edit-inner {
@@ -174,6 +186,9 @@
     overflow-x:hidden;
     scrollbar-width: thin;
     padding:1rem 0;
+    @media screen and (max-width: 1000px) {
+        max-height:20rem;
+    }
 }
 
 @mixin section-edit-error {
@@ -233,6 +248,16 @@
             font-size:1.5rem;
             h3 {
                 margin:0;
+            }
+        }
+    }
+
+    @media screen and (max-width: 1100px) {
+        padding:1rem;
+        .header {
+            gap:0.5rem;
+            .header-text {
+                font-size:1.2rem;
             }
         }
     }

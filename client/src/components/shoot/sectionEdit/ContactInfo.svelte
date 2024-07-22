@@ -151,5 +151,15 @@
     .error {
         @include section-edit-error;   
     }
+    @media screen and (max-width: 900px) {
+        .contact-item {
+            input.contact-label {
+                width:20%;
+            }
+            input.contact-info {
+                width:60%;
+            }
+        }
+    }
 
 </style>

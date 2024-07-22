@@ -4,6 +4,7 @@
 
     import CreateAccount from "../../components/login/CreateAccount.svelte";
     import Login from "../../components/login/Login.svelte";
+  import Footer from "../../components/landing sections/Footer.svelte";
 
     let mode = writable(0);
 
@@ -48,6 +49,9 @@
         </div>
     </div>
     
+    <div class="footer-outer">
+        <Footer />
+    </div>
 
 </div>
 
@@ -95,6 +99,59 @@
                 }
             }
         }
+
+        .footer-outer {
+            display:none;
+        }
+    }
+
+    
+    @media screen and (max-width: 500px) {
+
+        .container-login-page {
+            position:relative;
+            width:100dvw;
+            max-height:calc(100dvh - 5rem);
+            left:0;
+            top:0;
+            transform:none;
+            overflow-y:auto;
+
+            .container-inner {
+                .container-background {
+                    display:none;
+                }
+                .container-content {
+                    border:none;
+                    width:100%;
+                    border-radius:0;
+                    flex-direction: column-reverse;
+                    .logo-container {
+                        flex-direction: row;
+                        align-items:center;
+                        margin:0 1rem;
+                        border-radius:1rem;
+                        margin-bottom:0rem;
+                        img {
+                            width:5rem;
+                            border-radius:1rem;
+                            height:auto;
+                        }
+                        .switch-mode {
+                            margin-right:1rem;
+                        }
+                    }
+                    .form-container {
+                        width:calc(90dvw);
+                        margin:0 auto;
+                    }
+                }
+            }
+            .footer-outer {
+                display:block;
+            }
+        }
+
     }
 
 </style>

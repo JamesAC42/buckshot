@@ -106,6 +106,15 @@
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
+        position:relative;
+        @media screen and (max-width: 900px) {
+            display:flex;
+            flex-direction: column;
+            gap:1rem;
+            width:100%;
+        }
     }
     
+
+
 </style>

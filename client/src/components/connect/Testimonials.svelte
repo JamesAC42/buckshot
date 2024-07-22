@@ -258,5 +258,60 @@
             }
         }
     }
+    @media screen and (max-width: 1100px) {
+        .testimonials-outer {
+
+            @include connect-section-inner;
+            height:calc(100dvh - 5rem - 6rem);
+
+            .testimonials-content {
+                flex-direction: column;
+                gap:0.5rem;
+                margin-top:0;
+                .testimonials-input {
+                    position:relative;
+                    top:1rem;
+                    margin-left:0;
+                    border-radius:0.2rem;
+                    padding:1rem;
+                    max-width:100%;
+                    .testimonial-promo-message {
+                        font-size:1rem;
+                    }
+                    .testimonial-name-input {
+                        input {
+                            padding:0.5rem;
+                            font-size:0.9rem;
+                        }
+                    }
+                    .testimonial-text-input {
+                        textarea {
+                            height:5rem;
+                            font-size:0.9rem;
+                        }
+                    }
+                    .testimonial-comment-length {
+                        text-align:right;
+                        padding:0.5rem 0;
+                    }
+                    .user-already-submitted {
+                        text-align:center;
+                    }
+                    .testimonial-submit {
+                        margin-top:0.5rem;
+                        .testimonial-submit-button {
+                            @include simple-button;
+                            padding:0.2rem 0 0.4rem 0;
+                        }
+                    }
+                }
+                .testimonials-list {
+                    min-width:0;
+                    width:100%;
+                    margin-top:2rem;
+                }
+            }
+        }
+    }
 
 </style>

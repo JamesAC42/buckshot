@@ -159,7 +159,7 @@
             <Delete onDelete={() => removeSchool(index)}/>
             <input maxLength={200} type="text" placeholder="position title..." bind:value={$workItems[index].position}>
         </div>
-        <div class="workhistory-edit-row">
+        <div class="workhistory-edit-row work-info">
             <input maxLength={200} type="text" placeholder="position dates..." bind:value={$workItems[index].dates}>
             <input maxLength={200} type="text" placeholder="company name..." bind:value={$workItems[index].company}>
         </div>
@@ -254,6 +254,35 @@
 
     .error {
         @include section-edit-error;   
+    }
+
+    
+    @media screen and (max-width: 1000px) {
+        .workhistory-edit-outer {
+            .workhistory-edit-item {
+                margin:0;
+                padding:0.5rem 0;
+                margin-bottom:1rem;
+                input {
+                    width:100%;
+                }
+                .workhistory-edit-row {
+                    padding:0 0.5rem;
+                    gap:0.5rem;
+                    margin-bottom:0.5rem;
+                }
+                .workhistory-edit-row.work-info {
+                    flex-direction:column;
+                    input {
+                        width:calc(100% - 1.1rem);
+                    }
+                }
+                .workhistory-edit-description {
+                    margin-left:0rem;
+                    border:none;
+                }
+            }
+        }
     }
 
 </style>

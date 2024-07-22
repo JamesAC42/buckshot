@@ -148,8 +148,17 @@
             width:fit-content;
         }
     }
+    
     .error {
         @include section-edit-error;   
+    }
+
+    @media screen and (max-width: 900px) {
+        .project-item {
+            input.project-description {
+                width:65%;
+            }
+        }
     }
 
 </style>

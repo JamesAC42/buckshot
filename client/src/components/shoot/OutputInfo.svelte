@@ -129,5 +129,31 @@
             }
         }
     }
+    
+    @media screen and (max-width: 600px) {
+        
+        .output-options {
+            padding:0.4rem 0.2rem;
+            flex-direction:column;
+            align-items:first baseline;
+            gap:0.2rem;
+            .output-download {
+                margin:0;
+                position:absolute;
+                right:0;top:50%;
+                transform:translate(0,-50%);
+            }
+        }
+    }
+    @media screen and (max-width: 400px) {
+        
+        .output-options {
+            .output-download {
+                .download-label {
+                    display:none;
+                }
+            }
+        }
+    }
 
 </style>

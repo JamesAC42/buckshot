@@ -24,9 +24,8 @@
     <Banner />
     <Screenshot />
 
-    <Features />
     <HowItWorks />
-
+    <Features />
     <Faq />
 
     <div class="cta-outer">
@@ -44,12 +43,16 @@
     .home-container {
         padding:0;
         overflow-x:hidden;
-        height:calc(100vh - 5rem);
+        height:calc(100dvh - 5rem);
         display:flex;
         flex-direction: column;
         gap:0;
         overflow-y:scroll;
         scrollbar-width: thin;
+    }
+
+    .cta-outer {
+        padding:0 2rem;
     }
 
 </style>

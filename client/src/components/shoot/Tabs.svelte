@@ -13,6 +13,9 @@
 
     export let active = "";
     export let updateActive = (active) => {};
+
+    export let show = false;
+    export let leaving = false;
     
     let jobs = null;
     let user = null;
@@ -106,7 +109,7 @@
 
 </script>
 
-<div class="tabs">
+<div class="tabs" class:show={show} class:leaving={leaving}>
     <div class="tabs-container">
         {#each Object.entries(jobNames) as [id, name], index}
             <Tab 
@@ -162,4 +165,51 @@
         transform:translateY(2px);
         margin-right:2px;
     }
+    
+    @media screen and (max-width: 1200px) {
+
+        @keyframes slide-in-settings {
+            0% {
+                transform:translate(-100%,0);
+            }
+            100% {
+                transform:none;
+            }
+        }
+        @keyframes slide-out-settings {
+            0% {
+                transform:none;
+            }
+            100% {
+                transform:translate(-100%,0);
+            }
+        }
+        .tabs {
+            width:100dvw;
+            position:fixed;
+            z-index:1000;
+            height:calc(100dvh - 5rem - 3rem);
+            top:5rem;left:0;
+            transform:translate(-100%,0);
+
+            &.show {
+                animation:slide-in-settings 0.1s cubic-bezier(0.68, -0.55, 0.265, 1.1) 1;
+                transform:none;
+            }
+            
+            &.leaving {
+                animation:slide-out-settings 0.1s cubic-bezier(0.075, 0.82, 0.165, 1) 1;
+            }
+        }
+
+    }
+    @media screen and (max-height: 800px) {
+        .tabs {
+            .tabs-container {
+                max-height:calc(100dvh - 5rem - 3rem - 7rem);
+            }
+        }
+    }
+
+
 </style>

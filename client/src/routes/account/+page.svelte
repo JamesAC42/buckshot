@@ -173,5 +173,98 @@
         text-align:center;
         margin-top:5rem;
     }
+
+    @media screen and (max-width: 650px) {
+
+        .account-container {
+            transform:translate(-50%,-45%);
+            .account-row {
+                @include flex-center-col;
+                .account-section.profile-image {
+                    display:none;
+                }
+                .account-section.personal-info {
+                    .account-section-inner {
+                        padding:2rem;
+                        width:fit-content;
+                        margin:0 auto;
+                    }
+
+                    .info-header {
+                        font-size:1.2rem;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 400px) {
+
+        body {
+            overflow-y:hidden;
+        }
+        .account-container {
+            top:50%;left:50%;
+            transform:translate(-50%,-40%);
+            .account-row {
+                .account-section.personal-info {
+                    max-height:calc(100dvh - 8rem);
+                    .account-section-inner {
+                        padding:1rem;
+                        width:calc(100dvw - 4rem);
+                        height:fit-content;
+                    }
+                    .info-header {
+                        font-size:1rem;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+
+        .account-container {
+            top:5rem;left:0;
+            margin:0rem;
+            transform:none;
+            .account-row {
+                .account-section.personal-info {
+                    overflow-y:auto;
+                    padding:0rem;
+                    border-radius:0.5rem;
+                    border:1px solid $primary-color;
+
+                    .account-section-background {
+                        display:none;
+                    }
+                    .account-section-inner {
+                        padding:1rem;
+                        width:calc(100dvw - 4rem);
+                        height:fit-content;
+                        margin:0rem;
+                        border:none;
+                        overflow-y:hidden;
+                    }
+                    .info-header {
+                        font-size:1rem;
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    @media screen and (max-height: 680px) {
+        .account-container {
+            .account-row {
+                .account-section.profile-image {
+                    display:none;
+                }
+            }
+        }
+    }
+
+
 </style>
 

@@ -1,5 +1,8 @@
 
 <script>
+
+    import TestimonialItem from "../TestimonialItem.svelte";
+
 </script>
 
 <div class="testimonials">
@@ -8,6 +11,7 @@
     </div>
 
     <div class="testimonials-inner">
+
     </div>
 </div>
 

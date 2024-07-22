@@ -74,4 +74,11 @@ body {
     font-size:1.6rem;
     margin-bottom:2rem;
     border-bottom:1px solid #b8b8b8;
+    padding:0 2rem;
+
+    @media screen and (max-width: 800px) {
+        h2 {
+            font-size:1.8rem;
+        }
+    }
 }

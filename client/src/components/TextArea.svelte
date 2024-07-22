@@ -57,4 +57,15 @@
         background:$primary-color;
     }
 
+    
+    @media screen and (max-width: 600px) {
+        textarea.info-input-inner {
+            font-size:1rem;
+            height:15rem;
+            line-height:1rem;
+            padding:0.8rem;
+            width:calc(100% - 1.6rem);
+        }
+    }
+
 </style>

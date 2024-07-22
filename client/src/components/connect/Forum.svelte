@@ -235,4 +235,66 @@
         }
     }
 
+    @media screen and (max-width: 1100px) {
+
+        .forum-outer {
+
+            @include connect-section-inner;
+
+            .forum-content {
+                flex-direction:column;
+                margin-top:0.5rem;
+                justify-content:flex-start;
+                gap:0.5rem;
+
+                height:calc(100dvh - 5rem - 6rem);
+
+                .forum-rooms {
+                    margin:0;
+                    padding:1rem 0.5rem;
+                    position:relative;
+                    top:0;
+                    margin-left:0;
+                    border-radius:0.2rem;
+                    height:16rem;
+
+                    .forum-new-room {
+                        display:none;
+                    }
+                    .forum-room-list {
+                        margin-top:0rem;
+                        .forum-room-item {
+                            border-bottom:1px solid rgb(140, 140, 140);
+                            &:hover {
+                                background:#5b5b5b;
+                                color:$secondary-color;
+                            }
+                            .forum-room-name {
+                                font-weight:600;
+                                margin-bottom:0.3rem;
+                            }
+                            .forum-room-last-comment {
+                                font-size:0.9rem;
+                            }
+                            &:last-child {
+                                margin-bottom:0;
+                            }
+                        }
+                        
+
+                        .loading-rooms, .no-rooms {
+                            @include flex-center-row;
+                            background:#f6f6f6;
+                            padding:2rem;
+                            height:fit-content;
+                            text-align:center;
+                            border-radius:1rem;
+                            gap:0.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 </style>
