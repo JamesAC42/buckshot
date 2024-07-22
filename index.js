@@ -13,7 +13,7 @@ const port = 5010;
 const config = require('./config.json');
 const redisLogin = require('./redis_login.json');
 const stripeLogin = require('./stripe.json');
-const stripe = require('stripe')(stripeLogin.testKey);
+const stripe = require('stripe')(stripeLogin.key);
 
 const sequelize = require('./database');
 
