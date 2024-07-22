@@ -85,6 +85,14 @@ async function prompt(req, res, datamodels, cache) {
             return res.status(400).json({ success: false, message: generationResponse.reason });
         }
 
+        // Increment the successful generations count for the user
+        const redisKey = `buckshot:userGenerations`;
+        try {
+            await cache.hincrby(redisKey, userId, 1);
+        } catch (error) {
+            console.error('Error incrementing successful generations count:', error);
+        }
+
         if(settings.mode === mode.RESUME) {
             generationContent = generationResponse.resume;
         } else {
