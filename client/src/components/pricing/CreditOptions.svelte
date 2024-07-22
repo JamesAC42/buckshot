@@ -31,7 +31,7 @@
 
     // live 
     const productIds = {
-        tier1: "price_1Pc01wP7bDDw4hG2dLJcJOA0",
+        tier1: "price_1PfGD0P7bDDw4hG2RKXsz8qC",
         tier2: "price_1PdkQzP7bDDw4hG2wVDjh0oQ",
         tier3: "price_1PdkRaP7bDDw4hG2m7H2tuRM"
     }
